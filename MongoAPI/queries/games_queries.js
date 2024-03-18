@@ -9,7 +9,7 @@ const getByComp = (comp, season) => {
 }
 
 const getByClub = (comp, season, club_id) => {
-    return games.find({competition_id:comp, season:parseInt(season), home_club_id :club_id }, {}, null)
+    return games.find({competition_id:comp, season:season, home_club_id :club_id }, {}, null)
 }
 
 module.exports = {getByClub, getByComp, getById}

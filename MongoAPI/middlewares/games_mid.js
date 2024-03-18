@@ -24,7 +24,7 @@ module.exports.getBySeasonAndComp = async (req, res) => {
 }
 
 module.exports.getByClub = async (req, res) => {
-    await queries.getByClub(req.params.comp, req.params.season, req.params.game_id)
+    await queries.getByClub(req.params.comp, parseInt(req.params.season), req.params.game_id)
         .then(resp => {
             res.send(resp)
         })

@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 
 const game_events = new mongoose.Schema({
-
-    game_event_id: String,
+    _id: String,
     date: Date,
     game_id: Number,
     minute: Number,

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const game_lineups = new mongoose.Schema({
-
+    _id: String,
     game_id: Number,
     club_id: Number,
     type: String,
