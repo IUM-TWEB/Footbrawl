@@ -5,7 +5,8 @@ const bodyparser = require('body-parser')
 const appearances = require('./routes/appearances_Roots')
 const games = require('./routes/games_Roots')
 const club_games = require('./routes/clubgames_Roots')
-
+const lineups = require('./routes/game_lineups_roots')
+const events = require('./routes/game_events_routes')
 mongoose.connect('mongodb://localhost:2717/footbrawl').then(()=>console.log("Connected to mongoDB/footbrawl"))
 const db = mongoose.connection
 db.once('connection', () => {
@@ -32,3 +33,5 @@ server.listen(3001, (e)=>{
 server.use('/app', appearances)
 server.use('/games', games)
 server.use('/clubgames', club_games)
+server.use('/lineups', lineups )
+server.use('/events', events)
