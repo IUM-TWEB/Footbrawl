@@ -25,6 +25,10 @@ public class PlayerService {
     //return player.orElse(null);
   }
 
+  public List<Player> getPlayerByName(String firstName, String lastName){
+    return playerRepository.findPlayerByNameCustomQuery(firstName, lastName).orElse(null);
+  }
+
   public List<Player> getPlayersByClubId(int id){
     return playerRepository.findPlayersByCurrent_club_id(id).orElse(null);
   }

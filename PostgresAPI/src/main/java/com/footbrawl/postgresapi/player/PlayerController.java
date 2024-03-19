@@ -27,6 +27,19 @@ public class PlayerController {
     return player;
   }
 
+  @GetMapping("/playerByName")
+  public List<Player> getPlayerByName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName){
+    List<Player> players = playerService.getPlayerByName(firstName, lastName);
+    if(players==null) // gestire il caso quando player sia null
+      return null;
+    for(Player p : players){
+      p.setAge(calcAge(p));
+      p.setMarket_value(calculateMarket_value(p));
+      p.setHighest_market_value(calculateHighest_market_value(p));
+    }
+    return players;
+  }
+
   @GetMapping("/playersOfClub")
   public List<Player> getPlayersByClubId(@RequestParam int id){
     List<Player> players = playerService.getPlayersByClubId(id);
@@ -56,7 +69,7 @@ public class PlayerController {
     return -1;
   }
 
-  private int calculateMarket_value(Player player){
+  public static int calculateMarket_value(Player player){
     String value = player.getMarket_value_in_eur();
     if(value == null){
       return -1;

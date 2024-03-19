@@ -3,6 +3,7 @@ package com.footbrawl.postgresapi.club;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table
@@ -25,8 +26,12 @@ public class Club {
   private String coach_name;
   private int last_season;
   private String url;
+  @Transient
+  private int net_transfer_rec;
+  @Transient
+  private int total_market_val;
 
-  public Club(){
+  public Club() {
 
   }
 
@@ -47,6 +52,8 @@ public class Club {
     this.coach_name = coach_name;
     this.last_season = last_season;
     this.url = url;
+    this.net_transfer_rec = getNet_transfer_rec();
+    this.total_market_val = getTotal_market_val();
   }
 
   public Long getClub_id() {
@@ -175,6 +182,22 @@ public class Club {
 
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  public int getNet_transfer_rec() {
+    return this.net_transfer_rec;
+  }
+
+  public void setNet_transfer_rec(int value) {
+    this.net_transfer_rec = value;
+  }
+
+  public int getTotal_market_val() {
+    return this.total_market_val;
+  }
+
+  public void setTotal_market_val(int value) {
+    this.total_market_val = value;
   }
 
 }
