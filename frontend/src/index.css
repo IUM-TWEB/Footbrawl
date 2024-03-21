@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.padding {
+    padding: 10px;
+}
+
+.menu {
+    background-color: black;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.menu-item {
+    color: white;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 21px;
+    text-decoration: none;
+}
+
+.menu-item:hover {
+    text-decoration: underline;
+    color: chocolate;
+}
+
+.divCarousel {
+    width: 100%;
+    height: 100%;
+}
+
+.news-container {
+    border: 1px solid #ccc; /* Sottile bordo grigio */
+    border-radius: 10px; /* Angoli arrotondati */
+    width: 100%; /* Larghezza al 100% del contenitore padre */
+    background-color: white; /* Sfondo nero */
+    color: black; /* Testo bianco */
+    padding: 20px; /* Spaziatura interna per non avere il testo attaccato ai bordi */
+    box-sizing: border-box; /* Assicura che padding e bordo siano inclusi nella larghezza */
+}
+
+.news-title {
+    margin-top: 0;
+}
+
+.news-text {
+    word-wrap: break-word; /* Assicura che il testo non esca dal contenitore */
+}
+
+.divSearchForm {
+    display: flex;
+    justify-content: center; /* Centra orizzontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: auto; /* qualsiasi altezza desideri */
+
+
+}
+.center {
+    text-align: center;
+}
