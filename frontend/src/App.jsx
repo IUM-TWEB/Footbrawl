@@ -6,10 +6,8 @@ import News from "./News.jsx";
 import SearchForm from "./SearchForm.jsx";
 import axios from "axios";
 
-//import 'bootstrap/dist/css/bootstrap.min.css'; // Assicurati di avere importato il CSS di Bootstrap
+//import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-//data will be the string we send from our server
 const apiCall = () => {
   axios.get('http://localhost:3000/test').then((data) => {
     //this console.log will be in our frontend console
@@ -21,7 +19,7 @@ const apiCall = () => {
 
 function App() {
   return (
-    <>{/*
+    <>
       <Menu></Menu>
       <div className="padding"></div>
       <div className="divSearchForm">
@@ -77,8 +75,10 @@ function App() {
 
           </div>
         </div>
-      </div>*/}
+      </div>
+      {/*bottone di prova per testare la connessione al server
       <button onClick={apiCall}>Make API Call</button>
+      */}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Carousel } from 'react-bootstrap'; // Assumendo che stai usando react-bootstrap
+//import { Carousel } from 'react-bootstrap';
 
 const ImmaginiCarousel = () => { // Rinominato per evitare conflitti
 
