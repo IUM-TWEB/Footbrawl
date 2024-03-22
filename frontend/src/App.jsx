@@ -1,12 +1,12 @@
 import React from 'react';
 import Leaderboard from './Leaderboard';
-import ImmaginiCarousel from './ImmaginiCarousel';
+
 import Menu from "./Menu.jsx";
 import News from "./News.jsx";
 import SearchForm from "./SearchForm.jsx";
 import axios from "axios";
 
-//import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const apiCall = () => {
   axios.get('http://localhost:3000/test').then((data) => {
@@ -55,8 +55,9 @@ function App() {
                          thirdValue="21"
             ></Leaderboard>
           </div>
+
           <div className="col-md-6">
-            <ImmaginiCarousel></ImmaginiCarousel>
+
             <News></News>
             <News></News>
             <News></News>
@@ -76,9 +77,9 @@ function App() {
           </div>
         </div>
       </div>
-      {/*bottone di prova per testare la connessione al server
+      <p>bottone di prova per testare la connessione al server</p>
       <button onClick={apiCall}>Make API Call</button>
-      */}
+
     </>
   );
 }

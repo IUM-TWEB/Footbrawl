@@ -1,3 +1,6 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 function Leaderboard(props) {
   const competitions = props.competitions;
   const first = props.first;
@@ -9,10 +12,10 @@ function Leaderboard(props) {
 
   return (
     <div>
-      <div class="container">
-        <h2 class="mt-4 mb-3">{competitions}</h2>
-        <table class="table">
-          <thead class="thead-dark">
+      <div className="container">
+        <h2 className="mt-4 mb-3">{competitions}</h2>
+        <table className="table">
+          <thead className="thead-dark">
           <tr>
             <th scope="col">Squadra</th>
             <th scope="col">Punti</th>
