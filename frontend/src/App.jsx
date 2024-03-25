@@ -1,11 +1,11 @@
 import React from 'react';
+import {useState, useEffect,} from "react";
 import Leaderboard from './Leaderboard';
-
 import Menu from "./Menu.jsx";
 import News from "./News.jsx";
 import SearchForm from "./SearchForm.jsx";
 import axios from "axios";
-
+import Prova from "./Prova.jsx";
 
 
 const apiCall = () => {
@@ -14,12 +14,19 @@ const apiCall = () => {
     console.log(data)
 
   })
-    .catch(e=>{console.log(e)})
+    .catch(e => {
+      console.log(e)
+    })
 }
 
 function App() {
+
+
   return (
     <>
+
+      <Prova></Prova>
+      {/*
       <Menu></Menu>
       <div className="padding"></div>
       <div className="divSearchForm">
@@ -79,6 +86,8 @@ function App() {
       </div>
       <p>bottone di prova per testare la connessione al server</p>
       <button onClick={apiCall}>Make API Call</button>
+      */}
+
 
     </>
   );
