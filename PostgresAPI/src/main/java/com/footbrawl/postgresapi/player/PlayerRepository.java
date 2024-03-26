@@ -25,4 +25,10 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
   @Query(value = "SELECT * FROM players WHERE first_name LIKE %:firstName% AND last_name LIKE %:lastName%", nativeQuery = true)
   Optional<List<Player>> findPlayerByNameCustomQuery(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
+  @Query(value = "SELECT 'player' as type, id, first_name, last_name FROM players WHERE first_name LIKE %:firstName% AND last_name LIKE %:lastName% " +
+      "UNION " +
+      "SELECT 'club' as type, id, name, '' as last_name FROM clubs WHERE name LIKE %:name% " +
+      "ORDER BY first_name, last_name, name", nativeQuery = true)
+  Optional<List<Object>> findPlayerAndClubByNameCustomQuery(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("name") String name);
+
 }
