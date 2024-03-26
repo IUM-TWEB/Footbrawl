@@ -7,16 +7,8 @@ import axios from "axios";
 import SearchBar from "./SearchBar.jsx";
 
 
-const apiCall = () => {
-  axios.get('http://localhost:3000/test').then((data) => {
-    //this console.log will be in our frontend console
-    console.log(data)
 
-  })
-    .catch(e => {
-      console.log(e)
-    })
-}
+
 
 function App() {
   return (
@@ -56,9 +48,7 @@ function App() {
                          thirdValue="21"
             ></LeaderBoard>
           </div>
-
           <div className="col-md-6">
-
             <News></News>
             <News></News>
             <News></News>
@@ -77,10 +67,6 @@ function App() {
           </div>
         </div>
       </div>
-      {/*
-      <p>bottone di prova per testare la connessione al server</p>
-      <button onClick={apiCall}>Make API Call</button>
-        */}
     </>
   );
 }
