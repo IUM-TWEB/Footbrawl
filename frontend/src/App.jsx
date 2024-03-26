@@ -6,9 +6,15 @@ import News from "./News.jsx";
 import axios from "axios";
 import SearchBar from "./SearchBar.jsx";
 
-
-
-
+const apiCall = () => {
+  axios.get('http://localhost:3000/test2').then((data) => {
+    //this console.log will be in our frontend console
+    console.log(data)
+  })
+    .catch(e => {
+      console.log(e)
+    })
+}
 
 function App() {
   return (
@@ -67,6 +73,9 @@ function App() {
           </div>
         </div>
       </div>
+
+      <p>bottone di prova per testare la connessione al server</p>
+      <button onClick={apiCall}>Make API Call</button>
     </>
   );
 }

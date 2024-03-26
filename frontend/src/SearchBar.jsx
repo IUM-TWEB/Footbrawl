@@ -34,7 +34,7 @@ function SearchBar() {
       clearTimeout(errorTimeoutRef.current);
     }
     if (searchTerm) {
-      axios.get(`https://jsonplaceholder.typicode.com/posts/${searchTerm}`)
+      axios.get(`http://localhost:8080/player?id=4042`)
         .then(response => {
           setPostData(response.data);
           setShowContent(true);
