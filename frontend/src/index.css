@@ -53,8 +53,21 @@
     align-items: center; /* Centra verticalmente */
     height: auto; /* qualsiasi altezza desideri */
 
-
 }
 .center {
     text-align: center;
 }
+.search-bar-container {
+    text-align: center; /* Centra il contenuto del testo e i form inline o inline-block orizzontalmente */
+}
+
+.search-form {
+    display: inline-block; /* Rende il form un blocco, ma permette il centrare con text-align sul container */
+    margin: 0 auto; /* Aggiunge la centratura orizzontale per elementi con display block */
+}
+
+.search-form input,
+.search-form button {
+    margin: 5px; /* Aggiunge un po' di spazio intorno all'input e al bottone */
+}
+

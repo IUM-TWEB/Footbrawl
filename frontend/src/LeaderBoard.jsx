@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-function Leaderboard(props) {
+function LeaderBoard(props) {
   const competitions = props.competitions;
   const first = props.first;
   const second = props.second;
@@ -41,4 +41,4 @@ function Leaderboard(props) {
   );
 }
 
-export default Leaderboard;
+export default LeaderBoard;
