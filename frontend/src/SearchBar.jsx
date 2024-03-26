@@ -1,57 +1,68 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
+import axios from 'axios';
 
 function SearchBar() {
   const [postData, setPostData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  // Stato per controllare se mostrare o meno il contenuto HTML
   const [showContent, setShowContent] = useState(false);
-  const varUrl = "5";
+  const [showError, setShowError] = useState(false);
+  const errorTimeoutRef = useRef(null);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    setShowContent(true);
     e.preventDefault();
-    console.log('ho inviato il form con la parola: ', searchTerm);
-
-    // Reset del termine di ricerca al valore iniziale
-    setSearchTerm('');
-  }
-
-  useEffect(() => {
-
-    fetch(`https://jsonplaceholder.typicode.com/posts/${varUrl}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setPostData(data))
-      .catch(error => {
-        console.error('Fetch error:', error);
-      });
-  }, []);
-
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+    if (searchTerm) {
+      axios.get(`https://jsonplaceholder.typicode.com/posts/${searchTerm}`)
+        .then(response => {
+          setPostData(response.data);
+          setShowContent(true);
+          setShowError(false); // Assicurati di nascondere gli errori precedenti
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setShowError(true);
+          setShowContent(false); // Nascondi il contenuto se c'è un errore
+          // Imposta il timer di errore e memorizza il riferimento
+          errorTimeoutRef.current = setTimeout(() => {
+            setShowError(false);
+          }, 5000);
+        });
+    } else {
+      setShowContent(false);
+      setShowError(false);
+    }
+  };
 
   return (
     <>
       <div className="search-bar-container">
-        <form id="searchForm" className="search-form" onSubmit={handleSubmit} onChange={handleInputChange}>
+        <form id="searchForm" className="search-form" onSubmit={handleSubmit}>
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Cerca..."
           />
           <button type="submit">Cerca</button>
           {showContent && (
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">{postData.title}</h5>
-                <p className="card-text">{postData.body}</p>
+                <h5 className="card-title">{postData?.title}</h5>
+                <p className="card-text">{postData?.body}</p>
+              </div>
+            </div>
+          )}
+          {showError && (
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Mi dispiace</h5>
+                <p className="card-text">il giocatore o il club che hai cercato non è nel nostro database</p>
               </div>
             </div>
           )}
