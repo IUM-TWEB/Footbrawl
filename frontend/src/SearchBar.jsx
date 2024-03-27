@@ -14,6 +14,7 @@ function SearchBar() {
   const [preferenza, setPreferenza] = useState('');
   const [showFilter, setShowFilter] = useState(false);
 
+
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -24,9 +25,7 @@ function SearchBar() {
 
   const   handleClickFilterSearch = (e) => {
     e.preventDefault();
-    console.log("clicckato il bottone cerca con filtri");
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,11 +33,12 @@ function SearchBar() {
       clearTimeout(errorTimeoutRef.current);
     }
     if (searchTerm) {
-      axios.get(`http://localhost:8080/player?id=4042`)
+      axios.get(`http://localhost:3000/${searchTerm}`)
         .then(response => {
           setPostData(response.data);
           setShowContent(true);
           setShowError(false);
+          console.log(response);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -132,8 +132,8 @@ function SearchBar() {
           {showContent && (
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">{postData?.title}</h5>
-                <p className="card-text">{postData?.body}</p>
+                <h5 className="card-title">{postData?.name}</h5>
+                <p className="card-text">{postData?.date_of_birth}</p>
               </div>
             </div>
           )}

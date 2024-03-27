@@ -7,14 +7,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/test', function(req, res, next) {
-  res.send(giocatori[2]);
-});
-
-router.get('/test2', async (req, res) => {
+router.get('/:searchTerm', async (req, res) => {
   try {
-
-    const response = await axios.get('http://localhost:8080/player?id=4042');
+    const word= req.params.searchTerm;
+    const response = await axios.get(`http://localhost:8080/player?id=${word}`);
     const dati = response.data;
     res.send(dati);
   } catch (error) {
@@ -22,5 +18,6 @@ router.get('/test2', async (req, res) => {
     res.status(500).send('Errore nella richiesta al server Spring Boot');
   }
 });
+
 
 module.exports = router;
