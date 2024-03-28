@@ -1,70 +1,30 @@
 import React from 'react';
-import {useState, useEffect,} from "react";
-import LeaderBoard from './LeaderBoard.jsx';
-import Menu from "./Menu.jsx";
-import News from "./News.jsx";
-import axios from "axios";
-import SearchBar from "./SearchBar.jsx";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Menu from "./simple_components/Menu.jsx";
+import PaginaPartite from "./page/PaginaPartite.jsx";
+import PaginaCampionati from "./page/PaginaCampionati.jsx";
+import PaginaClub from "./page/PaginaClub.jsx";
+import PaginaGiocatori from "./page/PaginaGiocatori.jsx";
+import PaginaMercato from "./page/PaginaMercato.jsx";
+import PaginaNews from "./page/PaginaNews.jsx";
+import Home from "./page/Home.jsx";
 
 function App() {
   return (
-    <>
-      <Menu></Menu>
-      <SearchBar></SearchBar>
-
-      <div className="padding"></div>
-      <div className="container-fluid padding">
-        <div className="row justify-content-md-center">
-          <div className="col-md-3">
-            <LeaderBoard class="leaderboard"
-                         competitions="serie A"
-                         first="Milan"
-                         second="juventus"
-                         third="Inter"
-                         firstValue="11"
-                         secondValue="16"
-                         thirdValue="21"
-            ></LeaderBoard>
-            <LeaderBoard class="leaderboard"
-                         competitions="serie B"
-                         first="Milan"
-                         second="juventus"
-                         third="Inter"
-                         firstValue="11"
-                         secondValue="16"
-                         thirdValue="21"
-            ></LeaderBoard>
-            <LeaderBoard class="leaderboard"
-                         competitions="serie C"
-                         first="Milan"
-                         second="juventus"
-                         third="Inter"
-                         firstValue="11"
-                         secondValue="16"
-                         thirdValue="21"
-            ></LeaderBoard>
-          </div>
-          <div className="col-md-6">
-            <News></News>
-            <News></News>
-            <News></News>
-          </div>
-          <div className="col-md-3">
-            <LeaderBoard class="leaderboard"
-                         competitions="serie D"
-                         first="Milan"
-                         second="juventus"
-                         third="Inter"
-                         firstValue="11"
-                         secondValue="16"
-                         thirdValue="21"
-            ></LeaderBoard>
-          </div>
-        </div>
-      </div>
-    </>
+    <Router>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<Home />
+        } exact />
+        <Route path="/news" element={<PaginaNews />} />
+        <Route path="/partite" element={<PaginaPartite />} />
+        <Route path="/campionati" element={<PaginaCampionati />} />
+        <Route path="/club" element={<PaginaClub />} />
+        <Route path="/giocatori" element={<PaginaGiocatori />} />
+        <Route path="/mercato" element={<PaginaMercato />} />
+      </Routes>
+    </Router>
   );
 }
 
 export default App;
-
