@@ -31,7 +31,7 @@ public class ClubController {
   @GetMapping("/clubByName")
   public ResponseEntity<List<ClubDTO>> getClubByName(@RequestParam String name) { //@RequestBody
     List<ClubDTO> clubDTOList = clubService.getClubByName(name);
-    if (clubDTOList == null)
+    if (clubDTOList == null || clubDTOList.isEmpty())
       return ResponseEntity.notFound().build();
     return ResponseEntity.ok(clubDTOList);
   }

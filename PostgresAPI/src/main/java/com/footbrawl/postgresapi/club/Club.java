@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table
+@Table(name = "clubs")
 public class Club {
 
   @Id

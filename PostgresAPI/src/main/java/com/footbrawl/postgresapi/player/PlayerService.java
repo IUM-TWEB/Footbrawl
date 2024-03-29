@@ -26,32 +26,41 @@ public class PlayerService {
     Player player = playerRepository.findPlayerByIdCustomQuery(id).orElse(null);
     if (player == null)
       return null;
-
     return convertToDTO(player);
-    //Optional<Player> player = playerRepository.findPlayerByIdCustomQuery(id);
-    //return player.orElse(null);
   }
 
-  public List<PlayerDTO> getPlayerByName(String firstName, String lastName) {
-    List<Player> playerList = playerRepository.findPlayerByNameCustomQuery(firstName, lastName).orElse(null);
-    if (playerList == null)
+  public List<PlayerDTO> getPlayerByName(String name) {
+    List<Player> playerList = playerRepository.findPlayerByNameCustomQuery(name).orElse(null);
+    if (playerList == null || playerList.isEmpty())
       return null;
 
     List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
-    for (int i = 0; i < playerList.size(); i++)
-      playerDTOList.add(i, convertToDTO(playerList.get(i)));
+    for (Player player : playerList)
+      playerDTOList.add(convertToDTO(player));
+
+    return playerDTOList;
+  }
+
+  public List<PlayerDTO> getPlayerByName2(String firstName, String lastName) {
+    List<Player> playerList = playerRepository.findPlayerByName2CustomQuery(firstName, lastName).orElse(null);
+    if (playerList == null || playerList.isEmpty())
+      return null;
+
+    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
+    for (Player player : playerList)
+      playerDTOList.add(convertToDTO(player));
 
     return playerDTOList;
   }
 
   public List<PlayerDTO> getPlayersByClubId(int id) {
     List<Player> playerList = playerRepository.findPlayersByCurrent_club_id(id).orElse(null);
-    if (playerList == null)
+    if (playerList == null || playerList.isEmpty())
       return null;
 
     List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
-    for (int i = 0; i < playerList.size(); i++)
-      playerDTOList.add(i, convertToDTO(playerList.get(i)));
+    for (Player player : playerList)
+      playerDTOList.add(convertToDTO(player));
 
     return playerDTOList;
   }

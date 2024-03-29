@@ -31,12 +31,12 @@ public class ClubService {
 
   public List<ClubDTO> getClubByName(String name) {
     List<Club> clubList = clubRepository.findClubByNameCustomQuery(name).orElse(null);
-    if (clubList == null)
+    if (clubList == null || clubList.isEmpty())
       return null;
 
     List<ClubDTO> clubDTOList = new ArrayList<>(clubList.size());
-    for (int i = 0; i < clubList.size(); i++)
-      clubDTOList.add(i, convertToDTO(clubList.get(i)));
+    for (Club club : clubList)
+      clubDTOList.add(convertToDTO(club));
 
     return clubDTOList;
   }
