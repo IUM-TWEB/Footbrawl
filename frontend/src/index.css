@@ -71,3 +71,14 @@
     margin: 5px; /* Aggiunge un po' di spazio intorno all'input e al bottone */
 }
 
+.btn-chocolate {
+    background-color: chocolate;
+    border-color: chocolate;
+    color: white;
+}
+
+.btn-chocolate:hover {
+    background-color: #8b4513; /* un po' più scuro di chocolate */
+    border-color: #8b4513;
+    color: white;
+}

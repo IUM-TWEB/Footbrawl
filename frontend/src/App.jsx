@@ -8,6 +8,7 @@ import PaginaGiocatori from "./page/PaginaGiocatori.jsx";
 import PaginaMercato from "./page/PaginaMercato.jsx";
 import PaginaNews from "./page/PaginaNews.jsx";
 import Home from "./page/Home.jsx";
+import Login from "./page/Login.jsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/club" element={<PaginaClub />} />
         <Route path="/giocatori" element={<PaginaGiocatori />} />
         <Route path="/mercato" element={<PaginaMercato />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

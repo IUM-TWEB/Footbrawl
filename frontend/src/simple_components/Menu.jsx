@@ -11,6 +11,8 @@ const Menu = () => {
       <Link to="/club" className="menu-item">Club</Link>
       <Link to="/giocatori" className="menu-item">Giocatori</Link>
       <Link to="/mercato" className="menu-item">Mercato</Link>
+      <Link to="/login" className="menu-item">Login</Link>
+
     </nav>
   );
 }
