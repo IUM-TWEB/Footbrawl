@@ -22,7 +22,7 @@ router.get('/player/:searchTerm', async (req, res) => {
 router.get('/competitions/:id_competition', async (req, res) => {
   try {
    const id= req.params.id_competition;
-    const response = await axios.get(`http://localhost:8080/competition?id=IT1`);
+    const response = await axios.get(`http://localhost:8080/competition?id=${id}`);
     const dati = response.data;
     res.send(dati);
   } catch (error) {

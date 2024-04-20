@@ -82,3 +82,33 @@
     border-color: #8b4513;
     color: white;
 }
+
+.row{
+    width: 100%;
+    height: 100%;
+}
+
+
+.square{
+    background-color: black; /* Colore di sfondo */
+    border-radius: 10px; /* Bordi arrotondati */
+    padding: 20px; /* Padding interno */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    width: 200px; /* Larghezza fissa di 300px */
+    height: 200px; /* Altezza fissa di 300px */
+
+}
+.quadrati-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.quadrato-padding {
+    padding: 10px;
+}
+
+
