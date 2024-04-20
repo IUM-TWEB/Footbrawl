@@ -33,7 +33,8 @@ function SearchBar() {
       clearTimeout(errorTimeoutRef.current);
     }
     if (searchTerm) {
-      axios.get(`http://localhost:3000/${searchTerm}`)
+      axios.get(`http://localhost:3000/player/${searchTerm}`)
+
         .then(response => {
           setPostData(response.data);
           setShowContent(true);
