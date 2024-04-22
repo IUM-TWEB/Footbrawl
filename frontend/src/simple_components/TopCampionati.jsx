@@ -1,4 +1,3 @@
-// TopCampionati.js (componente figlio)
 import React from 'react';
 
 const TopCampionati = ({ onSelectCampionato }) => {

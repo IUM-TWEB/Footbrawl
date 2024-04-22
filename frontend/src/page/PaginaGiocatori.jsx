@@ -23,13 +23,10 @@ export default function PaginaGiocatori() {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-sm-3">
-                    <PlayerPres name="federico" age="19 gio 1991" position="attaccante" team="juve"/>
+                    <PlayerPres name="Davide" age="19 gio 1991" position="attaccante" team="Milan"/>
                 </div>
 
                 <div className="col-sm-6">
-                    <div className="col chart-container">
-                        <Line options={options} data={data}/>
-                    </div>
                     <div className="col chart-container">
                         <Line options={options} data={data}/>
                     </div>
