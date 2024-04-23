@@ -21,7 +21,7 @@ function App() {
         <Route path="/partite" element={<PaginaPartite />} />
         <Route path="/campionati" element={<PaginaCampionati />} />
         <Route path="/club" element={<PaginaClub />} />
-        <Route path="/giocatori" element={<PaginaGiocatori />} />
+        <Route path="/giocatori/:player_id" element={<PaginaGiocatori />} />
         <Route path="/mercato" element={<PaginaMercato />} />
         <Route path="/login" element={<Login />} />
       </Routes>

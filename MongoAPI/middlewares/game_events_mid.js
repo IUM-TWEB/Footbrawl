@@ -31,4 +31,14 @@ const getByClub = (req,res) => {
         })
 }
 
-module.exports = {getById, getByPlayer, getByClub}
+const getDatesByPlayerIn = (req,res) => {
+    queries.getGoalDatesByPlayerIn(req.params.player_in)
+        .then( resp => {
+            res.send(resp)
+        })
+        .catch( e => {
+            res.send(e.name)
+        })
+}
+
+module.exports = {getById, getByPlayer, getByClub, getDatesByPlayerIn}

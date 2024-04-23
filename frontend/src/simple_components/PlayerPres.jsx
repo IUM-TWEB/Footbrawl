@@ -1,13 +1,13 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import CalabriaLarge from '../img/Calabria-Large.png';
+import Test from '../img/test.jpg';
 
 function PlayerPres({name, age, team, position}) {
     return (
       <div className="card player-card">
           <div className="card-body">
-              <img src={CalabriaLarge} className="center-img" alt="Giocatore"/>
+              <img src={Test} className="center-img" alt="Giocatore"/>
               <h2 className="center-text card-title">{name}</h2>
 
               <p className="center-text card-text card-subtitle"> Data: </p>

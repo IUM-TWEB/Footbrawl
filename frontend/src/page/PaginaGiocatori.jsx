@@ -1,29 +1,42 @@
 import React from 'react';
+import {useParams} from 'react-router-dom'; // Import useParams hook
+
 import PlayerPres from "../simple_components/PlayerPres.jsx";
 import {Line} from 'react-chartjs-2';
 
 import {
     Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend,
 } from 'chart.js';
+import axios from "axios";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
+const response = await axios.get(`http://localhost:3000/player/goals_date/56416`);
+console.log(response.data)
 export const options = {};
 
-const labels = [2011, 2012, 2013, 2014, 2015, 2016, 2017,2018,2019];
+const labels = response.data.dates
 
 export const data = {
-    labels, datasets: [{
-        label: 'Goals', data: [23, 33, 103, 99, 124, 56, 44,22,44], borderColor: 'rgb(210,105,30)', backgroundColor: 'rgba(210,105,30, 0.5)',
-    },],
+    labels,
+    datasets: [{
+        label: 'Goals',
+        data: response.data.goal_counts,
+        borderColor: 'rgb(210,105,30)',
+        backgroundColor: 'rgba(210,105,30, 0.5)',
+    }],
 };
 
 export default function PaginaGiocatori() {
+    // Use useParams hook to access parameters from URL
+    const {player_id} = useParams();
+
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-sm-3">
-                    <PlayerPres name="Davide" age="19 gio 1991" position="attaccante" team="Milan"/>
+                    {/* Use parameters from URL */}
+                    <PlayerPres name={player_id} age={"330"} position={"playerPosition"} team={"plarTeam"}/>
                 </div>
 
                 <div className="col-sm-6">
@@ -40,5 +53,3 @@ export default function PaginaGiocatori() {
         </div>
     );
 }
-
-
