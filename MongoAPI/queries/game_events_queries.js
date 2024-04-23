@@ -12,7 +12,7 @@ const getByClub = (club) => {
 }
 
 const getGoalDatesByPlayerIn = (player_in) => {
-    return queries.find({player_in_id: player_in}, {
+    return queries.find({player_id: player_in, type:"Goals"}, {
         _id: 0,
         game_id: 0,
         minute: 0,
@@ -24,4 +24,18 @@ const getGoalDatesByPlayerIn = (player_in) => {
         player_assist_id: 0,
     }, null)
 }
-module.exports = {getByPlayer, getByClub, getById, getGoalDatesByPlayerIn}
+
+const getAssistDatesByPlayerIn = (player_in) => {
+    return queries.find({player_assist_id: player_in, type:"Goals"}, {
+        _id: 0,
+        game_id: 0,
+        minute: 0,
+        type: 0,
+        club_id: 0,
+        player_id: 0,
+        description: 0,
+        player_in_id: 0,
+        player_assist_id: 0,
+    }, null)
+}
+module.exports = {getByPlayer, getByClub, getById, getGoalDatesByPlayerIn, getAssistDatesByPlayerIn}

@@ -1,32 +1,48 @@
 import React from 'react';
 import {useParams} from 'react-router-dom'; // Import useParams hook
-
 import PlayerPres from "../simple_components/PlayerPres.jsx";
 import {Line} from 'react-chartjs-2';
 
 import {
-    Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend,
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    Title,
+    Tooltip,
 } from 'chart.js';
 import axios from "axios";
+export const options = {};
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const response = await axios.get(`http://localhost:3000/player/goals_date/56416`);
-console.log(response.data)
-export const options = {};
+async function getChartData(player_id) {
+    const goals_stats = await axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
+    const assist_stats = await axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
 
-const labels = response.data.dates
+    const labels = goals_stats.data.dates
 
-export const data = {
-    labels,
-    datasets: [{
-        label: 'Goals',
-        data: response.data.goal_counts,
-        borderColor: 'rgb(210,105,30)',
-        backgroundColor: 'rgba(210,105,30, 0.5)',
-    }],
-};
-
+    return {
+        labels,
+        datasets: [
+            {
+                label: 'Goals',
+                data: goals_stats.data.goal_counts,
+                borderColor: 'rgb(210,105,30)',
+                backgroundColor: 'rgba(210,105,30, 1)',
+            },
+            {
+                label: 'Assists',
+                data: assist_stats.data.goal_counts,
+                borderColor: 'rgba(210,105,30, 0.5)',
+                backgroundColor: 'rgba(210,105,30, 0.5)',
+            }],
+    };
+}
+const data = await getChartData(36500)
 export default function PaginaGiocatori() {
     // Use useParams hook to access parameters from URL
     const {player_id} = useParams();

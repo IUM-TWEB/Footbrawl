@@ -7,7 +7,9 @@ router.get('/:id', mid.getById)
 
 router.get('/player/:player_id', mid.getByPlayer)
 
-router.get('/player_in/:player_in', mid.getDatesByPlayerIn)
+router.get('/player_goals_date/:player_id', mid.getGoalDatesById)
+
+router.get('/player_assist_date/:player_id', mid.getAssistDatesByPlayerId)
 
 router.get('/club/:club_id', mid.getByClub)
 
