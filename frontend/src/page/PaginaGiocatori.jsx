@@ -14,35 +14,63 @@ import {
     Tooltip,
 } from 'chart.js';
 import axios from "axios";
+
 export const options = {};
 
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-async function getChartData(player_id) {
-    const goals_stats = await axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
-    const assist_stats = await axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
+function getChartData(player_id) {
+    let goals_stats = 0
+    let assist_stats = 0
+    axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
+        .then(res => {
+            goals_stats = res
+        })
+        .catch(err => {
+            goals_stats = null
+        })
+    axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
+        .then(res => {
+            assist_stats = res
+        })
+        .catch(err => {
+            assist_stats = null
+        })
 
-    const labels = goals_stats.data.dates
+    if (goals_stats  && assist_stats) {
+        console.log("siamo qui")
+        const labels = goals_stats.data.dates
 
-    return {
-        labels,
-        datasets: [
-            {
-                label: 'Goals',
-                data: goals_stats.data.goal_counts,
-                borderColor: 'rgb(210,105,30)',
-                backgroundColor: 'rgba(210,105,30, 1)',
-            },
-            {
-                label: 'Assists',
-                data: assist_stats.data.goal_counts,
-                borderColor: 'rgba(210,105,30, 0.5)',
-                backgroundColor: 'rgba(210,105,30, 0.5)',
-            }],
-    };
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Goals',
+                    data: goals_stats.data.goal_counts,
+                    borderColor: 'rgb(210,105,30)',
+                    backgroundColor: 'rgba(210,105,30, 1)',
+                },
+                {
+                    label: 'Assists',
+                    data: assist_stats.data.goal_counts,
+                    borderColor: 'rgba(210,105,30, 0.5)',
+                    backgroundColor: 'rgba(210,105,30, 0.5)',
+                }],
+        };
+    } else return null
+
 }
-const data = await getChartData(36500)
+
+const data = getChartData(36500)
+function show_graph(data){
+    if(data){
+        return  <Line options={options} data={data}/>
+    }else{
+        return <h1>Somethings gone wrong</h1>
+    }
+}
+
 export default function PaginaGiocatori() {
     // Use useParams hook to access parameters from URL
     const {player_id} = useParams();
@@ -57,7 +85,7 @@ export default function PaginaGiocatori() {
 
                 <div className="col-sm-6">
                     <div className="col chart-container">
-                        <Line options={options} data={data}/>
+                        {show_graph(data)}
                     </div>
                 </div>
 
