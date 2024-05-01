@@ -3,25 +3,64 @@ var router = express.Router();
 var axios = require('axios'); // Assicurati di aver installato axios
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function (req, res, next) {
+  res.render('index', {title: 'Express'});
 });
 
-router.get('/player/:searchTerm', async (req, res) => {
+router.get('/home/:searchTerm', async (req, res) => {
+  const searchTerm = req.params.searchTerm;
+
+  const urlPlayerById = `http://localhost:8080/player?id=${searchTerm}`;
+  const urlPlayerByName = `http://localhost:8080/playerByName?name=${searchTerm}`;
+  const urlCompetition = `http://localhost:8080/competition?id=${searchTerm}`;
+  const urlClubByName = `http://localhost:8080/clubByName?name=${searchTerm}`;
+  const urlCompetitionByName = `http://localhost:8080/competitionByName?name=${searchTerm}`; // Nuova URL per la ricerca della competizione per nome
+
   try {
-    const word= req.params.searchTerm;
-    const response = await axios.get(`http://localhost:8080/player?id=${word}`);
-    const dati = response.data;
-    res.send(dati);
+    const [responseById, responseByName, responseCompetition, responseClubByName, responseCompetitionByName] = await Promise.all([
+      axios.get(urlPlayerById).catch(err => ({error: err.response})),
+      axios.get(urlPlayerByName).catch(err => ({error: err.response})),
+      axios.get(urlCompetition).catch(err => ({error: err.response})),
+      axios.get(urlClubByName).catch(err => ({error: err.response})),
+      axios.get(urlCompetitionByName).catch(err => ({error: err.response})) // Nuova chiamata aggiunta
+    ]);
+
+    const results = [];
+    if (!responseById.error) {
+      const dataById = Array.isArray(responseById.data) ? responseById.data : [responseById.data];
+      results.push(...dataById);
+    }
+    if (!responseByName.error) {
+      const dataByName = Array.isArray(responseByName.data) ? responseByName.data : [responseByName.data];
+      results.push(...dataByName);
+    }
+    if (!responseCompetition.error) {
+      const dataCompetition = Array.isArray(responseCompetition.data) ? responseCompetition.data : [responseCompetition.data];
+      results.push(...dataCompetition);
+    }
+    if (!responseClubByName.error) {
+      const dataClubByName = Array.isArray(responseClubByName.data) ? responseClubByName.data : [responseClubByName.data];
+      results.push(...dataClubByName);
+    }
+    if (!responseCompetitionByName.error) {
+      const dataCompetitionByName = Array.isArray(responseCompetitionByName.data) ? responseCompetitionByName.data : [responseCompetitionByName.data];
+      results.push(...dataCompetitionByName);
+    }
+
+    if (results.length > 0) {
+      res.send(results);
+    } else {
+      res.status(404).send('Nessun dato disponibile');
+    }
   } catch (error) {
-    console.error('Errore nella richiesta al server Spring Boot:', error);
-    res.status(500).send('Errore nella richiesta al server Spring Boot');
+    console.error('Errore imprevisto:', error);
+    res.status(500).send('Errore imprevisto nelle chiamate API');
   }
 });
 
 router.get('/competitions/:id_competition', async (req, res) => {
   try {
-   const id= req.params.id_competition;
+    const id = req.params.id_competition;
     const response = await axios.get(`http://localhost:8080/competition?id=${id}`);
     const dati = response.data;
     res.send(dati);
