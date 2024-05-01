@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom'; // Import useParams hook
 import PlayerPres from "../simple_components/PlayerPres.jsx";
 import {Line} from 'react-chartjs-2';
@@ -20,25 +20,11 @@ export const options = {};
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function getChartData(player_id) {
-    let goals_stats = 0
-    let assist_stats = 0
-    axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
-        .then(res => {
-            goals_stats = res
-        })
-        .catch(err => {
-            goals_stats = null
-        })
-    axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
-        .then(res => {
-            assist_stats = res
-        })
-        .catch(err => {
-            assist_stats = null
-        })
+async function getChartData(player_id) {
+    let goals_stats = await axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
+    let assist_stats = await axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
 
-    if (goals_stats  && assist_stats) {
+    if (goals_stats  && assist_stats && goals_stats.data.dates.length>=5) {
         console.log("siamo qui")
         const labels = goals_stats.data.dates
 
@@ -58,11 +44,12 @@ function getChartData(player_id) {
                     backgroundColor: 'rgba(210,105,30, 0.5)',
                 }],
         };
-    } else return null
+    } else {
+        console.log("ritorna null")
+        return null}
 
 }
 
-const data = getChartData(36500)
 function show_graph(data){
     if(data){
         return  <Line options={options} data={data}/>
@@ -72,27 +59,38 @@ function show_graph(data){
 }
 
 export default function PaginaGiocatori() {
-    // Use useParams hook to access parameters from URL
-    const {player_id} = useParams();
+    const { player_id } = useParams();
+    const [chartData, setChartData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getChartData(player_id);
+                setChartData(data);
+            } catch (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        };
+
+        fetchData();
+    }, [player_id]);
 
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-sm-3">
-                    {/* Use parameters from URL */}
-                    <PlayerPres name={player_id} age={"330"} position={"playerPosition"} team={"plarTeam"}/>
+                    <PlayerPres name={player_id} age={"330"} position={"playerPosition"} team={"plarTeam"} />
                 </div>
 
                 <div className="col-sm-6">
                     <div className="col chart-container">
-                        {show_graph(data)}
+                        {show_graph(chartData)}
                     </div>
                 </div>
 
                 <div className="col-sm-3 ">
-                    <PlayerPres name="federico" age="19 gio 1991" position="attaccante" team="juve"/>
+                    <PlayerPres name="federico" age="19 gio 1991" position="attaccante" team="juve" />
                 </div>
-
             </div>
         </div>
     );
