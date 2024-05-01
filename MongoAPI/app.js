@@ -16,7 +16,6 @@ db.on('error', (e) => {
     console.log(e)
 })
 
-// Initialize the express server
 const server = express()
 server.use(bodyparser.json())
 server.use(
