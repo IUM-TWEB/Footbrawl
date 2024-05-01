@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PlayerValuationRepository extends JpaRepository<PlayerValuation, Long> {
 
-  @Query(value = "SELECT * FROM player_valuations WHERE player_id = :player_id", nativeQuery = true)
-  Optional<List<PlayerValuation>> findPlayerValuationByIdCustomQuery(int player_id);
+  @Query(value = "SELECT * FROM player_valuations WHERE player_id = :id", nativeQuery = true)
+  Optional<List<PlayerValuation>> findPlayerValuationByIdCustomQuery(int id);
 
 }

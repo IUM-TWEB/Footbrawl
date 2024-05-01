@@ -8,7 +8,7 @@ import jakarta.persistence.Transient;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "players")
 public class Player {
 
   @Id
