@@ -88,12 +88,16 @@ public class PlayerValuationService {
     if (value == null) {
       return -1;
     }
-    // Rimuovi il simbolo dell'euro e il separatore delle migliaia
-    String cleanMarketValue = value.replaceAll("[€.]", "");
+    String cleanMarketValue;
+    if(value.contains("€")) {
+      // Rimuovi il simbolo dell'euro e il separatore delle migliaia
+      cleanMarketValue = value.replaceAll("[€.]", "");
 
-    // Sostituisci il separatore decimale con un punto
-    cleanMarketValue = cleanMarketValue.replace(',', '.');
-
+      // Sostituisci il separatore decimale con un punto
+      cleanMarketValue = cleanMarketValue.replace(',', '.');
+    }else{
+      cleanMarketValue = value.replaceAll("[$,]", "");
+    }
     // Converte la stringa risultante in un numero intero
     double doubleValue = Double.parseDouble(cleanMarketValue);
     return (int) doubleValue;
