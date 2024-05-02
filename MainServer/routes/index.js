@@ -14,7 +14,7 @@ router.get('/home/:searchTerm', async (req, res) => {
   const urlPlayerByName = `http://localhost:8080/playerByName?name=${searchTerm}`;
   const urlCompetition = `http://localhost:8080/competition?id=${searchTerm}`;
   const urlClubByName = `http://localhost:8080/clubByName?name=${searchTerm}`;
-  const urlCompetitionByName = `http://localhost:8080/competitionByName?name=${searchTerm}`; // Nuova URL per la ricerca della competizione per nome
+  const urlCompetitionByName = `http://localhost:8080/competitionByName?name=${searchTerm}`;
 
   try {
     const [responseById, responseByName, responseCompetition, responseClubByName, responseCompetitionByName] = await Promise.all([
@@ -22,33 +22,43 @@ router.get('/home/:searchTerm', async (req, res) => {
       axios.get(urlPlayerByName).catch(err => ({error: err.response})),
       axios.get(urlCompetition).catch(err => ({error: err.response})),
       axios.get(urlClubByName).catch(err => ({error: err.response})),
-      axios.get(urlCompetitionByName).catch(err => ({error: err.response})) // Nuova chiamata aggiunta
+      axios.get(urlCompetitionByName).catch(err => ({error: err.response}))
     ]);
 
-    const results = [];
+    // Separate arrays for players, clubs, competitions
+    const players = [];
+    const clubs = [];
+    const competitions = [];
+
+    // Populate players array
     if (!responseById.error) {
       const dataById = Array.isArray(responseById.data) ? responseById.data : [responseById.data];
-      results.push(...dataById);
+      players.push(...dataById);
     }
     if (!responseByName.error) {
       const dataByName = Array.isArray(responseByName.data) ? responseByName.data : [responseByName.data];
-      results.push(...dataByName);
+      players.push(...dataByName);
     }
-    if (!responseCompetition.error) {
-      const dataCompetition = Array.isArray(responseCompetition.data) ? responseCompetition.data : [responseCompetition.data];
-      results.push(...dataCompetition);
-    }
+
+    // Populate clubs array
     if (!responseClubByName.error) {
       const dataClubByName = Array.isArray(responseClubByName.data) ? responseClubByName.data : [responseClubByName.data];
-      results.push(...dataClubByName);
+      clubs.push(...dataClubByName);
+    }
+
+    // Populate competitions array
+    if (!responseCompetition.error) {
+      const dataCompetition = Array.isArray(responseCompetition.data) ? responseCompetition.data : [responseCompetition.data];
+      competitions.push(...dataCompetition);
     }
     if (!responseCompetitionByName.error) {
       const dataCompetitionByName = Array.isArray(responseCompetitionByName.data) ? responseCompetitionByName.data : [responseCompetitionByName.data];
-      results.push(...dataCompetitionByName);
+      competitions.push(...dataCompetitionByName);
     }
 
-    if (results.length > 0) {
-      res.send(results);
+    // Check if there is any data to send
+    if (players.length > 0 || clubs.length > 0 || competitions.length > 0) {
+      res.send([players, clubs, competitions]); // Send an array of three arrays
     } else {
       res.status(404).send('Nessun dato disponibile');
     }
@@ -57,6 +67,7 @@ router.get('/home/:searchTerm', async (req, res) => {
     res.status(500).send('Errore imprevisto nelle chiamate API');
   }
 });
+
 
 router.get('/competitions/:id_competition', async (req, res) => {
   try {

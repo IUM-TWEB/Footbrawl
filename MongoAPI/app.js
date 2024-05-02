@@ -7,7 +7,7 @@ const games = require('./routes/games_routes')
 const club_games = require('./routes/clubgames_routes')
 const lineups = require('./routes/game_lineups_routes')
 const events = require('./routes/game_events_routes')
-mongoose.connect('mongodb://localhost:2717/footbrawl').then(()=>console.log("Connected to mongoDB/footbrawl"))
+mongoose.connect('mongodb://localhost:27017/footbrawl').then(()=>console.log("Connected to mongoDB/footbrawl"))
 const db = mongoose.connection
 db.once('connection', () => {
     console.log("eccoci")
