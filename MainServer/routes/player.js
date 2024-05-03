@@ -1,24 +1,84 @@
 let express = require('express');
 let router = express.Router();
 let axios = require('axios');
-function extract(raw){
+
+function extract_values(raw) {
     const res_data = {
-        'dates' : [],
-        'goal_counts' : []
+        'dates': [],
+        'goal_counts': []
+    };
+
+    // Sort the data based on the year
+    raw.sort((a, b) => {
+        return parseInt(a.date.substring(0, 4)) - parseInt(b.date.substring(0, 4));
+    });
+
+    // Populate the res_data object
+    let currentYear = null;
+    let valuesForYear = [];
+
+    for (let i of raw) {
+        let int_date = parseInt(i.date.substring(0, 4));
+
+        // Check if the year has changed
+        if (currentYear !== int_date) {
+            // Calculate the median for the previous year, if there are values
+            if (valuesForYear.length > 0) {
+                const median = calculateMedian(valuesForYear);
+                res_data.goal_counts.push(median);
+            }
+
+            // Update currentYear and reset valuesForYear
+            currentYear = int_date;
+            valuesForYear = [];
+            res_data.dates.push(currentYear);
+        }
+
+        // Accumulate values for the current year
+        valuesForYear.push(i.marketValue);
     }
 
-    for( let i of raw){
-        let int_date = parseInt((i.date).substring(0,4))
-        if(!res_data.dates.includes(int_date)){
+    // Calculate the median for the last year
+    if (valuesForYear.length > 0) {
+        const median = calculateMedian(valuesForYear);
+        res_data.goal_counts.push(median);
+    }
+
+    console.log(res_data);
+    return res_data;
+}
+
+function calculateMedian(values) {
+    const sortedValues = values.sort((a, b) => a - b);
+    const middle = Math.floor(sortedValues.length / 2);
+
+    if (sortedValues.length % 2 === 0) {
+        return (sortedValues[middle - 1] + sortedValues[middle]) / 2;
+    } else {
+        return sortedValues[middle];
+    }
+}
+
+function extract(raw) {
+    const res_data = {
+        'dates': [],
+        'goal_counts': []
+    }
+
+    for (let i of raw) {
+        let int_date = parseInt((i.date).substring(0, 4))
+        if (!res_data.dates.includes(int_date)) {
             res_data.dates.push(int_date)
             res_data.goal_counts.push(1)
         }
         const index_date = res_data.dates.indexOf(int_date)
-        res_data.goal_counts[index_date] ++
+        res_data.goal_counts[index_date]++
     }
     return res_data
 }
+
 router.get('/goals_date/:player_id', async (req, res) => {
+    console.log("n")
     try {
         const response = await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`);
         const res_data = extract(response.data);
@@ -44,6 +104,37 @@ router.get('/assist_date/:player_id', async (req, res) => {
 
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        console.log(req.params.id)
+        const response = await axios.get(`http://localhost:8080/player?id=${req.params.id}`);
+        res.send(response);
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Il main server non risponde');
+    }
+})
 
+router.get('/market_value/:id', async (req, res) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/playerValuation?id=${req.params.id}`);
+        res.send(extract_values(response.data))
+    } catch (error) {
+        console.log(err)
+        res.status(500).send('Il main server non risponde');
+    }
+})
+
+router.get('/player_clubs/:id', async (req, res) => {
+    const response = await axios.get(`http://localhost:8080/playerValuation?id=${req.params.id}`);
+    const data = {
+        'clubs':[]
+    }
+    for(let i of response.data){
+        if(!data.clubs.includes(i.currentClubName))
+            data.clubs.push(i.currentClubName);
+    }
+    res.send(data)
+})
 
 module.exports = router;
