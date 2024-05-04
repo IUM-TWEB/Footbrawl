@@ -9,6 +9,7 @@ import PaginaMercato from "./page/PaginaMercato.jsx";
 import PaginaNews from "./page/PaginaNews.jsx";
 import Home from "./page/Home.jsx";
 import Login from "./page/Login.jsx";
+import Chat from "./page/Chat.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/giocatori/:playerId" element={<PaginaGiocatori />} />
         <Route path="/mercato" element={<PaginaMercato />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </Router>
   );

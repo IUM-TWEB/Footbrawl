@@ -12,6 +12,7 @@ const Menu = () => {
       <Link to="/giocatori" className="menu-item">Giocatori</Link>
       <Link to="/mercato" className="menu-item">Mercato</Link>
       <Link to="/login" className="menu-item">Login</Link>
+      <Link to="/chat" className="menu-item">Chat</Link>
 
     </nav>
   );
