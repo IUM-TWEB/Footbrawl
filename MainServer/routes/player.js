@@ -108,7 +108,7 @@ router.get('/:id', async (req, res) => {
     try {
         console.log(req.params.id)
         const response = await axios.get(`http://localhost:8080/player?id=${req.params.id}`);
-        res.send(response);
+        res.send(response.data);
     } catch (err) {
         console.log(err)
         res.status(500).send('Il main server non risponde');

@@ -20,8 +20,8 @@ function App() {
         <Route path="/news" element={<PaginaNews />} />
         <Route path="/partite" element={<PaginaPartite />} />
         <Route path="/campionati" element={<PaginaCampionati />} />
-        <Route path="/club" element={<PaginaClub />} />
-        <Route path="/giocatori/:player_id" element={<PaginaGiocatori />} />
+        <Route path="/club/:clubId" element={<PaginaClub />} />
+        <Route path="/giocatori/:playerId" element={<PaginaGiocatori />} />
         <Route path="/mercato" element={<PaginaMercato />} />
         <Route path="/login" element={<Login />} />
       </Routes>

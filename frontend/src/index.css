@@ -139,12 +139,11 @@
 }
 
 /* Player card */
-.player-card {
+.results-card {
     border: 1px solid #ccc;
     border-radius: 10px;
     height: 90%;
-    padding: 3%;
-    margin: 6% 3% 3%;
+
 }
 
 .card-subtitle {
@@ -165,6 +164,9 @@ hr.solid {
     width: 100% !important;
     height: 50% !important;
     margin: 3%;
+}
+.results-card:hover {
+    background-color: orange;
 }
 
 .loader-container {

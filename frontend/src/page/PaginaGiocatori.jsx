@@ -76,7 +76,7 @@ function show_info(player) {
 }
 
 export default function PaginaGiocatori() {
-    const { player_id } = useParams();
+    const { playerId } = useParams();
     const [chartGoalData, setChartGoalData] = useState(null);
     const [playerClubs, setPlayerClubs] = useState(null);
     const [chartMarket, setChartMarket] = useState(null);
@@ -86,16 +86,16 @@ export default function PaginaGiocatori() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const playerClubs = await axios.get(`http://localhost:3000/player/player_clubs/${player_id}`)
-                const playerData = await axios.get(`http://localhost:3000/player/${player_id}`);
-                const goalsChartData = await getChartData(player_id, 'goals_date', 'goals');
-                const assistsChartData = await getChartData(player_id, 'assist_date', 'assists');
+                const playerClubs = await axios.get(`http://localhost:3000/player/player_clubs/${playerId}`)
+                const playerData = await axios.get(`http://localhost:3000/player/${playerId}`);
+                const goalsChartData = await getChartData(playerId, 'goals_date', 'goals');
+                const assistsChartData = await getChartData(playerId, 'assist_date', 'assists');
 
                 if (assistsChartData) {
                     goalsChartData.datasets.push(assistsChartData.datasets);
                 }
 
-                const marketValueChartData = await getChartData(player_id, 'market_value', 'market value');
+                const marketValueChartData = await getChartData(playerId, 'market_value', 'market value');
                 setPlayerClubs(playerClubs.data.clubs)
                 setPlayer(playerData.data);
                 setChartGoalData(goalsChartData);
@@ -108,10 +108,10 @@ export default function PaginaGiocatori() {
         };
 
         // Check if player_id is available
-        if (player_id) {
+        if (playerId) {
             fetchData();
         }
-    }, [player_id]);
+    }, [playerId]);
 
     if (loading) {
         return (
