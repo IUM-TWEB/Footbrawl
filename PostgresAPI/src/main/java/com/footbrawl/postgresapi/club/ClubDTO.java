@@ -1,6 +1,7 @@
 package com.footbrawl.postgresapi.club;
 
 public class ClubDTO {
+  private Long clubId;
   private String clubCode;
   private String name;
   private String domesticCompetitionId;
@@ -19,6 +20,10 @@ public class ClubDTO {
   public ClubDTO(){
 
   }
+
+  public Long getClubId(){return clubId;}
+
+  public void setClubId(Long clubId){this.clubId = clubId;}
 
   public String getClubCode() {
     return clubCode;

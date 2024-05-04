@@ -43,6 +43,7 @@ public class ClubService {
 
   public ClubDTO convertToDTO(Club club) {
     ClubDTO clubDTO = new ClubDTO();
+    clubDTO.setClubId(club.getClub_id());
     clubDTO.setClubCode(club.getClub_code());
     clubDTO.setName(club.getName());
     clubDTO.setDomesticCompetitionId(club.getDomestic_competition_id());

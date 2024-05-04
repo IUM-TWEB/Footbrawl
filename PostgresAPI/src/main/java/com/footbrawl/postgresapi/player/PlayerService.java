@@ -67,6 +67,7 @@ public class PlayerService {
 
   public PlayerDTO convertToDTO(Player player) {
     PlayerDTO playerDTO = new PlayerDTO();
+    playerDTO.setPlayerId(player.getPlayer_id());
     playerDTO.setFirstName(player.getFirst_name());
     playerDTO.setLastName(player.getLast_name());
     playerDTO.setName(player.getName());

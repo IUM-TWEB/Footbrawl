@@ -19,7 +19,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
   @Query(value = "SELECT * FROM players WHERE current_club_id = :id", nativeQuery = true)
   Optional<List<Player>> findPlayersByCurrent_club_id(int id);
 
-  @Query(value = "SELECT * FROM players WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
+  @Query(value = "SELECT * FROM players WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) LIMIT 10", nativeQuery = true)
   Optional<List<Player>> findPlayerByNameCustomQuery(@Param("name") String name);
 
   //@Query(value = "SELECT * FROM players WHERE first_name LIKE %:firstName% AND last_name LIKE %:lastName%", nativeQuery = true)
