@@ -4,9 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PaginaChat = () => {
   const chats = [
-    {id: 1, title: 'Chat Generale'},
-    {id: 2, title: 'Chat di Progetto'},
-    {id: 3, title: 'Chat Privata'}
+    {nameRoom: 'Chat Generale', title: 'Chat Generale'},
+    {nameRoom: 2, title: 'Chat di Progetto'},
+    {nameRoom: 3, title: 'Chat Privata'}
   ];
 
   return (
@@ -14,7 +14,7 @@ const PaginaChat = () => {
       <h1>Ciao, seleziona una chat</h1>
       <div className="d-flex flex-column">
         {chats.map(chat => (
-          <Link key={chat.id} to={`/chat/${chat.id}`} className="btn btn-primary mb-2">
+          <Link key={chat.nameRoom} to={`/chat/${chat.nameRoom}`} className="btn btn-primary mb-2">
             {chat.title}
           </Link>
         ))}
