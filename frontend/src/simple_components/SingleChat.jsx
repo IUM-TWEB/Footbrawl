@@ -1,31 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {useParams, useNavigate} from "react-router-dom";
 import io from "socket.io-client";
 
-const socket = io();
-
 const SingleChat = () => {
-  const { id: currentRoom } = useParams();
+  const {id: currentRoom} = useParams();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
 
   //prendere il nome dai dati di login
-  const myName = localStorage.getItem('my_name') || "io";
+  const myName = "login";
 
   useEffect(() => {
+    const socket = io("http://localhost:3000");
+    setSocket(socket);
+
     socket.emit('create or join', currentRoom, myName);
+    const joinMessage = {text: ` has joined the conversation`, author: `Me`};
+    setMessages(prevMessages => [...prevMessages, joinMessage]);
     //localStorage.setItem('room', currentRoom);
 
     socket.on('create or join', (name) => {
       if (name !== myName) {
-        const joinMessage = { text: `${name} has joined the conversation`, author: "System" };
+        const joinMessage = {text: ` has joined the conversation`, author: `${name}`};
         setMessages(prevMessages => [...prevMessages, joinMessage]);
       }
     });
 
     socket.on('chat message', (msg, name) => {
-      const newMessage = { text: msg, author: name === myName ? "Me" : name };
+      name = msg;
+      const newMessage = {text: msg, author: name === myName ? "Me" : name};
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    });
+
+    socket.on('leave conversation', (name) => {
+      const newMessage = {text: ' has left the conversation', author: `${name}`};
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
@@ -33,19 +43,23 @@ const SingleChat = () => {
       socket.off('chat message');
       socket.off('create or join');
     };
-  }, [currentRoom, myName]);
+  }, [currentRoom]);
 
   const sendMessage = () => {
-    if (message) {
+    if (message && socket) {
+      console.log(message);
       socket.emit('chat message', currentRoom, message, myName);
-      setMessages(prevMessages => [...prevMessages, { text: message, author: "Me" }]);
+      setMessages(prevMessages => [...prevMessages, {text: message, author: "Me"}]);
       setMessage('');
     }
   };
 
   const logout = () => {
     localStorage.clear();
-    socket.emit('leave conversation', currentRoom, myName);
+    if(socket){
+      socket.emit('leave conversation', currentRoom, myName);
+      socket.close();
+    }
     navigate(-1);
   };
 

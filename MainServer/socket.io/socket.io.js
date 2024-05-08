@@ -6,21 +6,24 @@ exports.init = function (io) {
       /** it creates or joins a room */
       socket.on('create or join', function (room, name) {
         socket.join(room);
-        io.sockets.to(room).emit('joined', room, name); //si può usare broadcast e inserire il prorpio messaggio di join tramite client
+        socket.broadcast.to(room).emit('create or join', name);
+        //console.log(name + ' joined ' + room);
       });
 
       socket.on('chat message', function (room, msg, name) {
-        io.sockets.to(room).emit('chat message', room, msg, name);
+        socket.broadcast.to(room).emit('chat message', msg, name);
+        //console.log(name + " sent a message in " + room + ": " + msg);
       });
 
       socket.on('leave conversation', function (room, name) {
-        io.sockets.to(room).emit('leaved', room, name);
+        socket.broadcast.to(room).emit('leave conversation', name);
         socket.leave(room);
+        //console.log(name + ' left ' + room);
       });
 
       socket.on('disconnected', (room, name) => {
         try {
-          io.sockets.to(room).emit('leaved', room, name);
+          io.sockets.to(room).emit('disconnected', name);
           socket.leave(room);
         } catch (e) {
           console.log('ignore' + e);

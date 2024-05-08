@@ -91,6 +91,11 @@ function onListening() {
 
 const io = require('socket.io')(server, { //socketIo
   pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:5173",  // Sostituisci con l'URL del tuo frontend
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 /*
 si passa il server a socketIo
