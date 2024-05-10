@@ -39,9 +39,23 @@ const SingleChat = () => {
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
+    socket.on('disconnected', (name) => {
+      const newMessage = {text: ' has left the conversation', author: `${name}`};
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    });
+
+    const handleUnload = () => {
+      socket.emit('disconnected', currentRoom, myName);
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
     return () => {
       socket.off('chat message');
       socket.off('create or join');
+      socket.emit('leave conversation', currentRoom, myName);
+      socket.close();
+      window.removeEventListener('beforeunload', handleUnload);
     };
   }, [currentRoom]);
 

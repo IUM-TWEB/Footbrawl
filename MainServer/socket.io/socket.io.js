@@ -16,6 +16,7 @@ exports.init = function (io) {
       });
 
       socket.on('leave conversation', function (room, name) {
+        //console.log("User leaved");
         socket.broadcast.to(room).emit('leave conversation', name);
         socket.leave(room);
         //console.log(name + ' left ' + room);
@@ -23,13 +24,14 @@ exports.init = function (io) {
 
       socket.on('disconnected', (room, name) => {
         try {
-          io.sockets.to(room).emit('disconnected', name);
+          //console.log("User disconnected");
+          socket.broadcast.to(room).emit('disconnected', name);
           socket.leave(room);
         } catch (e) {
-          console.log('ignore' + e);
+          console.log('ignore ' + e);
         }
-
       });
+
     } catch (e) {
       console.log(e);
     }
