@@ -1,6 +1,5 @@
 import React from 'react';
 import {Route, Routes, Link, useParams} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PaginaChat = () => {
   const chats = [
@@ -14,7 +13,7 @@ const PaginaChat = () => {
       <h1>Ciao, seleziona una chat</h1>
       <div className="d-flex flex-column">
         {chats.map(chat => (
-          <Link key={chat.nameRoom} to={`/chat/${chat.nameRoom}`} className="btn btn-primary mb-2">
+          <Link key={chat.nameRoom} to={`/chat/${chat.nameRoom}`} aria-label="chat button" className="btn btn-primary mb-2">
             {chat.title}
           </Link>
         ))}

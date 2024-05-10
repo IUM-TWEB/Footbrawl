@@ -56,7 +56,7 @@ const SingleChat = () => {
 
   const logout = () => {
     localStorage.clear();
-    if(socket){
+    if (socket) {
       socket.emit('leave conversation', currentRoom, myName);
       socket.close();
     }
@@ -64,30 +64,45 @@ const SingleChat = () => {
   };
 
   return (
-    <div className="container mt-5 w-100" id="message_container">
-      <div className="row">
+    <div className="container mt-5 w-100 min-height-75" id="message_container">
+      <div className="row mb-2">
         <h2 className="col-md-10">Benvenuto nella chat {currentRoom}</h2>
-        <button id="logout" className="btn btn-small btn-danger col-md-2" onClick={logout}>Logout</button>
+        <button
+          id="logout"
+          className="btn btn-small btn-danger col-md-2"
+          aria-label="logout"
+          onClick={logout}>Logout
+        </button>
       </div>
 
-      <ul id="messages" style={{backgroundColor: 'bisque'}}>
+      <ul id="messages" className="bg-custom list-unstyled shadow p-3">
         {messages.map((msg, index) => (
-          <li key={index}>
-            {msg.author}: {msg.text}
+          <li key={index} className="message-item">
+            <strong>{msg.author}</strong>: {msg.text}
           </li>
         ))}
       </ul>
-      <div className="row">
-        <label htmlFor="messageInput" className="me-4">Chat</label>
-        <input
-          id="messageInput"
-          autoComplete="off"
-          className="w-75"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' ? sendMessage() : null}
-        />
-        <button id="messageButton" className="w-25" onClick={sendMessage}>Send</button>
+
+      <div className="row align-items-center">
+        <div className="col-md-9 pe-2">
+          <input
+            id="messageInput"
+            autoComplete="off"
+            className="form-control"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' ? sendMessage() : null}
+            placeholder="Scrivi un messaggio qui..."
+          />
+        </div>
+        <div className="col-md-3">
+          <button
+            aria-label="send message"
+            id="messageButton"
+            className="btn btn-primary w-100"
+            onClick={sendMessage}>Send
+          </button>
+        </div>
       </div>
     </div>
   );
