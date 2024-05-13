@@ -78,7 +78,6 @@ function extract(raw) {
 }
 
 router.get('/goals_date/:player_id', async (req, res) => {
-    console.log("n")
     try {
         const response = await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`);
         const res_data = extract(response.data);
@@ -106,7 +105,6 @@ router.get('/assist_date/:player_id', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        console.log(req.params.id)
         const response = await axios.get(`http://localhost:8080/player?id=${req.params.id}`);
         res.send(response.data);
     } catch (err) {
@@ -119,22 +117,32 @@ router.get('/market_value/:id', async (req, res) => {
     try {
         const response = await axios.get(`http://localhost:8080/playerValuation?id=${req.params.id}`);
         res.send(extract_values(response.data))
-    } catch (error) {
-        console.log(err)
-        res.status(500).send('Il main server non risponde');
+    } catch (err) {
+        res.status(500).send('Errore nella richiesta al server Spring Boot');
     }
 })
 
 router.get('/player_clubs/:id', async (req, res) => {
-    const response = await axios.get(`http://localhost:8080/playerValuation?id=${req.params.id}`);
-    const data = {
-        'clubs':[]
+    try {
+
+        const response = await axios.get(`http://localhost:3001/events/player/${req.params.id}`);
+        const clubs_id = []
+        const data = {
+            'clubs': []
+        }
+        for (let i of response.data) {
+            if (!clubs_id.includes(i.club_id)) {
+                const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
+                data.clubs.push(club_name.data.name);
+                clubs_id.push(i.club_id);
+
+
+            }
+        }
+        res.send(data)
+    } catch (err) {
+        res.status(500).send("Errore nella richiesta al server Spring Boot")
     }
-    for(let i of response.data){
-        if(!data.clubs.includes(i.currentClubName))
-            data.clubs.push(i.currentClubName);
-    }
-    res.send(data)
 })
 
 module.exports = router;
