@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PlayerPres from "../simple_components/PlayerPres.jsx";
 import PlayerClubs from "../simple_components/PlayerClubs.jsx";
@@ -53,7 +53,7 @@ function show_graph(data) {
     if (data) {
         return <Line options={options} data={data} />;
     } else {
-        return <h1>Somethings gone wrong</h1>;
+        return;
     }
 }
 
@@ -71,7 +71,7 @@ function show_info(player) {
             />
         );
     } else {
-        return <h1 className={"center-text"}>Somethings gone wrong</h1>;
+        return;
     }
 }
 
@@ -86,16 +86,18 @@ export default function PaginaGiocatori() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const playerClubs = await axios.get(`http://localhost:3000/player/player_clubs/${playerId}`)
-                const playerData = await axios.get(`http://localhost:3000/player/${playerId}`);
-                const goalsChartData = await getChartData(playerId, 'goals_date', 'goals');
-                const assistsChartData = await getChartData(playerId, 'assist_date', 'assists');
+                const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
+                    axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
+                    axios.get(`http://localhost:3000/player/${playerId}`),
+                    getChartData(playerId, 'goals_date', 'goals'),
+                    getChartData(playerId, 'assist_date', 'assists'),
+                    getChartData(playerId, 'market_value', 'market value')
+                ]);
 
                 if (assistsChartData) {
                     goalsChartData.datasets.push(assistsChartData.datasets);
                 }
 
-                const marketValueChartData = await getChartData(playerId, 'market_value', 'market value');
                 setPlayerClubs(playerClubs.data.clubs)
                 setPlayer(playerData.data);
                 setChartGoalData(goalsChartData);
@@ -124,7 +126,7 @@ export default function PaginaGiocatori() {
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-sm-3">{show_info(player)}</div>
+                <div className="col-sm-3 p-3">{show_info(player)}</div>
                 <div className="col-sm-6">
                     <div className={"m-3"}>
                         <div>{show_graph(chartGoalData)}</div>
@@ -133,7 +135,7 @@ export default function PaginaGiocatori() {
                         <div>{show_graph(chartMarket)}</div>
                     </div>
                 </div>
-                <div className="col-sm-3"> <PlayerClubs playerInfo={playerClubs}></PlayerClubs></div>
+                <div className="col-sm-3 p-3"> <PlayerClubs playerInfo={playerClubs}></PlayerClubs></div>
             </div>
         </div>
     );

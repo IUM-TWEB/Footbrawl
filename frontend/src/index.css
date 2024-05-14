@@ -190,5 +190,14 @@ hr.solid {
         transform: rotate(360deg);
     }
 }
+.results-div{
+    min-height: 400px;
+    min-width:800px;
+    z-index: 999;
+}
+.home {
+    z-index: 1;
+}
+
 
 
