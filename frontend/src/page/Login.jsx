@@ -20,15 +20,15 @@ function Login() {
       setError('Both username and password are required');
     } else {
       setError('');
-      axios.post(`http://localhost:3000/users/${username}/${password}`, {username:"ciao", pwd:"ciaciao"})
+      axios.post(`http://localhost:3000/users/log`, {username:username, pwd:password})
           .then(res => {
-            console.log(res)
+            console.log(res.data)
+            localStorage.setItem("name",username)
+            localStorage.setItem("isLogged","true")
           })
           .catch(err=>{
             console.log(err)
           })
-      // console.log('Login successful:', username, password);
-      // Implement further logic here such as authentication or redirecting
     }
   };
 

@@ -1,7 +1,7 @@
 const queries = require('../queries/user_queries')
 
 module.exports.getUsr = (req, res) => {
-    queries.getUsr(req.params.name, req.params.pwd)
+    queries.getUsr(req.body.name, req.body.pwd)
         .then((resp) => {
             res.send(resp)
         })
@@ -12,8 +12,7 @@ module.exports.getUsr = (req, res) => {
 }
 
 module.exports.postUsr = (req, res) => {
-    console.log("mandiamo")
-    queries.postUsr(req.params.name, req.params.pwd)
+    queries.postUsr(req.body.name, req.body.pwd)
         .then(() => {
             res.sendStatus(200)
         })
