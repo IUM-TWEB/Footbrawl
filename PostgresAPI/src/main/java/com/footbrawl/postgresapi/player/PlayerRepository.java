@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
-  Optional<Player> findByName(String first_name);
-
   @Query(value = "SELECT * FROM players WHERE player_id = :id", nativeQuery = true)
   Optional<Player> findPlayerByIdCustomQuery(int id);
 

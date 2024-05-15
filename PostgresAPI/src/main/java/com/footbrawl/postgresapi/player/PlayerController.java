@@ -47,12 +47,4 @@ public class PlayerController {
     return ResponseEntity.ok(playerDTOList);
   }
 
-  @PostMapping("/calculateAge")
-  public Player calculateAge(@RequestBody Player player) {
-    /*player.setAge(calcAge(player));
-    player.setMarket_value(calculateMarket_value(player));
-    player.setHighest_market_value(calculateHighest_market_value(player));*/
-    return player;
-  }
-
 }
