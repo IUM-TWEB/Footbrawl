@@ -11,6 +11,7 @@ import Home from "./page/Home.jsx";
 import Login from "./page/Login.jsx";
 import PaginaChat from "./page/PaginaChat.jsx";
 import SingleChat from "./simple_components/SingleChat.jsx"
+import Register from "./page/Registrazione.jsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/chat" element={<PaginaChat />} />
         <Route path="/chat/:id" element={<SingleChat />} />
+        <Route path="/reg" element={<Register/>} />
       </Routes>
     </Router>
   );
