@@ -4,19 +4,28 @@
 .padding {
     padding: 10px;
 }
+.logo{
+    height: 50px;
+    width: 100px;
+}
 
-/* Menu */
+
+
 .menu {
     background-color: black;
     padding: 10px;
-    display: flex;
-    justify-content: space-around;
+    display: flex;           /* Assicurati che flex sia abilitato */
+    flex-direction: row;     /* Disponi gli elementi in una riga */
+    justify-content: space-between; /* Distribuisce gli elementi uniformemente */
+    align-items: center;     /* Centra gli elementi verticalmente */
+    width: 100%;             /* Imposta la larghezza al 100% dell'elemento genitore */
 }
+
 
 .menu-item {
     color: white;
     font-family: 'Bebas Neue', cursive;
-    font-size: 21px;
+    font-size: 30px;
     text-decoration: none;
 }
 
@@ -198,6 +207,5 @@ hr.solid {
 .home {
     z-index: 1;
 }
-
 
 

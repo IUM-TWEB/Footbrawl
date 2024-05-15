@@ -7,6 +7,7 @@ const games = require('./routes/games_routes')
 const club_games = require('./routes/clubgames_routes')
 const lineups = require('./routes/game_lineups_routes')
 const events = require('./routes/game_events_routes')
+const news = require('./routes/news_routes')
 mongoose.connect('mongodb://localhost:27017/footbrawl').then(()=>console.log("Connected to mongoDB/footbrawl"))
 const db = mongoose.connection
 db.once('connection', () => {
@@ -34,3 +35,4 @@ server.use('/games', games)
 server.use('/clubgames', club_games)
 server.use('/lineups', lineups )
 server.use('/events', events)
+server.use('/news', news)
