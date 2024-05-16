@@ -9,6 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long> {
+  @Query("SELECT c.club_id FROM Club c")
+  List<Long> findAllClubIds();
 
   @Query(value = "SELECT * FROM clubs WHERE club_id = :id", nativeQuery = true)
   Optional<Club> findClubByIdCustomQuery(int id);

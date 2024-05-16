@@ -35,4 +35,12 @@ public class ClubController {
     return ResponseEntity.ok(clubDTOList);
   }
 
+  @GetMapping("/clubIds")
+  public ResponseEntity<List<Long>> getAllClubIds() {
+    List<Long> clubIds = clubService.getAllClubIds();
+    if (clubIds == null || clubIds.isEmpty())
+      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(clubIds);
+  }
+
 }

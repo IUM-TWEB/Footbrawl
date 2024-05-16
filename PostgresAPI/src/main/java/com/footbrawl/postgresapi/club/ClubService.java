@@ -40,6 +40,10 @@ public class ClubService {
     return clubDTOList;
   }
 
+  public List<Long> getAllClubIds() {
+    return clubRepository.findAllClubIds();
+  }
+
   public ClubDTO convertToDTO(Club club) {
     ClubDTO clubDTO = new ClubDTO();
     clubDTO.setClubId(club.getClub_id());
