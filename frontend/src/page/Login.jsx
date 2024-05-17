@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";  // Import Link from 'react-router-dom'
-import { toast, ToastContainer } from "react-toastify";
+import {useNavigate, Link} from "react-router-dom";  // Import Link from 'react-router-dom'
+import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {useAuth} from '../context/AuthContext';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -10,6 +11,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loginValid, setLoginValid] = useState(null);
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -36,8 +38,9 @@ function Login() {
       });
     } else {
       setLoginValid(true);
-      localStorage.setItem("name", username);
-      localStorage.setItem("isLogged", "true");
+      login();
+      //localStorage.setItem("name", username);
+      //localStorage.setItem("isLogged", "true");
       navigate(-1);  // Navigate back to the previous page
     }
   };
@@ -49,65 +52,65 @@ function Login() {
       setLoginValid(false);
     } else {
       setError('');
-      axios.post(`http://localhost:3000/users/log`, { username: username, pwd: password })
-          .then(res => {
-            console.log(res.data);
-            handleError(res.data);
-          })
-          .catch(err => {
-            console.log(err);
-          });
+      axios.post(`http://localhost:3000/users/log`, {username: username, pwd: password})
+        .then(res => {
+          console.log(res.data);
+          handleError(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
 
   return (
-      <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="card">
-              <h5 className="card-header">Login</h5>
-              <div className="card-body">
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="username" className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
-                        id="username"
-                        value={username}
-                        onChange={handleUsernameChange}
-                        required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
-                        id="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                    />
-                  </div>
-                  <div className="text-end">
-                    <button type="submit" className="btn btn-chocolate">Invia</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <ToastContainer />
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <div className="text-center mt-4">
-              <Link to="/reg" className="link-primary">Non ti sei ancora registrato?</Link>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <h5 className="card-header">Login</h5>
+            <div className="card-body">
+              {error && <div className="alert alert-danger" role="alert">{error}</div>}
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">Username</label>
+                  <input
+                    type="text"
+                    className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
+                    id="username"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Password</label>
+                  <input
+                    type="password"
+                    className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+                <div className="text-end">
+                  <button type="submit" className="btn btn-chocolate">Invia</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
+      <ToastContainer/>
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="text-center mt-4">
+            <Link to="/reg" className="link-primary">Non ti sei ancora registrato?</Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
