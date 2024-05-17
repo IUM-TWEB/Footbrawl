@@ -13,8 +13,6 @@ const getByClub = (comp, season, club_id) => {
 }
 
 const getPosition = (teamId) => {
-    console.log(typeof teamId)
-    // teamId = 2700
     return games.aggregate([
         {
             $match: {
