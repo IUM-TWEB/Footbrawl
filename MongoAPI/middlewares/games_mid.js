@@ -66,8 +66,13 @@ module.exports.getPosition = async (req, res) => {
                     for (x of resp) {
                         x.ranking_id = a
                         a++
-                        x.club_name = "" // inserire qui il nome del club
-                        x.competition_name = "" //inserire il nome della competizione
+                        let res = await axios.get(`http://localhost:8080/club?id=${i}`)
+                        if(res.data)
+                        x.club_name = res.data.name// inserire qui il nome del club
+                        res = await axios.get(`http://localhost:8080/competition?id=${x.competition_id}`)
+                        console.log(res.data)
+                        if(res.data)
+                        x.competition_name = res.data.name//inserire il nome della competizione
                         await axios.post('http://localhost:8080/saveClubRanking', x)
                         console.log("funge")
                     }
