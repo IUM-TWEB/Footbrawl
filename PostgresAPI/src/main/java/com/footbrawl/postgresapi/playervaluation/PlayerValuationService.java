@@ -3,6 +3,7 @@ package com.footbrawl.postgresapi.playervaluation;
 import com.footbrawl.postgresapi.club.ClubRepository;
 import com.footbrawl.postgresapi.competition.CompetitionRepository;
 import com.footbrawl.postgresapi.player.PlayerRepository;
+import com.footbrawl.postgresapi.utils.PlayerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,19 +28,7 @@ public class PlayerValuationService {
   }
 
   public List<PlayerValuationDTO> getPlayerValuation(int id) {
-    List<PlayerValuation> playerValuationList = playerValuationRepository.findPlayerValuationByIdCustomQuery(id).orElse(null);
-    if (playerValuationList == null || playerValuationList.isEmpty())
-      return null;
-
-    Map<Integer, String> playerNameCache = new HashMap<>();
-    Map<Integer, String> clubNameCache = new HashMap<>();
-    Map<String, String> competitionNameCache = new HashMap<>();
-
-    List<PlayerValuationDTO> playerValuationDTOList = new ArrayList<>(playerValuationList.size());
-    for (PlayerValuation playerValuation : playerValuationList)
-      playerValuationDTOList.add(convertToDTO(playerValuation, playerNameCache, clubNameCache, competitionNameCache));
-
-    return playerValuationDTOList;
+    return getPlayerValuationDTOList(id);
   }
 
   public List<PlayerValuationDTO> getPlayerValuationByPlayerName(String name) {
@@ -47,6 +36,10 @@ public class PlayerValuationService {
     if (id == null)
       return null;
 
+    return getPlayerValuationDTOList(id);
+  }
+
+  private List<PlayerValuationDTO> getPlayerValuationDTOList(int id) {
     List<PlayerValuation> playerValuationList = playerValuationRepository.findPlayerValuationByIdCustomQuery(id).orElse(null);
     if (playerValuationList == null || playerValuationList.isEmpty())
       return null;
@@ -83,24 +76,9 @@ public class PlayerValuationService {
     return playerValuationDTO;
   }
 
-  public int calculateMarketValue(PlayerValuation playerValuation) {
+  private int calculateMarketValue(PlayerValuation playerValuation) {
     String value = playerValuation.getMarket_value_in_eur();
-    if (value == null) {
-      return -1;
-    }
-    String cleanMarketValue;
-    if(value.contains("€")) {
-      // Rimuovi il simbolo dell'euro e il separatore delle migliaia
-      cleanMarketValue = value.replaceAll("[€.]", "");
-
-      // Sostituisci il separatore decimale con un punto
-      cleanMarketValue = cleanMarketValue.replace(',', '.');
-    }else{
-      cleanMarketValue = value.replaceAll("[$,]", "");
-    }
-    // Converte la stringa risultante in un numero intero
-    double doubleValue = Double.parseDouble(cleanMarketValue);
-    return (int) doubleValue;
+    return PlayerUtils.calculateMarketValueUtils(value);
   }
 
 }

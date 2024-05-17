@@ -1,7 +1,5 @@
 package com.footbrawl.postgresapi.competition;
 
-import com.footbrawl.postgresapi.player.Player;
-import com.footbrawl.postgresapi.player.PlayerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
