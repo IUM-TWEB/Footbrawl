@@ -9,3 +9,13 @@ module.exports.getById = async (req, res) => {
     res.status(500).send(err.message);
   }
 };
+
+module.exports.getAll = async (req, res) => {
+  try {
+    const news = await queries.getAll();
+    res.send(news);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err.message);
+  }
+};

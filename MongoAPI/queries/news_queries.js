@@ -13,3 +13,16 @@ module.exports.getById = async (id) => {
   }
 }
 
+module.exports.getAll = async (id) => {
+  try {
+    const result = await News.find().limit(10);
+    if (!result) {
+      throw new Error('Nessuna notizia trovata');
+    }
+    return result;
+  } catch (error) {
+    console.error('Errore durante la ricerca della notizia:', error);
+    throw error;
+  }
+}
+

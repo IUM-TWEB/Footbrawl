@@ -1,39 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "../index.css";
 
-const Notizia = () => {
-  const [notizia, setNotizia] = useState(null);
-  const [errore, setErrore] = useState(false);
-
-  useEffect(() => {
-    const idCasuale = Math.floor(Math.random() * 5); // Genera un ID casuale tra 0 e 4
-    axios.get(`http://localhost:3000/home/news/${idCasuale}`)
-      .then(response => {
-        setNotizia(response.data);
-      })
-      .catch(error => {
-        console.error('Errore durante il recupero della notizia:', error);
-        setErrore(true);
-      });
-  }, []); // L'array vuoto assicura che useEffect venga eseguito solo una volta al caricamento del componente
-
-  if (errore) {
-    return <p>Errore nel caricamento della notizia.</p>;
-  }
-
-  if (!notizia) {
+const News = ({ singleNews, onClick }) => {
+  if (!singleNews) {
     return <p>Caricamento in corso...</p>;
   }
 
   return (
-    <div>
-      <h2>{notizia.titolo}</h2>
-      <p><strong>Autore:</strong> {notizia.autore}</p>
-      <p><strong>Titoletto:</strong> {notizia.titoletto}</p>
-      <p><strong>Testo:</strong> {notizia.testo}</p>
-      {notizia.img && <img src={notizia.img} alt="Immagine notizia" style={{ width: '100%' }} />}
+    <div className="card news-item" onClick={onClick} style={{ cursor: 'pointer' }}>
+      {singleNews.img && <img src={singleNews.img} alt="Immagine notizia" className="card-img-top" />}
+      <div className="card-body">
+        <h5 className="card-title">{singleNews.titolo}</h5>
+        <p className="card-text"><strong>Autore:</strong> {singleNews.autore}</p>
+        <p className="card-text"><strong>Titoletto:</strong> {singleNews.titoletto}</p>
+      </div>
     </div>
   );
 };
 
-export default Notizia;
+export default News;

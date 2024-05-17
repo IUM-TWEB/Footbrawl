@@ -6,7 +6,16 @@ var axios = require('axios'); // Assicurati di aver installato axios
 router.get('/', function (req, res, next) {
   res.render('index', {title: 'Express'});
 });
-
+router.get('/home/news', async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:3001/news`);
+    const newsArray = response.data;
+    res.send(newsArray);
+  } catch (error) {
+    console.error('Error in MongoDB request:', error);
+    res.status(500).send('Errore nella richiesta al server MongoDB');
+  }
+});
 router.get('/home/:searchTerm', async (req, res) => {
   const searchTerm = req.params.searchTerm;
 
@@ -67,8 +76,6 @@ router.get('/home/:searchTerm', async (req, res) => {
     res.status(500).send('Errore imprevisto nelle chiamate API');
   }
 });
-
-
 router.get('/competitions/:id_competition', async (req, res) => {
   try {
     const id = req.params.id_competition;
@@ -80,7 +87,6 @@ router.get('/competitions/:id_competition', async (req, res) => {
     res.status(500).send('Errore nella richiesta al server Spring Boot');
   }
 });
-
 router.get('/home/news/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -92,7 +98,8 @@ router.get('/home/news/:id', async (req, res) => {
     console.error('ERRORE nella richiesta al server MongoDB:', error);
     res.status(500).send('Errore nella richiesta al server MongoDB');
   }
-  const id = req.params.id;
 })
+
+
 
 module.exports = router;
