@@ -41,7 +41,7 @@ public class ClubService {
   }
 
   public List<Long> getAllClubIds() {
-    return clubRepository.findAllClubIds();
+    return clubRepository.findAllClubIds().orElse(null);
   }
 
   public ClubDTO convertToDTO(Club club) {

@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 /**/
-router.get('/position/:club_id', ctrl.getPosition)
+router.get('/position', ctrl.getPosition)
 /**/
 router.get('/:id', ctrl.getById)
 /**/
