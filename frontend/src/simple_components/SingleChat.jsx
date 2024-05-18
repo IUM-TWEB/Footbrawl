@@ -10,7 +10,7 @@ const SingleChat = () => {
   const [socket, setSocket] = useState(null);
 
   let myName = "";
-  myName = localStorage.getItem("name");
+  myName = localStorage.getItem("username");
 
   useEffect(() => {
     const socket = io("http://localhost:3000");
@@ -85,7 +85,7 @@ const SingleChat = () => {
           id="logout"
           className="btn btn-small btn-danger col-md-2"
           aria-label="logout"
-          onClick={logout}>Logout
+          onClick={logout}>Exit
         </button>
       </div>
 

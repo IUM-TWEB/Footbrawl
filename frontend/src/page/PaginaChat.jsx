@@ -12,7 +12,7 @@ const PaginaChat = () => {
   const navigate = useNavigate();
 
   const handleChatClick = (nameRoom) => {
-    if (localStorage.getItem("name")) {
+    if (localStorage.getItem("username")) {
       navigate(`/chat/${nameRoom}`);
     } else {
       navigate('/login');

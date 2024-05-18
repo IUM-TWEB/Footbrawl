@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import axios from "axios";
-import {useNavigate, Link} from "react-router-dom";  // Import Link from 'react-router-dom'
+import {useNavigate, Link} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useAuth} from '../context/AuthContext';
@@ -38,10 +38,10 @@ function Login() {
       });
     } else {
       setLoginValid(true);
-      login();
-      //localStorage.setItem("name", username);
+      login({username});
+      //localStorage.setItem("username", username);
       //localStorage.setItem("isLogged", "true");
-      navigate(-1);  // Navigate back to the previous page
+      navigate('/');
     }
   };
 
