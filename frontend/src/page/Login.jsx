@@ -41,7 +41,7 @@ function Login() {
       login({username});
       //localStorage.setItem("username", username);
       //localStorage.setItem("isLogged", "true");
-      navigate('/');
+      navigate('/paginauser');
     }
   };
 
