@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -19,8 +20,15 @@ function Login() {
       setError('Both username and password are required');
     } else {
       setError('');
-      console.log('Login successful:', username, password);
-      // Implement further logic here such as authentication or redirecting
+      axios.post(`http://localhost:3000/users/log`, {username:username, pwd:password})
+          .then(res => {
+            console.log(res.data)
+            localStorage.setItem("name",username)
+            localStorage.setItem("isLogged","true")
+          })
+          .catch(err=>{
+            console.log(err)
+          })
     }
   };
 

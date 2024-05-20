@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var axios = require('axios'); // Assicurati di aver installato axios
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
