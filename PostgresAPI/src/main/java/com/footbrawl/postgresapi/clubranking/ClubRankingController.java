@@ -20,9 +20,43 @@ public class ClubRankingController {
     this.clubRankingService = clubRankingService;
   }
 
+  /*Restituisce la posizione del club nell'ultima stagione'*/
+  @GetMapping("/lastClubRankingByClubName")
+  public ResponseEntity<List<ClubRanking>> getLastClubRanking(@RequestParam String name) {
+    List<ClubRanking> clubRankingList = clubRankingService.getLastClubRanking(name);
+    if (clubRankingList == null || clubRankingList.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      return ResponseEntity.ok(clubRankingList);
+    }
+  }
+
+  /*Restituisce la posizione del club nelle diverse stagioni*/
   @GetMapping("/clubRankingByClubName")
   public ResponseEntity<List<ClubRanking>> getClubRanking(@RequestParam String name) {
     List<ClubRanking> clubRankingList = clubRankingService.getClubRanking(name);
+    if (clubRankingList == null || clubRankingList.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      return ResponseEntity.ok(clubRankingList);
+    }
+  }
+
+  /*Restituisce la classifica del campionato dell'ultima stagione*/
+  @GetMapping("/lastCompetitionRankingByCompetitionName")
+  public ResponseEntity<List<ClubRanking>> getLastCompetitionRanking(@RequestParam String name) {
+    List<ClubRanking> clubRankingList = clubRankingService.getLastCompetitionRanking(name);
+    if (clubRankingList == null || clubRankingList.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      return ResponseEntity.ok(clubRankingList);
+    }
+  }
+
+  /*Restituisce la classifica del campionato nelle diverse stagioni*/
+  @GetMapping("/competitionRankingByCompetitionName")
+  public ResponseEntity<List<ClubRanking>> getCompetitionRanking(@RequestParam String name) {
+    List<ClubRanking> clubRankingList = clubRankingService.getCompetitionRanking(name);
     if (clubRankingList == null || clubRankingList.isEmpty()) {
       return ResponseEntity.notFound().build();
     } else {
