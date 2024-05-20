@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import biancoSVG from '../img/bianco.svg'; // Importa il file SVG
 
 const Menu = () => {
   return (
     <nav className="menu">
+
+      <img src={biancoSVG} className="logo" alt="Descrizione dell'immagine" />
       <Link to="/" className="menu-item">Home</Link>
       <Link to="/news" className="menu-item">News</Link>
       <Link to="/partite" className="menu-item">Partite</Link>
