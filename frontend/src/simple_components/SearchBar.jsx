@@ -78,8 +78,9 @@ function SearchBar({ setOpacity }) {
               <button type="button" className="btn btn-outline-secondary ml-2" onClick={handleClickClean}>Clean</button>*/}
             </form>
           </div>
-          <div className="position-absolute results-div">
+
             {showContent && (
+              <div className="position-absolute results-div">
               <div className="row mt-2">
                 {showPlayersDropdown && (
                   <div className="col-md-4">
@@ -115,6 +116,7 @@ function SearchBar({ setOpacity }) {
                   </div>
                 )}
               </div>
+              </div>
             )}
             {showError && (
               <div id="errorMessage" className="alert alert-danger">
@@ -124,7 +126,7 @@ function SearchBar({ setOpacity }) {
           </div>
         </div>
       </div>
-    </div>
+
   );
 }
 
