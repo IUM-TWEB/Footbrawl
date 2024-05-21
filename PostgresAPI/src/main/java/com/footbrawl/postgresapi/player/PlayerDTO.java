@@ -3,6 +3,7 @@ package com.footbrawl.postgresapi.player;
 import java.time.LocalDate;
 
 public class PlayerDTO {
+  private Long playerId;
   private String firstName;
   private String lastName;
   private String name;
@@ -23,6 +24,10 @@ public class PlayerDTO {
   public PlayerDTO() {
 
   }
+
+  public Long getPlayerId(){return playerId;}
+
+  public void setPlayerId(Long playerId){this.playerId = playerId;}
 
   public String getFirstName() {
     return firstName;

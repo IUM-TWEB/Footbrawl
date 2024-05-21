@@ -1,8 +1,11 @@
-import React, {useEffect,useState} from 'react';
-import {useParams} from 'react-router-dom'; // Import useParams hook
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import PlayerPres from "../simple_components/PlayerPres.jsx";
-import {Line} from 'react-chartjs-2';
+import PlayerClubs from "../simple_components/PlayerClubs.jsx";
+import { Line } from 'react-chartjs-2';
+import axios from "axios";
 
+// Import chart.js components
 import {
     CategoryScale,
     Chart as ChartJS,
@@ -13,84 +16,126 @@ import {
     Title,
     Tooltip,
 } from 'chart.js';
-import axios from "axios";
+
+// Register chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export const options = {};
 
+async function getChartData(player_id, endpoint, label_name) {
+    try {
+        const response = await axios.get(`http://localhost:3000/player/${endpoint}/${player_id}`);
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+        if (response && response.data && response.data.dates.length >= 5) {
+            const labels = response.data.dates;
+            const data = response.data.goal_counts;
 
-async function getChartData(player_id) {
-    let goals_stats = await axios.get(`http://localhost:3000/player/goals_date/${player_id}`)
-    let assist_stats = await axios.get(`http://localhost:3000/player/assist_date/${player_id}`)
-
-    if (goals_stats  && assist_stats && goals_stats.data.dates.length>=5) {
-        console.log("siamo qui")
-        const labels = goals_stats.data.dates
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: 'Goals',
-                    data: goals_stats.data.goal_counts,
+            return {
+                labels,
+                datasets: [{
+                    label: label_name,
+                    data,
                     borderColor: 'rgb(210,105,30)',
                     backgroundColor: 'rgba(210,105,30, 1)',
-                },
-                {
-                    label: 'Assists',
-                    data: assist_stats.data.goal_counts,
-                    borderColor: 'rgba(210,105,30, 0.5)',
-                    backgroundColor: 'rgba(210,105,30, 0.5)',
                 }],
-        };
-    } else {
-        console.log("ritorna null")
-        return null}
-
+            };
+        } else {
+            console.log("Returning null: ", endpoint);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error fetching ${endpoint} data:`, error);
+        return null;
+    }
 }
 
-function show_graph(data){
-    if(data){
-        return  <Line options={options} data={data}/>
-    }else{
-        return <h1>Somethings gone wrong</h1>
+function show_graph(data) {
+    if (data) {
+        return <Line options={options} data={data} />;
+    } else {
+        return;
+    }
+}
+
+function show_info(player) {
+    if (player) {
+        return (
+            <PlayerPres
+                name={player.name}
+                data={player.dateOfBirth}
+                posizione={player.position}
+                img={player.imageUrl}
+                squadra={player.currentClubName}
+                hight={player.heightInCm}
+                lastSeason={player.lastSeason}
+            />
+        );
+    } else {
+        return;
     }
 }
 
 export default function PaginaGiocatori() {
-    const { player_id } = useParams();
-    const [chartData, setChartData] = useState(null);
+    const { playerId } = useParams();
+    const [chartGoalData, setChartGoalData] = useState(null);
+    const [playerClubs, setPlayerClubs] = useState(null);
+    const [chartMarket, setChartMarket] = useState(null);
+    const [player, setPlayer] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getChartData(player_id);
-                setChartData(data);
+                const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
+                    axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
+                    axios.get(`http://localhost:3000/player/${playerId}`),
+                    getChartData(playerId, 'goals_date', 'goals'),
+                    getChartData(playerId, 'assist_date', 'assists'),
+                    getChartData(playerId, 'market_value', 'market value')
+                ]);
+
+                if (assistsChartData) {
+                    goalsChartData.datasets.push(assistsChartData.datasets);
+                }
+
+                setPlayerClubs(playerClubs.data.clubs)
+                setPlayer(playerData.data);
+                setChartGoalData(goalsChartData);
+                setChartMarket(marketValueChartData);
+                setLoading(false); // Set loading to false once data is fetched
             } catch (error) {
                 console.error('Error fetching chart data:', error);
+                setLoading(false); // Set loading to false in case of error
             }
         };
 
-        fetchData();
-    }, [player_id]);
+        // Check if player_id is available
+        if (playerId) {
+            fetchData();
+        }
+    }, [playerId]);
+
+    if (loading) {
+        return (
+            <div className="loader-container">
+                <div className="loader"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-sm-3">
-                    <PlayerPres name={player_id} age={"330"} position={"playerPosition"} team={"plarTeam"} />
-                </div>
-
+                <div className="col-sm-3 p-3">{show_info(player)}</div>
                 <div className="col-sm-6">
-                    <div className="col chart-container">
-                        {show_graph(chartData)}
+                    <div className={"m-3"}>
+                        <div>{show_graph(chartGoalData)}</div>
+                    </div>
+                    <div className={"m-3"}>
+                        <div>{show_graph(chartMarket)}</div>
                     </div>
                 </div>
-
-                <div className="col-sm-3 ">
-                    <PlayerPres name="federico" age="19 gio 1991" position="attaccante" team="juve" />
-                </div>
+                <div className="col-sm-3 p-3"> <PlayerClubs playerInfo={playerClubs}></PlayerClubs></div>
             </div>
         </div>
     );

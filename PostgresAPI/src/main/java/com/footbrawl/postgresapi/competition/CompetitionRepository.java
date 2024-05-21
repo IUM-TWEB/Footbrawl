@@ -13,7 +13,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
   @Query(value = "SELECT * FROM competitions WHERE competition_id = :id", nativeQuery = true)
   Optional<Competition> findCompetitionByIdCustomQuery(String id);
 
-  @Query(value = "SELECT * FROM competitions WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
+  @Query(value = "SELECT * FROM competitions WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) LIMIT 10", nativeQuery = true)
   Optional<List<Competition>> findCompetitionByNameCustomQuery(String name);
 
   /*-------------Query necessarie per il processo di business----------------*/

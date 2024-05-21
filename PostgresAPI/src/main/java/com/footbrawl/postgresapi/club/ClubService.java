@@ -1,7 +1,6 @@
 package com.footbrawl.postgresapi.club;
 
 import com.footbrawl.postgresapi.player.Player;
-import com.footbrawl.postgresapi.player.PlayerDTO;
 import com.footbrawl.postgresapi.player.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.footbrawl.postgresapi.player.PlayerService.calculateMarketValue;
+import static com.footbrawl.postgresapi.utils.PlayerUtils.calculateMarketValueUtils;
 
 @Service
 public class ClubService {
@@ -43,6 +42,7 @@ public class ClubService {
 
   public ClubDTO convertToDTO(Club club) {
     ClubDTO clubDTO = new ClubDTO();
+    clubDTO.setClubId(club.getClub_id());
     clubDTO.setClubCode(club.getClub_code());
     clubDTO.setName(club.getName());
     clubDTO.setDomesticCompetitionId(club.getDomestic_competition_id());
@@ -70,7 +70,7 @@ public class ClubService {
     for (Player p : lista) {
       count++;
       System.out.println(p.getName() + ", " + p.getLast_season() + ", " + p.getPosition() + ", " + p.getAge());
-      tot += calculateMarketValue(p);
+      tot += calculateMarketValueUtils(p.getMarket_value_in_eur());
     }
     System.out.println(count);
     return tot;
@@ -92,10 +92,9 @@ public class ClubService {
       multiplier = 1000.0;
       value = value.substring(0, value.length() - 1);
     } else if (value.endsWith("m")) {
-      multiplier = 1000000.0;
+      multiplier = 10000.0;
       value = value.substring(0, value.length() - 1);
     }
-
     try {
       double numericValue = Double.parseDouble(value) * multiplier;
       netTransferRecord = (int) numericValue;
@@ -103,7 +102,6 @@ public class ClubService {
       // Log dell'errore o gestione dell'eccezione
       System.err.println("Impossibile analizzare il valore di trasferimento netto: " + club.getNet_transfer_record());
     }
-
     return netTransferRecord;
   }
 

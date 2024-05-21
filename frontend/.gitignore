@@ -23,5 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Files JSON
-*.json
+*.iml

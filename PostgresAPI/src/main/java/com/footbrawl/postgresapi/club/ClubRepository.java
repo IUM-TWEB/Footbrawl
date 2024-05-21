@@ -13,7 +13,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
   @Query(value = "SELECT * FROM clubs WHERE club_id = :id", nativeQuery = true)
   Optional<Club> findClubByIdCustomQuery(int id);
 
-  @Query(value = "SELECT * FROM clubs WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
+  @Query(value = "SELECT * FROM clubs WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) LIMIT 10", nativeQuery = true)
   Optional<List<Club>> findClubByNameCustomQuery(String name);
 
   /*-------------Query necessarie per il processo di business----------------*/
