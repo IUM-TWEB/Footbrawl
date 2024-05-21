@@ -2,6 +2,7 @@ package com.footbrawl.postgresapi.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.footbrawl.postgresapi.utils.PlayerUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,11 +16,6 @@ public class PlayerService {
   @Autowired
   public PlayerService(PlayerRepository playerRepository) {
     this.playerRepository = playerRepository;
-  }
-
-  public Player savePlayer(Player player) {
-    return playerRepository.save(player);
-    //return playerRepository.findByName(player.getFirst_name());
   }
 
   public PlayerDTO getPlayer(int id) {
@@ -95,44 +91,14 @@ public class PlayerService {
     return -1;
   }
 
-  public static int calculateMarketValue(Player player) {
+  private int calculateMarketValue(Player player) {
     String value = player.getMarket_value_in_eur();
-    if (value == null) {
-      return -1;
-    }
-    String cleanMarketValue;
-    if (value.contains("€")) {
-      // Rimuovi il simbolo dell'euro e il separatore delle migliaia
-      cleanMarketValue = value.replaceAll("[€.]", "");
-
-      // Sostituisci il separatore decimale con un punto
-      cleanMarketValue = cleanMarketValue.replace(',', '.');
-    } else {
-      cleanMarketValue = value.replaceAll("[$,]", "");
-    }
-    // Converte la stringa risultante in un numero intero
-    double doubleValue = Double.parseDouble(cleanMarketValue);
-    return (int) doubleValue;
+    return PlayerUtils.calculateMarketValueUtils(value);
   }
 
   private int calculateHighestMarketValue(Player player) {
     String value = player.getHighest_market_value_in_eur();
-    if (value == null) {
-      return -1;
-    }
-    String cleanHighestMarketValue;
-    if (value.contains("€")) {
-      // Rimuovi il simbolo dell'euro e il separatore delle migliaia
-      cleanHighestMarketValue = value.replaceAll("[€.]", "");
-
-      // Sostituisci il separatore decimale con un punto
-      cleanHighestMarketValue = cleanHighestMarketValue.replace(',', '.');
-    } else {
-      cleanHighestMarketValue = value.replaceAll("[$,]", "");
-    }
-    // Converte la stringa risultante in un numero intero
-    double doubleValue = Double.parseDouble(cleanHighestMarketValue);
-    return (int) doubleValue;
+    return PlayerUtils.calculateMarketValueUtils(value);
   }
 
 }

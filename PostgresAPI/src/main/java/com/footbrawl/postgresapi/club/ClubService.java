@@ -1,7 +1,6 @@
 package com.footbrawl.postgresapi.club;
 
 import com.footbrawl.postgresapi.player.Player;
-import com.footbrawl.postgresapi.player.PlayerDTO;
 import com.footbrawl.postgresapi.player.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.footbrawl.postgresapi.player.PlayerService.calculateMarketValue;
+import static com.footbrawl.postgresapi.utils.PlayerUtils.calculateMarketValueUtils;
 
 @Service
 public class ClubService {
@@ -71,7 +70,7 @@ public class ClubService {
     for (Player p : lista) {
       count++;
       System.out.println(p.getName() + ", " + p.getLast_season() + ", " + p.getPosition() + ", " + p.getAge());
-      tot += calculateMarketValue(p);
+      tot += calculateMarketValueUtils(p.getMarket_value_in_eur());
     }
     System.out.println(count);
     return tot;
