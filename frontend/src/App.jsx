@@ -23,23 +23,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>
         } exact/>
-        <Route path="/news" element={<PaginaNews/>}/>
-        <Route path="/partite" element={<PaginaPartite/>}/>
-        <Route path="/campionati" element={<PaginaCampionati/>}/>
-        <Route path="/club/:clubId" element={<PaginaClub/>}/>
-        <Route path="/giocatori/:playerId" element={<PaginaGiocatori/>}/>
+        
         <Route path="/mercato" element={<PaginaMercato/>}/>
-        <Route path="/login" element={<Login/>}/>
         <Route path="/reg" element={<Register/>}/>
         <Route path="/chat" element={<ProtectedRoute> <PaginaChat/> </ProtectedRoute>}/>
         <Route path="/chat/:id" element={<ProtectedRoute> <SingleChat/> </ProtectedRoute>}/>
         <Route path="/paginauser" element={<ProtectedRoute> <PaginaUser/> </ProtectedRoute>}/>
-
-        <Route path="/" element={<Home />
-        } exact />
-        <Route path="/news" element={<GridNews />} />
+        <Route path="/news" element={<GridNews/>}/>
         <Route path="/news-params" element={<NewsParams />} />
-        <Route path="/partite" element={<PaginaPartite />} />
         <Route path="/campionati" element={<PaginaCampionati />} />
         <Route path="/club/:clubId" element={<PaginaClub />} />
         <Route path="/giocatori/:playerId" element={<PaginaGiocatori />} />
