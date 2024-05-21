@@ -34,3 +34,26 @@ module.exports.getByClub = async (req, res) => {
         })
 }
 
+module.exports.getPosition = async (req, res) => {
+    try {
+        const club_ids = []/*get all the club_id in the database */
+
+        for (i of club_ids)
+            await queries.getPosition(Number(i))
+                .then(resp => {
+                    const competition_name = "test"
+
+                    /*add in each the name of the club and competition_name to the record*/
+                    /*post the result in postgres*/
+
+                    // res.send(resp)
+
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+    }catch (e){
+        console.log(e.name)
+        res.send(e.name)
+    }
+}

@@ -4,13 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.util.UUID;
 
 @Entity
 @Table(name = "club_ranking")
 public class ClubRanking {
   @Id
-  private UUID id;
+  private int ranking_id;
   private int club_id;
   private int position;
   private int season;
@@ -22,8 +21,8 @@ public class ClubRanking {
 
   }
 
-  public ClubRanking(UUID id, int club_id, int position, int season, String competition_id, String club_name, String competition_name) {
-    this.id = id;
+  public ClubRanking(int ranking_id, int club_id, int position, int season, String competition_id, String club_name, String competition_name) {
+    this.ranking_id = ranking_id;
     this.club_id = club_id;
     this.position = position;
     this.season = season;
@@ -32,12 +31,12 @@ public class ClubRanking {
     this.competition_name = competition_name;
   }
 
-  public UUID getId() {
-    return id;
+  public int getRanking_id() {
+    return ranking_id;
   }
 
-  public void setId(UUID id) {
-    this.id = id;
+  public void setRanking_id(int ranking_id) {
+    this.ranking_id = ranking_id;
   }
 
   public String getCompetition_id() {
