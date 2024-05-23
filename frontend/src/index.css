@@ -216,12 +216,7 @@ hr.solid {
     background-color: chocolate;
     height: 100%;
 }
-/* GridNews.css */
-.news-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Spazio tra le card */
-}
+
 
 .news-item {
     background-color: #f8f9fa; /* Sfondo chiaro per le card */
@@ -235,9 +230,6 @@ hr.solid {
 }
 
 
-.news-item:hover {
-    transform: scale(1.03); /* Aumenta lo zoom al 10% */
-}
 
 .news-item img {
     width: 100%; /* Assicurati che le immagini coprano la larghezza della card */
@@ -261,7 +253,7 @@ hr.solid {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: auto; /* Assicura che il testo venga spinto verso il basso */
-
+}
 /* Beginning of section for the SingleChat page */
 .bg-custom {
     background-color: #CAD2C5;
