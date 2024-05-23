@@ -11,4 +11,8 @@ router.post('/', mid.postUsr)
 
 router.post('/ex/', mid.getUsrByName)
 
+router.post('/fav/player/', mid.addFavoritePlayer)
+
+router.post('/fav/team/', mid.addFavoriteTeam)
+
 module.exports = router

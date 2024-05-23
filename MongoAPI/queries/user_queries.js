@@ -12,10 +12,27 @@ const getUsr = async (name, pwd) => {
 };
 
 const getUsrByName = (name, pwd) => {
+
     return model.find({user_name:name},{}, null)
 }
 
 const postUsr = (name, pwd) => {
     return model.create([{user_name: name, pwd: pwd}],{})
 }
-module.exports = {getUsr,postUsr,getUsrByName}
+
+const addFavoritePlayer = (name, pwd , playerId) => {
+    console.log("finqui ci siamo")
+    return model.updateOne(
+      { user_name: name , pwd:pwd},
+      { $push: { favorite_players: playerId } }
+    );
+};
+
+const addFavoriteTeam = (name, pwd, teamId) => {
+    return model.updateOne(
+      { user_name: name , pwd:pwd},
+      { $push: { favorite_teams: teamId } }
+    );
+};
+
+module.exports = { getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam };
