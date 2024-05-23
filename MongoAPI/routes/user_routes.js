@@ -9,6 +9,7 @@ router.post('/log/', mid.getUsr )
 /**/
 router.post('/', mid.postUsr)
 
+router.post('/ex/', mid.getUsrByName)
 
 router.post('/fav/player/', mid.addFavoritePlayer)
 

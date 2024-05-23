@@ -9,8 +9,8 @@ const SingleChat = () => {
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  //prendere il nome dai dati di login
-  const myName = "login";
+  let myName = "";
+  myName = localStorage.getItem("username");
 
   useEffect(() => {
     const socket = io("http://localhost:3000");
@@ -19,7 +19,7 @@ const SingleChat = () => {
     socket.emit('create or join', currentRoom, myName);
     const joinMessage = {text: ` has joined the conversation`, author: `Me`};
     setMessages(prevMessages => [...prevMessages, joinMessage]);
-    //localStorage.setItem('room', currentRoom);
+    localStorage.setItem('room', currentRoom);
 
     socket.on('create or join', (name) => {
       if (name !== myName) {
@@ -29,7 +29,6 @@ const SingleChat = () => {
     });
 
     socket.on('chat message', (msg, name) => {
-      name = msg;
       const newMessage = {text: msg, author: name === myName ? "Me" : name};
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
@@ -56,6 +55,7 @@ const SingleChat = () => {
       socket.emit('leave conversation', currentRoom, myName);
       socket.close();
       window.removeEventListener('beforeunload', handleUnload);
+      localStorage.removeItem('room');
     };
   }, [currentRoom]);
 
@@ -69,11 +69,11 @@ const SingleChat = () => {
   };
 
   const logout = () => {
-    localStorage.clear();
     if (socket) {
       socket.emit('leave conversation', currentRoom, myName);
       socket.close();
     }
+    localStorage.removeItem('room');
     navigate(-1);
   };
 
@@ -85,7 +85,7 @@ const SingleChat = () => {
           id="logout"
           className="btn btn-small btn-danger col-md-2"
           aria-label="logout"
-          onClick={logout}>Logout
+          onClick={logout}>Exit
         </button>
       </div>
 

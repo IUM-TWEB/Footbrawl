@@ -11,7 +11,8 @@ const getUsr = async (name, pwd) => {
     }
 };
 
-const getUsrByName = (name) => {
+const getUsrByName = (name, pwd) => {
+
     return model.find({user_name:name},{}, null)
 }
 
