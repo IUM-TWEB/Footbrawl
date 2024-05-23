@@ -38,7 +38,7 @@ function Login() {
       });
     } else {
       setLoginValid(true);
-      login({username});
+      login({username, password});
       //localStorage.setItem("username", username);
       //localStorage.setItem("isLogged", "true");
       navigate('/paginauser');
@@ -59,6 +59,7 @@ function Login() {
         })
         .catch(err => {
           console.log(err);
+          setError('Error logging in');
         });
     }
   };
