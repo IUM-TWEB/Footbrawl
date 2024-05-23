@@ -10,4 +10,8 @@ router.post('/log/', mid.getUsr )
 router.post('/', mid.postUsr)
 
 
+router.post('/fav/player/', mid.addFavoritePlayer)
+
+router.post('/fav/team/', mid.addFavoriteTeam)
+
 module.exports = router

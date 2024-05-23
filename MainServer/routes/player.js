@@ -135,13 +135,12 @@ router.get('/player_clubs/:id', async (req, res) => {
                 const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
                 data.clubs.push(club_name.data.name);
                 clubs_id.push(i.club_id);
-
-
             }
         }
         res.send(data)
     } catch (err) {
-        res.status(500).send("Errore nella richiesta al server Spring Boot")
+        console.log(err)
+        res.status(500).send(err.name)
     }
 })
 

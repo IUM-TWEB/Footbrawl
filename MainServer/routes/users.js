@@ -37,4 +37,19 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/favplayer', (req,res) => {
+    try{
+        axios.post("http://localhost:3001/user/fav/player", req.body)
+          .then(resp => {
+              res.send(resp.data)
+          })
+          .catch(e => {
+              res.send(e.name)
+          })
+    }catch (e){
+
+
+    }
+})
+
 module.exports = router;
