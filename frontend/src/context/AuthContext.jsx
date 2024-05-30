@@ -65,6 +65,22 @@ export const AuthProvider = ({children}) => {
     setFavoriteClubs(userInfo.favoriteClubs || []);
   };
 
+  const setNewPlayer = (player_id) => {
+    // Get the current list of favorite players from localStorage
+    let fav_players = localStorage.getItem("favoritePlayers");
+    console.log("prima",fav_players)
+
+    // Parse the JSON string to an array, or initialize an empty array if null
+    fav_players = fav_players ? JSON.parse(fav_players) : [];
+
+    console.log(fav_players)
+    // Add the new player ID to the array
+    fav_players.push(player_id);
+
+    // Convert the array back to a JSON string and save it to localStorage
+    localStorage.setItem("favoritePlayers", JSON.stringify(fav_players));
+  };
+
   //const logout = () => setIsAuthenticated(false);
   const logout = () => {
     setIsAuthenticated(false);
@@ -80,7 +96,8 @@ export const AuthProvider = ({children}) => {
   };
 
   return (
-    <AuthContext.Provider value={{isAuthenticated, username, favoritePlayers, favoriteClubs, login, logout}}>
+    <AuthContext.Provider
+      value={{isAuthenticated, username, password, favoritePlayers, favoriteClubs, login, logout, setNewPlayer}}>
       {children}
     </AuthContext.Provider>
   );

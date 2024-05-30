@@ -11,7 +11,7 @@ const getUsr = async (name, pwd) => {
     }
 };
 
-const getUsrByName = (name, pwd) => {
+const getUsrByName = (name) => {
 
     return model.find({user_name:name},{}, null)
 }
@@ -20,14 +20,30 @@ const postUsr = (name, pwd) => {
     return model.create([{user_name: name, pwd: pwd}],{})
 }
 
-const addFavoritePlayer = (name, pwd , playerId) => {
-    console.log("finqui ci siamo")
-    return model.updateOne(
-      { user_name: name , pwd:pwd},
-      { $push: { favorite_players: playerId } }
-    );
-};
+const addFavoritePlayer = async (name, pwd, playerId) => {
+    try {
+        const rr = await getUsr(name, pwd)
+        const result = await model.updateOne(
+          { user_name: name, pwd: pwd },
+          { $push: { favorite_players: playerId } }
+        );
 
+        if (result.nModified === 0) {
+            console.log("non trovato")
+        }
+
+        return { success: true, message: "Player added to favorites successfully." };
+    } catch (error) {
+        return { success: false, message: error.message };
+    }
+};
+const getFavoritePlayer = async (username, pwd) => {
+    try {
+        return result = await model.findOne({user_name:username, pwd:pwd},{},null)
+    }catch (e){
+
+    }
+}
 const addFavoriteTeam = (name, pwd, teamId) => {
     return model.updateOne(
       { user_name: name , pwd:pwd},
@@ -35,4 +51,4 @@ const addFavoriteTeam = (name, pwd, teamId) => {
     );
 };
 
-module.exports = { getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam };
+module.exports = { getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoritePlayer };

@@ -48,7 +48,16 @@ router.post('/favplayer', (req,res) => {
               res.send(e.name)
           })
     }catch (e){
+    }
+})
 
+router.post('/getfav', async (req, res) => {
+    try {
+        const response = await axios.post(`http://localhost:3001/user/getfav/player`, {username: req.body.username, pwd: req.body.pwd})
+
+        res.send(response.data)
+    }catch (e){
+        res.sendStatus(500)
 
     }
 })
