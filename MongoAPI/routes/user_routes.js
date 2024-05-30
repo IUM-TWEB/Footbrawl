@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mid = require('../middlewares/user_mid');
-
+const model = require('../models/user')
 /**
  * @swagger
  * /user/log/:
@@ -133,5 +133,12 @@ router.post('/fav/player/', mid.addFavoritePlayer);
  *           schema:
  *
 */
-
+router.post('/getfav/player', async (req, res) => {
+  const resp = await model.findOne({user_name: req.body.username, pwd: req.body.pwd}, {
+    pwd: 0,
+    user_name: 0,
+    favorite_teams: 0
+  }, null)
+  res.send(resp.favorite_players)
+})
 module.exports = router
