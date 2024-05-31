@@ -27,7 +27,7 @@ const Register = () => {
       })).data;
       if (newUserResponse === 1) {
         setError('');
-        login({username, password});
+        await login({username, password});
         navigate('/paginauser');
       } else if (newUserResponse === 0) {
         setError('Nome utente già esistente')

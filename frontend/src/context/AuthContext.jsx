@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -57,28 +58,31 @@ export const AuthProvider = ({children}) => {
   }, [isAuthenticated, username, password, favoritePlayers, favoriteClubs]);
 
   //const login = () => setIsAuthenticated(true);
-  const login = (userInfo) => {
+  const login = async (userInfo) => {
+    const favoritePlayers = (await axios.post('http://localhost:3000/users/getfav', {
+      username: userInfo.username,
+      pwd: userInfo.password
+    })).data;
     setIsAuthenticated(true);
     setUsername(userInfo.username);
     setPassword(userInfo.password);
-    setFavoritePlayers(userInfo.favoritePlayers || []);
+    setFavoritePlayers(favoritePlayers || []);
     setFavoriteClubs(userInfo.favoriteClubs || []);
   };
 
   const setNewPlayer = (player_id) => {
     // Get the current list of favorite players from localStorage
     let fav_players = localStorage.getItem("favoritePlayers");
-    console.log("prima",fav_players)
 
     // Parse the JSON string to an array, or initialize an empty array if null
     fav_players = fav_players ? JSON.parse(fav_players) : [];
 
-    console.log(fav_players)
     // Add the new player ID to the array
     fav_players.push(player_id);
 
     // Convert the array back to a JSON string and save it to localStorage
     localStorage.setItem("favoritePlayers", JSON.stringify(fav_players));
+    setFavoritePlayers(fav_players);
   };
 
   //const logout = () => setIsAuthenticated(false);

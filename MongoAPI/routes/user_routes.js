@@ -132,13 +132,21 @@ router.post('/fav/player/', mid.addFavoritePlayer);
  *         application/json:
  *           schema:
  *
-*/
+ */
 router.post('/getfav/player', async (req, res) => {
-  const resp = await model.findOne({user_name: req.body.username, pwd: req.body.pwd}, {
-    pwd: 0,
-    user_name: 0,
-    favorite_teams: 0
-  }, null)
-  res.send(resp.favorite_players)
-})
+  try {
+    const resp = await model.findOne(
+      {user_name: req.body.username, pwd: req.body.pwd},
+      {favorite_players: 1}
+    );
+    if (resp) {
+      res.send(resp.favorite_players);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
 module.exports = router

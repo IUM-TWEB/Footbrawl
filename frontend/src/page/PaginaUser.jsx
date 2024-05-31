@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useAuth} from '../context/AuthContext';
+import {useNavigate} from 'react-router-dom';
 
 const PaginaUser = () => {
-  const { username, favoritePlayers, favoriteClubs, logout } = useAuth();
+  const {username, favoritePlayers, favoriteClubs, logout} = useAuth();
   const navigate = useNavigate();
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [selectedClub, setSelectedClub] = useState(null);
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
@@ -20,6 +21,10 @@ const PaginaUser = () => {
 
   const handlePlayerClick = (player) => {
     setSelectedPlayer(player);
+  };
+
+  const handleClubClick = (club) => {
+    setSelectedClub(club);
   };
 
   return (
