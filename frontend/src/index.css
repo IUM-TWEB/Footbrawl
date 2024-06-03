@@ -316,3 +316,15 @@ hr.solid {
 .text-center li {
   list-style: none;
 }
+
+.background-image{
+
+  height: 700px;
+  width: 476px;
+  min-width: 464px;
+  background-image: url("./img/soccer-green-field.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+

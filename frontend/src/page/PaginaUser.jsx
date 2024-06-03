@@ -135,6 +135,21 @@ const PaginaUser = () => {
     return value === -1 ? 'non disponibile' : value + ' euro';
   };
 
+  const RowComponent = (elements, h) => {
+    const numElements = elements.length;
+    const colSize = Math.min(1, 12 / Math.max(1, numElements));
+
+    return (
+      <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
+        {elements.map((element, index) => (
+          <div key={index} className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3`}>
+            <p>{element}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="container-fluid mt-5 px-5 pb-5">
       <h1>Utente: {username ? username : 'utente'}</h1>
@@ -236,45 +251,17 @@ const PaginaUser = () => {
 
           <div className="my-5">
             <h2 className="mb-4">Formazione della squadra preferita:</h2>
+            <select value={formation} onChange={handleFormationChange} className="form-select mb-3">
+              <option value="4-4-2">4-4-2</option>
+              <option value="4-3-3">4-3-3</option>
+              <option value="3-5-2">3-5-2</option>
+              <option value="3-4-3">3-4-3</option>
+              <option value="5-3-2">5-3-2</option>
+            </select>
+
             <div className="row">
-              <div className="col-md-6">
-                <select value={formation} onChange={handleFormationChange} className="form-select mb-3">
-                  <option value="4-4-2">4-4-2</option>
-                  <option value="4-3-3">4-3-3</option>
-                  <option value="3-5-2">3-5-2</option>
-                  <option value="3-4-3">3-4-3</option>
-                  <option value="5-3-2">5-3-2</option>
-                </select>
-
-                <h3>Giocatori selezionati:</h3>
-                <div className="text-center">
-                  <h4>Attaccanti</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.forwards.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Centrocampisti</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.midfielders.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Difensori</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.defenders.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Portiere</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.goalkeeper && (
-                      <li key={selectedFormation.goalkeeper.playerId}>{selectedFormation.goalkeeper.name}</li>
-                    )}
-                  </ul>
-                </div>
-
-                <div>
+              <div className="col-md-4">
+                <div className={"text-center"}>
                   <h3>Seleziona i giocatori:</h3>
                   <h4>Attaccanti</h4>
                   <ul className="list-unstyled">
@@ -309,12 +296,51 @@ const PaginaUser = () => {
                     ))}
                   </ul>
                 </div>
-
               </div>
-              <div className="col-md-6 text-end">
-                <img src={soccerFieldImage} alt="Soccer Field" className="img-fluid" style={{maxWidth: '100%'}}/>
+
+              <div className=" col-md-4 d-flex align-items-stretch justify-content-center">
+                <div
+                  className=" background-image">
+                  <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
+                    {RowComponent([1, 2], '')}
+                    {RowComponent([1, 2, 3, 4], '')}
+                    {RowComponent([1, 2, 3, 4], 'h-50')}
+                    {RowComponent([1], 'h-50')}
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-4">
+                <h3 className="text-center">Giocatori selezionati:</h3>
+                <div className="text-center">
+                  <h4>Attaccanti</h4>
+                  <ul className="list-unstyled">
+                    {selectedFormation.forwards.map(player => (
+                      <li key={player.playerId}>{player.name}</li>
+                    ))}
+                  </ul>
+                  <h4>Centrocampisti</h4>
+                  <ul className="list-unstyled">
+                    {selectedFormation.midfielders.map(player => (
+                      <li key={player.playerId}>{player.name}</li>
+                    ))}
+                  </ul>
+                  <h4>Difensori</h4>
+                  <ul className="list-unstyled">
+                    {selectedFormation.defenders.map(player => (
+                      <li key={player.playerId}>{player.name}</li>
+                    ))}
+                  </ul>
+                  <h4>Portiere</h4>
+                  <ul className="list-unstyled">
+                    {selectedFormation.goalkeeper && (
+                      <li key={selectedFormation.goalkeeper.playerId}>{selectedFormation.goalkeeper.name}</li>
+                    )}
+                  </ul>
+                </div>
               </div>
             </div>
+
           </div>
 
           <div className="d-flex justify-content-end w-100 mt-3">
