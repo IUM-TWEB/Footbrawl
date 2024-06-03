@@ -3,299 +3,316 @@
 
 /* Utility classes */
 .padding {
-    padding: 30px;
-}
-.logo{
-    height: 50px;
-    width: 100px;
+  padding: 30px;
 }
 
+.logo {
+  height: 50px;
+  width: 100px;
+}
 
 
 .menu {
-    background-color: black;
-    padding: 10px;
-    display: flex;           /* Assicurati che flex sia abilitato */
-    flex-direction: row;     /* Disponi gli elementi in una riga */
-    justify-content: space-between; /* Distribuisce gli elementi uniformemente */
-    align-items: center;     /* Centra gli elementi verticalmente */
-    width: 100%;             /* Imposta la larghezza al 100% dell'elemento genitore */
+  background-color: black;
+  padding: 10px;
+  display: flex; /* Assicurati che flex sia abilitato */
+  flex-direction: row; /* Disponi gli elementi in una riga */
+  justify-content: space-between; /* Distribuisce gli elementi uniformemente */
+  align-items: center; /* Centra gli elementi verticalmente */
+  width: 100%; /* Imposta la larghezza al 100% dell'elemento genitore */
 }
 
 
 .menu-item {
-    color: white;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 30px;
-    text-decoration: none;
+  color: white;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 30px;
+  text-decoration: none;
 }
 
 .menu-item:hover {
-    text-decoration: underline;
-    color: chocolate;
+  text-decoration: underline;
+  color: chocolate;
 }
 
 /* News container */
 .news-container {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    width: 100%;
-    background-color: white;
-    color: black;
-    padding: 20px;
-    box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .news-title {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .news-text {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Search form */
 .divSearchForm {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
 }
 
 .center {
-    text-align: center;
+  text-align: center;
 }
 
 .search-bar-container {
-    text-align: center;
+  text-align: center;
 }
 
 .search-form {
-    width: 50%;
-    margin: 0 auto;
-    text-align: center;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .search-form input,
 .search-form button {
-    margin: 5px;
+  margin: 5px;
 }
 
 /* Chocolate button */
 .btn-chocolate {
-    background-color: chocolate;
-    border-color: chocolate;
-    color: white;
+  background-color: chocolate;
+  border-color: chocolate;
+  color: white;
 }
 
 .btn-chocolate:hover {
-    background-color: #8b4513;
-    border-color: #8b4513;
-    color: white;
+  background-color: #8b4513;
+  border-color: #8b4513;
+  color: white;
 }
 
 /* Row */
 .row {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 /* Square */
 .square {
-    background-color: black;
-    border-radius: 10px;
-    padding: 20px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    width: 200px;
-    height: 200px;
+  background-color: black;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  width: 200px;
+  height: 200px;
 }
 
 .quadrati-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .quadrato-padding {
-    padding: 10px;
+  padding: 10px;
 }
 
 /* Title */
 .title {
-    color: black;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 30px;
-    text-decoration: none;
+  color: black;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 30px;
+  text-decoration: none;
 }
 
 .center-text {
-    text-align: center;
+  text-align: center;
 }
 
 /* Centered image */
 .center-img {
-    border-image-width: 1px;
-    border: 1px solid #ccc;
-    display: block;
-    margin: 4% auto;
-    border-radius: 50%;
-    width: 90%;
-    height: auto;
-    max-width: 200px;
+  border-image-width: 1px;
+  border: 1px solid #ccc;
+  display: block;
+  margin: 4% auto;
+  border-radius: 50%;
+  width: 90%;
+  height: auto;
+  max-width: 200px;
 }
 
 /* Player card */
 .results-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    height: 90%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  height: 90%;
 
 }
 
 .card-subtitle {
-    color: chocolate;
-    font-weight: bold;
-    text-decoration: underline;
+  color: chocolate;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 /* Solid border */
 hr.solid {
-    border-top: 1px solid #ccc;
+  border-top: 1px solid #ccc;
 }
 
 /* Chart container */
 .chart-container canvas {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    width: 100% !important;
-    height: 50% !important;
-    margin: 3%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100% !important;
+  height: 50% !important;
+  margin: 3%;
 }
+
 .results-card:hover {
-    background-color: orange;
+  background-color: orange;
 }
 
 .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .loader {
-    border: 3px solid rgba(120, 113, 113, 0.1);
-    border-left-color: #000000;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
+  border: 3px solid rgba(120, 113, 113, 0.1);
+  border-left-color: #000000;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.results-div{
-    min-height: 400px;
-    min-width:800px;
-    z-index: 999;
+
+.results-div {
+  min-height: 400px;
+  min-width: 800px;
+  z-index: 999;
 }
+
 .home {
-    z-index: 1;
+  z-index: 1;
 }
-.news{
-    font-family: Arial;
-    color: white;
-    border: black 1px solid;
-    border-radius: 20px;
-    background-color: chocolate;
-    height: 100%;
+
+.news {
+  font-family: Arial;
+  color: white;
+  border: black 1px solid;
+  border-radius: 20px;
+  background-color: chocolate;
+  height: 100%;
 }
 
 
 .news-item {
-    background-color: #f8f9fa; /* Sfondo chiaro per le card */
-    border: 1px solid #dee2e6; /* Bordo sottile */
-    border-radius: 0.25rem; /* Angoli arrotondati */
-    cursor: pointer; /* Cursor a mano per indicare la cliccabilità */
-    transition: transform 0.3s ease; /* Aggiunge una transizione per rendere lo zoom più fluido */
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Assicura che ciascuna card si estenda per tutto l'altezza del contenitore */
+  background-color: #f8f9fa; /* Sfondo chiaro per le card */
+  border: 1px solid #dee2e6; /* Bordo sottile */
+  border-radius: 0.25rem; /* Angoli arrotondati */
+  cursor: pointer; /* Cursor a mano per indicare la cliccabilità */
+  transition: transform 0.3s ease; /* Aggiunge una transizione per rendere lo zoom più fluido */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Assicura che ciascuna card si estenda per tutto l'altezza del contenitore */
 }
-
 
 
 .news-item img {
-    width: 100%; /* Assicurati che le immagini coprano la larghezza della card */
-    height: auto;
-    border-top-left-radius: 0.25rem; /* Angoli arrotondati per l'immagine in alto */
-    border-top-right-radius: 0.25rem;
+  width: 100%; /* Assicurati che le immagini coprano la larghezza della card */
+  height: auto;
+  border-top-left-radius: 0.25rem; /* Angoli arrotondati per l'immagine in alto */
+  border-top-right-radius: 0.25rem;
 }
 
 .news-item .card-body {
-    padding: 20px; /* Padding intorno al contenuto della card */
-    flex-grow: 1; /* Fa sì che il corpo della card occupi tutto lo spazio disponibile */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  padding: 20px; /* Padding intorno al contenuto della card */
+  flex-grow: 1; /* Fa sì che il corpo della card occupi tutto lo spazio disponibile */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .card-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: auto; /* Assicura che il testo venga spinto verso il basso */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: auto; /* Assicura che il testo venga spinto verso il basso */
 }
+
 /* Beginning of section for the SingleChat page */
 .bg-custom {
-    background-color: #CAD2C5;
-    /*background-color: #84A98C;*/
+  background-color: #CAD2C5;
+  /*background-color: #84A98C;*/
 }
 
 .message-item {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #354F52;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #354F52;
 }
 
 .message-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 #messages {
-    height: calc(100vh - 230px); /* Imposta l'altezza in modo che non superi un certo limite */
-    overflow-y: auto; /* Abilita lo scorrimento verticale */
+  height: calc(100vh - 230px); /* Imposta l'altezza in modo che non superi un certo limite */
+  overflow-y: auto; /* Abilita lo scorrimento verticale */
 }
+
 /* Ending of section for the SingleChat page */
 .ff {
-    background-color: #d2691e; /* Chocolate color */
-    color: white; /* White text color */
-    border-width: 0;
-    border-radius: 10%;
+  background-color: #d2691e; /* Chocolate color */
+  color: white; /* White text color */
+  border-width: 0;
+  border-radius: 10%;
 
 }
 
 .ff:hover {
-    background-color: #4d2e07;
-    color: black;
+  background-color: #4d2e07;
+  color: black;
 }
 
 .ff-not {
-    background-color: #4d2e07;
-    color: black;
-    border-width: 0;
-    border-radius: 10%;
+  background-color: #4d2e07;
+  color: black;
+  border-width: 0;
+  border-radius: 10%;
 }
 
 .nav-item .nav-link.active {
-    color: blue;
-    font-weight: bold;
+  color: blue;
+  font-weight: bold;
+}
+
+.my-custom-hr {
+  border: 1px solid #407f4a;
+}
+
+.text-center ul {
+  padding-left: 0;
+}
+
+.text-center li {
+  list-style: none;
 }

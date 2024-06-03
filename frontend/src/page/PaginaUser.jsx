@@ -127,6 +127,10 @@ const PaginaUser = () => {
     });
   };
 
+  const filterPlayersByPosition = (position) => {
+    return playerNames.filter((player) => player.position === position);
+  };
+
   const formatValue = (value) => {
     return value === -1 ? 'non disponibile' : value + ' euro';
   };
@@ -231,9 +235,9 @@ const PaginaUser = () => {
           <hr className="my-custom-hr"/>
 
           <div className="my-5">
+            <h2 className="mb-4">Formazione della squadra preferita:</h2>
             <div className="row">
               <div className="col-md-6">
-                <h2 className="mb-4">Formazione della squadra preferita:</h2>
                 <select value={formation} onChange={handleFormationChange} className="form-select mb-3">
                   <option value="4-4-2">4-4-2</option>
                   <option value="4-3-3">4-3-3</option>
@@ -269,6 +273,43 @@ const PaginaUser = () => {
                     )}
                   </ul>
                 </div>
+
+                <div>
+                  <h3>Seleziona i giocatori:</h3>
+                  <h4>Attaccanti</h4>
+                  <ul className="list-unstyled">
+                    {filterPlayersByPosition('Attack').map((player) => (
+                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'forward')}>
+                        {player.name}
+                      </li>
+                    ))}
+                  </ul>
+                  <h4>Centrocampisti</h4>
+                  <ul className="list-unstyled">
+                    {filterPlayersByPosition('Midfield').map((player) => (
+                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'midfielder')}>
+                        {player.name}
+                      </li>
+                    ))}
+                  </ul>
+                  <h4>Difensori</h4>
+                  <ul className="list-unstyled">
+                    {filterPlayersByPosition('Defender').map((player) => (
+                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'defender')}>
+                        {player.name}
+                      </li>
+                    ))}
+                  </ul>
+                  <h4>Portieri</h4>
+                  <ul className="list-unstyled">
+                    {filterPlayersByPosition('Goalkeeper').map((player) => (
+                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'goalkeeper')}>
+                        {player.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
               </div>
               <div className="col-md-6 text-end">
                 <img src={soccerFieldImage} alt="Soccer Field" className="img-fluid" style={{maxWidth: '100%'}}/>
