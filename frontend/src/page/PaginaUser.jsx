@@ -21,7 +21,7 @@ const PaginaUser = () => {
     goalkeeper: '1'
   });
 
-  const [selectedPosition, setSelectedPosition] = useState([null,null])
+  const [selectedPosition, setSelectedPosition] = useState([null, null])
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
@@ -110,20 +110,23 @@ const PaginaUser = () => {
   };
 
   const handlePlayerSelection = (player, position) => {
+    console.log(selectedPosition)
     setSelectedFormation(prevFormation => {
       const newFormation = {...prevFormation};
-      switch (position) {
-        case 'forward':
-          newFormation.forwards = newFormation.forwards.includes(player) ? newFormation.forwards.filter(p => p !== player) : [...newFormation.forwards, player];
+
+      switch (selectedPosition[1]) {
+        case 0:
+          newFormation.forwards[selectedPosition[0]]=player.name;
           break;
-        case 'midfielder':
-          newFormation.midfielders = newFormation.midfielders.includes(player) ? newFormation.midfielders.filter(p => p !== player) : [...newFormation.midfielders, player];
+        case 1:
+          newFormation.midfielders[selectedPosition[0]]=player.name;
           break;
-        case 'defender':
-          newFormation.defenders = newFormation.defenders.includes(player) ? newFormation.defenders.filter(p => p !== player) : [...newFormation.defenders, player];
+        case 2:
+          newFormation.defenders[selectedPosition[0]]=player.name;
+
           break;
-        case 'goalkeeper':
-          newFormation.goalkeeper = newFormation.goalkeeper === player ? null : player;
+        case 3:
+          newFormation.goalkeeper=player.name;
           break;
         default:
           break;
@@ -141,7 +144,7 @@ const PaginaUser = () => {
   };
 
   const selectPlayerPosition = (x, y) => {
-    setSelectedPosition([x,y])
+    setSelectedPosition([x, y])
     console.log(selectedPosition)
   }
 
@@ -149,11 +152,33 @@ const PaginaUser = () => {
     const numElements = elements.length;
     const colSize = Math.min(1, 12 / Math.max(1, numElements));
 
+    // Select the correct team segment based on the pos argument
+    let teamSegment;
+    switch (pos) {
+      case 0:
+        teamSegment = selectedFormation.forwards;
+        break;
+      case 1:
+        teamSegment = selectedFormation.midfielders;
+        break;
+      case 2:
+        teamSegment = selectedFormation.defenders;
+        break;
+      case 3:
+        // Assuming that goalkeeper is just one, create an array to handle similarly
+        teamSegment = [selectedFormation.goalkeeper];
+        break;
+      default:
+        teamSegment = []; // default to an empty array if no valid position is found
+    }
+    console.log(selectedFormation)
     return (
       <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
         {elements.map((element, index) => (
           <div key={index} className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3`}>
-            <button onClick={() => selectPlayerPosition(index, pos)}>{index}</button>
+            <button onClick={() => selectPlayerPosition(index, pos)}>
+              {teamSegment[index]}
+            </button>
           </div>
         ))}
       </div>
