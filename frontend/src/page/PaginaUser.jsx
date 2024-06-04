@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {useAuth} from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
-import soccerFieldImage from '../img/soccer-green-field.png';
 
 const PaginaUser = () => {
   const {username, favoritePlayers, favoriteClubs, logout} = useAuth();
@@ -16,11 +15,13 @@ const PaginaUser = () => {
   const [clubNames, setClubNames] = useState([]);
   const [formation, setFormation] = useState('4-4-2');
   const [selectedFormation, setSelectedFormation] = useState({
-    forwards: [],
-    midfielders: [],
-    defenders: [],
-    goalkeeper: null
+    forwards: ['1', '1'],
+    midfielders: ['1', '1', '1', '1'],
+    defenders: ['1', '1', '1', '1'],
+    goalkeeper: '1'
   });
+
+  const [selectedPosition, setSelectedPosition] = useState([null,null])
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
@@ -93,14 +94,18 @@ const PaginaUser = () => {
     setSelectedClub(club);
   };
 
-  const handleFormationChange = (event) => {
-    setFormation(event.target.value);
-    // Reset della formazione selezionata quando si cambia la formazione
+  const handleFormationChange = (formation) => {
+    setFormation(formation)
+
+    const defenders_num = parseInt(formation[0], 10);
+    const midfielders_num = parseInt(formation[2], 10);
+    const forwards_num = parseInt(formation[4], 10);
+
     setSelectedFormation({
-      forwards: [],
-      midfielders: [],
-      defenders: [],
-      goalkeeper: null
+      forwards: Array(forwards_num).fill("1"),
+      midfielders: Array(midfielders_num).fill("1"),
+      defenders: Array(defenders_num).fill("1"),
+      goalkeeper: "1"
     });
   };
 
@@ -135,7 +140,12 @@ const PaginaUser = () => {
     return value === -1 ? 'non disponibile' : value + ' euro';
   };
 
-  const RowComponent = (elements, h) => {
+  const selectPlayerPosition = (x, y) => {
+    setSelectedPosition([x,y])
+    console.log(selectedPosition)
+  }
+
+  const lineFormation = (elements, h, pos) => {
     const numElements = elements.length;
     const colSize = Math.min(1, 12 / Math.max(1, numElements));
 
@@ -143,7 +153,7 @@ const PaginaUser = () => {
       <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
         {elements.map((element, index) => (
           <div key={index} className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3`}>
-            <p>{element}</p>
+            <button onClick={() => selectPlayerPosition(index, pos)}>{index}</button>
           </div>
         ))}
       </div>
@@ -251,7 +261,8 @@ const PaginaUser = () => {
 
           <div className="my-5">
             <h2 className="mb-4">Formazione della squadra preferita:</h2>
-            <select value={formation} onChange={handleFormationChange} className="form-select mb-3">
+            <select value={formation} onChange={e => handleFormationChange(e.target.value)}
+                    className="form-select mb-3">
               <option value="4-4-2">4-4-2</option>
               <option value="4-3-3">4-3-3</option>
               <option value="3-5-2">3-5-2</option>
@@ -302,10 +313,10 @@ const PaginaUser = () => {
                 <div
                   className=" background-image">
                   <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
-                    {RowComponent([1, 2], '')}
-                    {RowComponent([1, 2, 3, 4], '')}
-                    {RowComponent([1, 2, 3, 4], 'h-50')}
-                    {RowComponent([1], 'h-50')}
+                    {lineFormation(selectedFormation.forwards, '', 0)}
+                    {lineFormation(selectedFormation.midfielders, '', 1)}
+                    {lineFormation(selectedFormation.defenders, 'h-50', 2)}
+                    {lineFormation(['1'], 'h-50', 3)}
                   </div>
                 </div>
               </div>
