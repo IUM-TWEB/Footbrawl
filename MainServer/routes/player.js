@@ -132,9 +132,14 @@ router.get('/player_clubs/:id', async (req, res) => {
         }
         for (let i of response.data) {
             if (!clubs_id.includes(i.club_id)) {
-                const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
-                data.clubs.push(club_name.data.name);
-                clubs_id.push(i.club_id);
+                try {
+                    const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
+                    if(club_name) {
+                        data.clubs.push(club_name.data.name);
+                        clubs_id.push(i.club_id);
+                    }
+                }catch (e){}
+
             }
         }
         res.send(data)

@@ -208,6 +208,13 @@ hr.solid {
   z-index: 999;
 }
 
+.results-div-2{
+  /*min-height: 400px;*/
+  min-width: 27.5%;
+  /*width: 100%;*/
+  z-index: 999;
+}
+
 .home {
   z-index: 1;
 }
@@ -328,3 +335,34 @@ hr.solid {
   background-size: cover;
 }
 
+.tb-player {
+  border-radius: 10%; /* Rende i bordi completamente arrotondati */
+  padding: 0; /* Rimuove il padding per evitare distorsioni dell'immagine */
+  overflow: hidden;
+  border: none;
+}
+
+.tb-player img {
+  width: 100%; /* larghezza completa dentro il bottone */
+  height: auto; /* altezza automatica per mantenere le proporzioni */
+  display: block; /* rimuove eventuali spazi extra sotto l'immagine */
+}
+
+.image-overlay-container {
+  position: relative;
+  display: inline-block; /* O 'block' a seconda delle tue necessità */
+}
+
+.image-overlay-container img {
+  display: block; /* Rimuove eventuali spazi extra sotto l'immagine */
+  width: 100%; /* Assicura che l'immagine copra tutto il contenitore */
+  height: auto; /* Mantiene le proporzioni dell'immagine */
+}
+
+.image-overlay {
+  border: 3px solid #595959;
+}
+
+.image-overlay-selected {
+  border: 3px solid #fd9902;
+}

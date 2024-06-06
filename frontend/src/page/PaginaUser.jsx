@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {useAuth} from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
-
+import TeamBuilder from "../simple_components/TeamBuilder.jsx";
 const PaginaUser = () => {
   const {username, favoritePlayers, favoriteClubs, logout} = useAuth();
   const navigate = useNavigate();
@@ -13,15 +13,7 @@ const PaginaUser = () => {
 
   const [playerNames, setPlayerNames] = useState([]);
   const [clubNames, setClubNames] = useState([]);
-  const [formation, setFormation] = useState('4-4-2');
-  const [selectedFormation, setSelectedFormation] = useState({
-    forwards: ['1', '1'],
-    midfielders: ['1', '1', '1', '1'],
-    defenders: ['1', '1', '1', '1'],
-    goalkeeper: '1'
-  });
 
-  const [selectedPosition, setSelectedPosition] = useState([null, null])
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
@@ -31,6 +23,7 @@ const PaginaUser = () => {
           .then(response => response.data)
       ))
         .then(players => {
+          console.log(players)
           setPlayerNames(players);
           setSelectedPlayer(players[0]);
         })
@@ -94,95 +87,8 @@ const PaginaUser = () => {
     setSelectedClub(club);
   };
 
-  const handleFormationChange = (formation) => {
-    setFormation(formation)
-
-    const defenders_num = parseInt(formation[0], 10);
-    const midfielders_num = parseInt(formation[2], 10);
-    const forwards_num = parseInt(formation[4], 10);
-
-    setSelectedFormation({
-      forwards: Array(forwards_num).fill("1"),
-      midfielders: Array(midfielders_num).fill("1"),
-      defenders: Array(defenders_num).fill("1"),
-      goalkeeper: "1"
-    });
-  };
-
-  const handlePlayerSelection = (player, position) => {
-    console.log(selectedPosition)
-    setSelectedFormation(prevFormation => {
-      const newFormation = {...prevFormation};
-
-      switch (selectedPosition[1]) {
-        case 0:
-          newFormation.forwards[selectedPosition[0]]=player.name;
-          break;
-        case 1:
-          newFormation.midfielders[selectedPosition[0]]=player.name;
-          break;
-        case 2:
-          newFormation.defenders[selectedPosition[0]]=player.name;
-
-          break;
-        case 3:
-          newFormation.goalkeeper=player.name;
-          break;
-        default:
-          break;
-      }
-      return newFormation;
-    });
-  };
-
-  const filterPlayersByPosition = (position) => {
-    return playerNames.filter((player) => player.position === position);
-  };
-
   const formatValue = (value) => {
     return value === -1 ? 'non disponibile' : value + ' euro';
-  };
-
-  const selectPlayerPosition = (x, y) => {
-    setSelectedPosition([x, y])
-    console.log(selectedPosition)
-  }
-
-  const lineFormation = (elements, h, pos) => {
-    const numElements = elements.length;
-    const colSize = Math.min(1, 12 / Math.max(1, numElements));
-
-    // Select the correct team segment based on the pos argument
-    let teamSegment;
-    switch (pos) {
-      case 0:
-        teamSegment = selectedFormation.forwards;
-        break;
-      case 1:
-        teamSegment = selectedFormation.midfielders;
-        break;
-      case 2:
-        teamSegment = selectedFormation.defenders;
-        break;
-      case 3:
-        // Assuming that goalkeeper is just one, create an array to handle similarly
-        teamSegment = [selectedFormation.goalkeeper];
-        break;
-      default:
-        teamSegment = []; // default to an empty array if no valid position is found
-    }
-    console.log(selectedFormation)
-    return (
-      <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
-        {elements.map((element, index) => (
-          <div key={index} className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3`}>
-            <button onClick={() => selectPlayerPosition(index, pos)}>
-              {teamSegment[index]}
-            </button>
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -284,100 +190,7 @@ const PaginaUser = () => {
 
           <hr className="my-custom-hr"/>
 
-          <div className="my-5">
-            <h2 className="mb-4">Formazione della squadra preferita:</h2>
-            <select value={formation} onChange={e => handleFormationChange(e.target.value)}
-                    className="form-select mb-3">
-              <option value="4-4-2">4-4-2</option>
-              <option value="4-3-3">4-3-3</option>
-              <option value="3-5-2">3-5-2</option>
-              <option value="3-4-3">3-4-3</option>
-              <option value="5-3-2">5-3-2</option>
-            </select>
-
-            <div className="row">
-              <div className="col-md-4">
-                <div className={"text-center"}>
-                  <h3>Seleziona i giocatori:</h3>
-                  <h4>Attaccanti</h4>
-                  <ul className="list-unstyled">
-                    {filterPlayersByPosition('Attack').map((player) => (
-                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'forward')}>
-                        {player.name}
-                      </li>
-                    ))}
-                  </ul>
-                  <h4>Centrocampisti</h4>
-                  <ul className="list-unstyled">
-                    {filterPlayersByPosition('Midfield').map((player) => (
-                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'midfielder')}>
-                        {player.name}
-                      </li>
-                    ))}
-                  </ul>
-                  <h4>Difensori</h4>
-                  <ul className="list-unstyled">
-                    {filterPlayersByPosition('Defender').map((player) => (
-                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'defender')}>
-                        {player.name}
-                      </li>
-                    ))}
-                  </ul>
-                  <h4>Portieri</h4>
-                  <ul className="list-unstyled">
-                    {filterPlayersByPosition('Goalkeeper').map((player) => (
-                      <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'goalkeeper')}>
-                        {player.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className=" col-md-4 d-flex align-items-stretch justify-content-center">
-                <div
-                  className=" background-image">
-                  <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
-                    {lineFormation(selectedFormation.forwards, '', 0)}
-                    {lineFormation(selectedFormation.midfielders, '', 1)}
-                    {lineFormation(selectedFormation.defenders, 'h-50', 2)}
-                    {lineFormation(['1'], 'h-50', 3)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-md-4">
-                <h3 className="text-center">Giocatori selezionati:</h3>
-                <div className="text-center">
-                  <h4>Attaccanti</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.forwards.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Centrocampisti</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.midfielders.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Difensori</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.defenders.map(player => (
-                      <li key={player.playerId}>{player.name}</li>
-                    ))}
-                  </ul>
-                  <h4>Portiere</h4>
-                  <ul className="list-unstyled">
-                    {selectedFormation.goalkeeper && (
-                      <li key={selectedFormation.goalkeeper.playerId}>{selectedFormation.goalkeeper.name}</li>
-                    )}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-          </div>
+          <TeamBuilder favoritePlayers={playerNames}></TeamBuilder>
 
           <div className="d-flex justify-content-end w-100 mt-3">
             <button onClick={handleLogout} className="btn btn-danger">Logout</button>
