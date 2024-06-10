@@ -4,7 +4,6 @@ import SearchBarUserTemp from "./SearchBarUserTemp.jsx";
 
 const TeamFormationSelector = ({favoritePlayers}) => {
   let a = []
-  const [isOpaque, setIsOpaque] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState([null, null])
   const [playerNames, setPlayerNames] = useState([]);
   const [formation, setFormation] = useState('4-4-2');
@@ -152,7 +151,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             <ul className="list-unstyled">
               {filterPlayersByPosition('Attack').map((player) => (
                 <li key={player.playerId} onClick={() => handlePlayerSelection(player)}>
-                  {player.name}
+                  <button className="">{player.name}</button>
                 </li>
               ))}
             </ul>

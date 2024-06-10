@@ -71,7 +71,7 @@ function SearchBar({ callback }) {
           <div className="position-absolute results-div-2">
             {players.map((player, index) => (
               <div key={`player-${player.player_id}-${index}`}
-                   className="card card-body p-2 results-card" onClick={() => callback(player)}>
+                   className="card card-body p-2 results-card" onClick={() => {callback(player); setShowContent(false); setSearchTerm('')}}>
                 <h6 className="card-title mb-0">{player.name}</h6>
               </div>
             ))}
