@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import PopupPlayer from "./PopupPlayer.jsx";
 import { useNavigate } from 'react-router-dom';
 
 function SearchBar({ callback }) {
+  const [popupsOpen, setPopupsOpen] = useState({});
   const [players, setPlayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showContent, setShowContent] = useState(false);
   const [showError, setShowError] = useState(false);
   const searchBarRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -22,6 +23,13 @@ function SearchBar({ callback }) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const togglePopup = (id) => {
+    setPopupsOpen(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -68,11 +76,20 @@ function SearchBar({ callback }) {
         </div>
 
         {showContent && (
-          <div className="position-absolute results-div-2">
+          <div className="position-absolute results-div-2" style={{backgroundColor:"rgb(255,255,255,100%)", borderRadius:"2%", marginTop:"10px"}}>
             {players.map((player, index) => (
               <div key={`player-${player.player_id}-${index}`}
+                   style={{margin:"2px"}}
                    className="card card-body p-2 results-card" onClick={() => {callback(player); setShowContent(false); setSearchTerm('')}}>
-                <h6 className="card-title mb-0">{player.name}</h6>
+                <button
+                  style={{height:"20px"}}
+                  className={"player-Usr"}
+                  onMouseOver={() => togglePopup(player.playerId)}
+                  onMouseLeave={() => togglePopup(player.playerId)}
+                >
+                  {player.name}
+                </button>
+                {popupsOpen[player.playerId] && <PopupPlayer isOpen={true} player={player}/>}
               </div>
             ))}
           </div>
