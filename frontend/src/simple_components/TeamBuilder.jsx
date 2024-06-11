@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react';
 import altImg from '../img/alt.png'
 import SearchBarUserTemp from "./SearchBarUserTemp.jsx";
+import PopupPlayer from "./PopupPlayer.jsx";
 
 const TeamFormationSelector = ({favoritePlayers}) => {
   let a = []
-  const [selectedPosition, setSelectedPosition] = useState([null, null])
+  const [popupsOpen, setPopupsOpen] = useState({});  const [selectedPosition, setSelectedPosition] = useState([null, null])
   const [playerNames, setPlayerNames] = useState([]);
   const [formation, setFormation] = useState('4-4-2');
   const [selectedFormation, setSelectedFormation] = useState({
@@ -13,9 +14,18 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     defenders: ['1', '1', '1', '1'],
     goalkeeper: '1'
   });
+
   useEffect(() => {
     setPlayerNames(favoritePlayers);
   }, [favoritePlayers]);
+
+  const togglePopup = (id) => {
+    setPopupsOpen(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   const filterPlayersByPosition = (position) => {
     return playerNames.filter((player) => player.position === position);
   };
@@ -122,6 +132,10 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     );
   };
 
+  const listItemStyle = {
+    position: 'relative',  // This makes it a reference for absolute positioning
+    margin: '3%'
+  };
 
   return (
     <>
@@ -138,7 +152,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         </div>
         <div className={"col-md"}></div>
         <div className={"col-md-4"}>
-        <SearchBarUserTemp callback={test}></SearchBarUserTemp>
+          <SearchBarUserTemp callback={test}></SearchBarUserTemp>
         </div>
       </div>
 
@@ -150,32 +164,61 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             <h4>Attaccanti</h4>
             <ul className="list-unstyled">
               {filterPlayersByPosition('Attack').map((player) => (
-                <li key={player.playerId} onClick={() => handlePlayerSelection(player)}>
-                  <button className="">{player.name}</button>
+                <li key={player.playerId} onClick={() => handlePlayerSelection(player)} style={listItemStyle}>
+                  <button
+                    className={"player-Usr"}
+                    onMouseOver={() => togglePopup(player.playerId)}
+                    onMouseLeave={() => togglePopup(player.playerId)}
+                  >
+                    {player.name}
+                  </button>
+                  {popupsOpen[player.playerId] && <PopupPlayer isOpen={true} player={player}/>}
                 </li>
               ))}
             </ul>
             <h4>Centrocampisti</h4>
             <ul className="list-unstyled">
               {filterPlayersByPosition('Midfield').map((player) => (
-                <li key={player.playerId} onClick={() => handlePlayerSelection(player)}>
-                  {player.name}
+                <li key={player.playerId} onClick={() => handlePlayerSelection(player)} style={listItemStyle}>
+                  <button
+                    className={"player-Usr"}
+                    onMouseOver={() => togglePopup(player.playerId)}
+                    onMouseLeave={() => togglePopup(player.playerId)}
+                  >
+                    {player.name}
+                  </button>
+                  {popupsOpen[player.playerId] && <PopupPlayer isOpen={true} player={player}/>}
                 </li>
               ))}
             </ul>
             <h4>Difensori</h4>
             <ul className="list-unstyled">
               {filterPlayersByPosition('Defender').map((player) => (
-                <li key={player.playerId} onClick={() => handlePlayerSelection(player)}>
-                  {player.name}
+                <li key={player.playerId} onClick={() => handlePlayerSelection(player)} style={listItemStyle}>
+                  <button
+                    className={"player-Usr"}
+                    onMouseOver={() => togglePopup(player.playerId)}
+                    onMouseLeave={() => togglePopup(player.playerId)}
+                  >
+                    {player.name}
+                  </button>
+                  {popupsOpen[player.playerId] && <PopupPlayer isOpen={true} player={player}/>}
                 </li>
               ))}
             </ul>
             <h4>Portieri</h4>
             <ul className="list-unstyled">
               {filterPlayersByPosition('Goalkeeper').map((player) => (
-                <li key={player.playerId} onClick={() => handlePlayerSelection(player, 'goalkeeper')}>
-                  {player.name}
+                <li key={player.playerId} onClick={() => handlePlayerSelection(player)} style={listItemStyle}>
+                  <button
+                    className={"player-Usr"}
+
+                    onMouseOver={() => togglePopup(player.playerId)}
+                    onMouseLeave={() => togglePopup(player.playerId)}
+                  >
+                    {player.name}
+                  </button>
+                  {popupsOpen[player.playerId] && <PopupPlayer isOpen={true} player={player}/>}
                 </li>
               ))}
             </ul>
