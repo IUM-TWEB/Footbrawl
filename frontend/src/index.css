@@ -12,13 +12,12 @@
 
 
 .menu {
-    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px;
-    display: flex;           /* Assicurati che flex sia abilitato */
-    flex-direction: row;     /* Disponi gli elementi in una riga */
-    justify-content: space-between; /* Distribuisce gli elementi uniformemente */
-    align-items: center;     /* Centra gli elementi verticalmente */
-    width: 100%;             /* Imposta la larghezza al 100% dell'elemento genitore */
+    padding-right: 50px;
+    background-color: black; /* Sfondo chiaro, modifica se necessario */
 }
 
 

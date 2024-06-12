@@ -6,6 +6,23 @@ const axios = require('axios');
 router.get('/', function (req, res, next) {
   res.render('index', {title: 'Express'});
 });
+
+router.get('/ranking/:competition_name', async (req, res) => {
+  const competitionName = req.params.competition_name;
+  const url = `http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${competitionName}`;
+
+  try {
+    const response = await axios.get(url);
+    const rankingData = response.data;
+
+    console.log(rankingData);
+    res.send(rankingData);
+  } catch (error) {
+    console.error('ERRORE nella richiesta al server Postgres:', error);
+    res.status(500).send('Errore nella richiesta al server Postgres');
+  }
+});
+
 router.get('/home/news', async (req, res) => {
   try {
     const response = await axios.get(`http://localhost:3001/news`);

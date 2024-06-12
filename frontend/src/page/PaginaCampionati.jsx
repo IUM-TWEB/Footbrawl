@@ -53,11 +53,16 @@ const PaginaCampionati = () => {
       )}
 
       {data && (
-        <div>
-          <h2>Data Received:</h2>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+        <div className="card mt-3">
+          <div className="card-body">
+            <h2 className="card-title">Data Received:</h2>
+            <p className="card-text"><strong>Name:</strong> {data.name || "Not available"}</p>
+            <p className="card-text"><strong>Type:</strong> {data.type || "Not available"}</p>
+            <p className="card-text"><strong>Confederation:</strong> {data.confederation || "Not available"}</p>
+          </div>
         </div>
       )}
+
     </>
   );
 };
