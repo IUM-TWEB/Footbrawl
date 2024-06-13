@@ -1,7 +1,6 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Menu from "./simple_components/Menu.jsx";
-import PaginaPartite from "./page/PaginaPartite.jsx";
 import PaginaCampionati from "./page/PaginaCampionati.jsx";
 import PaginaClub from "./page/PaginaClub.jsx";
 import PaginaGiocatori from "./page/PaginaGiocatori.jsx";
@@ -15,6 +14,7 @@ import SingleChat from "./simple_components/SingleChat.jsx"
 import Register from "./page/Registrazione.jsx";
 import PaginaUser from "./page/PaginaUser.jsx";
 import ProtectedRoute from './simple_components/ProtectedRoute.jsx';
+import PaginaCampionato from "./page/PaginaCampionato.jsx";
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>
         } exact/>
-        
+
         <Route path="/mercato" element={<PaginaMercato/>}/>
         <Route path="/reg" element={<Register/>}/>
         <Route path="/chat" element={<ProtectedRoute> <PaginaChat/> </ProtectedRoute>}/>
@@ -32,6 +32,7 @@ function App() {
         <Route path="/news" element={<GridNews/>}/>
         <Route path="/news-params" element={<NewsParams />} />
         <Route path="/campionati" element={<PaginaCampionati />} />
+        <Route path="/campionati/:id_campionato" element={<PaginaCampionato />} />
         <Route path="/club/:clubId" element={<PaginaClub />} />
         <Route path="/giocatori/:playerId" element={<PaginaGiocatori />} />
         <Route path="/mercato" element={<PaginaMercato />} />

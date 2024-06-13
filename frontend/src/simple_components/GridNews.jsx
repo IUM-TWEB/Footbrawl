@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import News from "./News.jsx";
-import "../index.css"; // Assicurati di importare il CSS
+import "../index.css";
 
 const GridNews = () => {
   const [newsList, setNewsList] = useState([]);
