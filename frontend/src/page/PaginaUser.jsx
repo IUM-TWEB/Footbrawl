@@ -11,7 +11,7 @@ const PaginaUser = () => {
   const navigate = useNavigate();
   const [selectedClub, setSelectedClub] = useState(null);
   const [clubDetails, setClubDetails] = useState(null);
-  const [clubNames, setClubNames] = useState([]);
+  const [favouriteClubs, setFavouriteClubs] = useState([]);
 
   const [players, setPlayers] = useState([]);
 
@@ -23,7 +23,6 @@ const PaginaUser = () => {
           .then(response => response.data)
       ))
         .then(players => {
-          console.log(players)
           setPlayers(players);
         })
         .catch(error => {
@@ -40,7 +39,7 @@ const PaginaUser = () => {
           .then(response => response.data)
       ))
         .then(clubs => {
-          setClubNames(clubs);
+          setFavouriteClubs(clubs);
           setSelectedClub(clubs[0]);
         })
         .catch(error => {
@@ -72,13 +71,13 @@ const PaginaUser = () => {
       <h1>Utente: {username ? username : 'utente'}</h1>
       {username && (
         <>
-          <FavoriteUserPlayers playerNames={players}></FavoriteUserPlayers>
+          <FavoriteUserPlayers Players={players}></FavoriteUserPlayers>
           <hr className="my-custom-hr"/>
 
-          <FavouriteUserTeam clubNames={clubNames}></FavouriteUserTeam>
+          <FavouriteUserTeam clubNames={favouriteClubs}></FavouriteUserTeam>
           <hr className="my-custom-hr"/>
 
-          <TeamBuilder favoritePlayers={players}></TeamBuilder>
+          <TeamBuilder  favoritePlayers={players}></TeamBuilder>
 
           <div className="d-flex justify-content-end w-100 mt-3">
             <button onClick={handleLogout} className="btn btn-danger">Logout</button>

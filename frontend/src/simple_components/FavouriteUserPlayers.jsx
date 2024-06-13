@@ -1,17 +1,14 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 
-const FavouriteUserPlayers = ({playerNames}) => {
+const FavouriteUserPlayers = ({Players}) => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
 
   useEffect(() => {
-    console.log("in fav ",playerNames)
-    setSelectedPlayer(playerNames[0])
-
-  }, [playerNames]);
+    setSelectedPlayer(Players[0])
+  }, [Players]);
 
   const handlePlayerClick = (player) => {
-    console.log(player)
     setSelectedPlayer(player);
   };
 
@@ -25,11 +22,11 @@ const FavouriteUserPlayers = ({playerNames}) => {
 
     <div className="my-5">
       <h2>Giocatori Preferiti:</h2>
-      {playerNames.length > 0 ? (
+      {Players.length > 0 ? (
         <div className="row align-items-center" style={{minHeight: '50vh'}}>
           <div className="col-md-3 border-2 border-end me-4">
             <ul className="list-group">
-              {playerNames.map((player, index) => (
+              {Players.map((player, index) => (
                 <li
                   className={`list-group-item ${selectedPlayer && selectedPlayer.playerId === player.playerId ? 'active' : ''}`}
                   key={index}

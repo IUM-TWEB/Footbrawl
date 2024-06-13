@@ -6,7 +6,6 @@ const FavouriteUserTeam = ({clubNames}) => {
   const [clubDetails, setClubDetails] = useState(null);
 
   useEffect(() => {
-    console.log("in fav ",clubNames)
     setSelectedClub(clubNames[0])
 
   }, [clubNames]);

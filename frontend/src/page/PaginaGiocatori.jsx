@@ -40,7 +40,6 @@ async function getChartData(player_id, endpoint, label_name) {
                 }],
             };
         } else {
-            console.log("Returning null: ", endpoint);
             return null;
         }
     } catch (error) {
@@ -53,7 +52,7 @@ function show_graph(data) {
     if (data) {
         return <Line options={options} data={data} />;
     } else {
-        return;
+        return null;
     }
 }
 
@@ -82,7 +81,7 @@ export default function PaginaGiocatori() {
     const [player, setPlayer] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    useEffect( () => {
         const fetchData = async () => {
             try {
                 const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
