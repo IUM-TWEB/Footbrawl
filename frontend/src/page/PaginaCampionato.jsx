@@ -4,23 +4,37 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PaginaCampionato = () => {
-
-
   const { id_campionato } = useParams();
   const [data, setData] = useState(null);
+  const [topScorerData, setTopScorerData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   function convertToLowerCase(str) {
     return str.toLowerCase();
   }
-  const lower_id_campionato =  convertToLowerCase(id_campionato);
+  const lower_id_campionato = convertToLowerCase(id_campionato);
+
+  const fetchTopScorer = async (id_campionato) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/campionati/top_scorer/${id_campionato}`, {
+        timeout: 10000000 // Aumenta il timeout a 10 secondi
+      });
+      const topScorerData = response.data;
+      console.log('Top Scorer Data:', topScorerData);
+      setTopScorerData(topScorerData);
+    } catch (error) {
+      console.error('Errore nella richiesta al server:', error);
+      setError(error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/competitions/${id_campionato}`);
+        const response = await axios.get(`http://localhost:3000/competitions/${id_campionato}`, {
+          timeout: 10000 // Aumenta il timeout a 10 secondi
+        });
         setData(response.data);
         setLoading(false);
       } catch (error) {
@@ -30,6 +44,7 @@ const PaginaCampionato = () => {
     };
 
     fetchData();
+    fetchTopScorer(id_campionato); // Chiama fetchTopScorer qui
   }, [id_campionato, lower_id_campionato]);
 
   if (loading) {
@@ -41,19 +56,26 @@ const PaginaCampionato = () => {
   }
 
   return (
-    <div className="container mt-5 d-flex justify-content-center">
+    <div className="container mt-5">
       {data ? (
-        <div className="card" style={{maxWidth: "540px"}}>
+        <div className="card mb-3" style={{ maxWidth: "540px" }}>
           <div className="row no-gutters">
             <div className="col-md-4 d-flex align-items-center justify-content-center p-3">
-              <img src={`https://tmssl.akamaized.net/images/logo/header/${lower_id_campionato}.png`}
-                   alt="Competition Logo" className="img-fluid"/>
+              <img
+                src={`https://tmssl.akamaized.net/images/logo/header/${lower_id_campionato}.png`}
+                alt="Competition Logo"
+                className="img-fluid"
+              />
             </div>
             <div className="col-md-8">
               <div className="card-body">
                 <h2 className="card-title">{data.name || "Not available"}</h2>
-                <p className="card-text"><strong>Type:</strong> {data.type || "Not available"}</p>
-                <p className="card-text"><strong>Confederation:</strong> {data.confederation || "Not available"}</p>
+                <p className="card-text">
+                  <strong>Type:</strong> {data.type || "Not available"}
+                </p>
+                <p className="card-text">
+                  <strong>Confederation:</strong> {data.confederation || "Not available"}
+                </p>
               </div>
             </div>
           </div>
@@ -61,8 +83,21 @@ const PaginaCampionato = () => {
       ) : (
         <div className="text-center">No data available</div>
       )}
-    </div>
 
+      <h3 className="text-center mt-5">Top Scorers</h3>
+      {topScorerData.length > 0 ? (
+        <ul className="list-group">
+          {topScorerData.map((scorer, index) => (
+            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+              {scorer.playerName} - {scorer.totalGoals} goals
+              <span className="badge badge-primary badge-pill">{scorer.position}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-center">No top scorers available</div>
+      )}
+    </div>
   );
 };
 
