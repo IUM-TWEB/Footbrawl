@@ -55,6 +55,22 @@ public class PlayerValuationService {
     return playerValuationDTOList;
   }
 
+  public List<PlayerValuationDTO> getTopMarketValuePlayersByCompetitionId(int competitionId) {
+    List<PlayerValuation> playerValuationList = playerValuationRepository.findTop15ByMarketValueInEurByCompetitionId(competitionId);
+    if (playerValuationList == null || playerValuationList.isEmpty())
+      return null;
+
+    Map<Integer, String> playerNameCache = new HashMap<>();
+    Map<Integer, String> clubNameCache = new HashMap<>();
+    Map<String, String> competitionNameCache = new HashMap<>();
+
+    List<PlayerValuationDTO> playerValuationDTOList = new ArrayList<>(playerValuationList.size());
+    for (PlayerValuation playerValuation : playerValuationList)
+      playerValuationDTOList.add(convertToDTO(playerValuation, playerNameCache, clubNameCache, competitionNameCache));
+
+    return playerValuationDTOList;
+  }
+
   public PlayerValuationDTO convertToDTO(PlayerValuation playerValuation, Map<Integer, String> playerNameCache, Map<Integer, String> clubNameCache, Map<String, String> competitionNameCache) {
     PlayerValuationDTO playerValuationDTO = new PlayerValuationDTO();
 

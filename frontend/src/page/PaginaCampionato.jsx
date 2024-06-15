@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../index.css';
 
 const PaginaCampionato = () => {
   const { id_campionato } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [topScorerData, setTopScorerData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,9 +88,13 @@ const PaginaCampionato = () => {
 
       <h3 className="text-center mt-5">Top Scorers</h3>
       {topScorerData.length > 0 ? (
-        <ul className="list-group">
+        <ul className="list-group top-scorer-list">
           {topScorerData.map((scorer, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+            <li
+              key={index}
+              className="list-group-item d-flex justify-content-between align-items-center top-scorer-item"
+              onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
+            >
               {scorer.playerName} - {scorer.totalGoals} goals
               <span className="badge badge-primary badge-pill">{scorer.position}</span>
             </li>

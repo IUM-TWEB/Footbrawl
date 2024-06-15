@@ -273,3 +273,22 @@ hr.solid {
     overflow-y: auto; /* Abilita lo scorrimento verticale */
 }
 /* Ending of section for the SingleChat page */
+
+/*top scorer*/
+
+.top-scorer-list {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.top-scorer-item {
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.top-scorer-item:hover {
+    background-color: chocolate;
+}
+
+/*end top scorer*/
