@@ -1,7 +1,10 @@
-const mongoose = require('mongoose')
-const user = new mongoose.Schema({
-    user_name: String,
-    pwd:String,
-})
+const mongoose = require('mongoose');
 
-module.exports = mongoose.model('user', user)
+const userSchema = new mongoose.Schema({
+    user_name: String,
+    pwd: String,
+    favorite_players: [Number], // Array of strings for player IDs
+    favorite_teams: [String]    // Array of strings for team IDs
+});
+
+module.exports = mongoose.model('User', userSchema);

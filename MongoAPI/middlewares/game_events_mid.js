@@ -50,4 +50,15 @@ const getAssistDatesByPlayerId = (req,res) => {
             res.send(e.name)
         })
 }
-module.exports = {getById, getByPlayer, getByClub, getAssistDatesByPlayerId, getGoalDatesById}
+
+const getTopScorer = (req,res) => {
+    queries.getTopScorer(req.params.competition_id)
+      .then( resp => {
+          res.send(resp)
+      })
+      .catch( e => {
+          res.send(e.name)
+      })
+}
+
+module.exports = {getById, getByPlayer, getByClub, getAssistDatesByPlayerId, getGoalDatesById, getTopScorer}

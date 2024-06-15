@@ -1,4 +1,5 @@
 const queries = require('../models/game_events')
+
 const getById = (id) => {
     return queries.find({_id: id}, {}, null)
 }
@@ -40,78 +41,66 @@ const getAssistDatesByPlayerIn = (player_in) => {
 }
 
 const getTopScorer = async (competition) => {
-    const latestYearDoc = await queries.findOne({}, {}, null).sort("-date");
-
-    if (!latestYearDoc) {
-        console.log("Nessun documento trovato.");
-        return;
-    }
-
-    const a = new Date(latestYearDoc.date);
-    const date = new Date(a.getFullYear(), 0, 1); // Imposta il mese a gennaio (0) e il giorno a 1
-    date.setUTCHours(0, 0, 0, 0); // Imposta ore, minuti, secondi e millisecondi a 0
+    // Definisci l'intervallo di date
+    const startDate = new Date(Date.UTC(2021, 7, 1, 0, 0, 0)); // 1 agosto 2021
+    const endDate = new Date(Date.UTC(2022, 6, 31, 23, 59, 59)); // 31 luglio 2022
 
     const pipeline = [
         {
-            $match: { type: "Goals", date: { $gte: date } }
-        },
-        {
-            $lookup: {
-                from: 'games', // il nome della collezione di destinazione
-                localField: 'game_id', // il campo nella collezione 'game_events'
-                foreignField: '_id', // il campo corrispondente nella collezione 'games'
-                as: 'gameDetails' // il nome del nuovo campo che conterrà i dati uniti
-            }
-        },
-        {
-            $unwind: '$gameDetails' // De-normalizza il risultato del lookup
-        },
-        {
-            $addFields: {
-                competition_id: '$gameDetails.competition_id',
-                player_id: '$player_id' // Aggiungi player_id se non esiste già
-            }
-        },
-        {
-            $project: {
-                game_id: 0, // Opzionale: rimuovi il game_id se non è più necessario
-                gameDetails: 0
-            }
-        },
-        {
-            $match: { competition_id: competition }
-        },
-        {
-            $group: {
-                _id: "$player_id", // Raggruppa per ID del giocatore
-                totalGoals: { $sum: 1 } // Conta il numero di goal per ogni giocatore
+            $match: {
+                type: "Goals",
+                date: { $gte: startDate, $lte: endDate }
             }
         },
         {
             $lookup: {
-                from: 'game_lineups', // Unisci con la tabella game_lineups
-                localField: '_id', // Campo da game_events
-                foreignField: 'player_id', // Campo corrispondente in game_lineups
-                as: 'playerDetails' // Nome del nuovo campo che conterrà i dati uniti
+                from: 'games',
+                localField: 'game_id',
+                foreignField: '_id',
+                pipeline: [
+                    { $match: { competition_id: competition } },
+                    { $project: { competition_id: 1 } }
+                ],
+                as: 'gameDetails'
             }
         },
         {
-            $unwind: '$playerDetails' // De-normalizza il risultato del lookup
+            $unwind: '$gameDetails'
         },
         {
             $group: {
-                _id: "$_id", // Raggruppa di nuovo per player_id
-                totalGoals: { $first: "$totalGoals" }, // Mantieni il numero totale di goal
-                playerName: { $first: "$playerDetails.player_name" }, // Mantieni il nome del giocatore
-                position: { $first: "$playerDetails.position" }, // Mantieni la posizione
-                number: { $first: "$playerDetails.number" } // Mantieni il numero della maglia
+                _id: "$player_id",
+                totalGoals: { $sum: 1 }
             }
         },
         {
-            $sort: { totalGoals: -1 } // Ordina in ordine decrescente per numero di goal
+            $sort: { totalGoals: -1 }
         },
         {
-            $limit: 15 // Mostra solo i primi 15 risultati
+            $limit: 15
+        },
+        {
+            $lookup: {
+                from: 'game_lineups',
+                localField: '_id',
+                foreignField: 'player_id',
+                pipeline: [
+                    { $project: { player_name: 1, position: 1, number: 1 } }
+                ],
+                as: 'playerDetails'
+            }
+        },
+        {
+            $unwind: '$playerDetails'
+        },
+        {
+            $group: {
+                _id: "$_id",
+                playerName: { $first: "$playerDetails.player_name" },
+                totalGoals: { $first: "$totalGoals" },
+                position: { $first: "$playerDetails.position" },
+                number: { $first: "$playerDetails.number" }
+            }
         },
         {
             $project: {
@@ -121,6 +110,9 @@ const getTopScorer = async (competition) => {
                 position: "$position",
                 number: "$number"
             }
+        },
+        {
+            $sort: { totalGoals: -1 } // Ordina i risultati finali per numero di goal in ordine decrescente
         }
     ];
 
@@ -137,4 +129,4 @@ const getTopScorer = async (competition) => {
 }
 
 
-module.exports = {getByPlayer, getByClub, getById, getGoalDatesByPlayerIn, getAssistDatesByPlayerIn, test: getTopScorer,}
+module.exports = {getByPlayer, getByClub, getById, getGoalDatesByPlayerIn, getAssistDatesByPlayerIn, getTopScorer}

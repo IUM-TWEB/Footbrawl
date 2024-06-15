@@ -13,6 +13,4 @@ public interface PlayerValuationRepository extends JpaRepository<PlayerValuation
   @Query(value = "SELECT * FROM player_valuations WHERE player_id = :id", nativeQuery = true)
   Optional<List<PlayerValuation>> findPlayerValuationByIdCustomQuery(int id);
 
-  @Query(value = "SELECT * FROM player_valuations WHERE competition_id = :competitionId ORDER BY market_value_in_eur DESC LIMIT 15", nativeQuery = true)
-  List<PlayerValuation> findTop15ByMarketValueInEurByCompetitionId(int competitionId);
 }

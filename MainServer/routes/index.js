@@ -116,11 +116,10 @@ router.get('/home/news/:id', async (req, res) => {
     res.status(500).send('Errore nella richiesta al server MongoDB');
   }
 })
-
 router.get('/campionati/top_scorer/:competition_id', async (req, res) => {
   try {
     const competitionId = req.params.competition_id;
-    const response = await axios.get(`http://localhost:3001/events/competition/${competitionId}`);
+    const response = await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`);
     const topScorerData = response.data;
     console.log(topScorerData);
 
