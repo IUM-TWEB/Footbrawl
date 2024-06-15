@@ -61,6 +61,20 @@ public class PlayerService {
     return playerDTOList;
   }
 
+  public List<PlayerDTO> getTopMarketPlayersByCompetitionId(String competitionId) {
+    List<Player> topMarketPlayers = playerRepository.findTopMarketPlayersByCompetitionId(competitionId);
+    if (topMarketPlayers == null || topMarketPlayers.isEmpty()) {
+      return null;
+    }
+
+    List<PlayerDTO> topMarketPlayerDTOList = new ArrayList<>(topMarketPlayers.size());
+    for (Player player : topMarketPlayers) {
+      topMarketPlayerDTOList.add(convertToDTO(player));
+    }
+
+    return topMarketPlayerDTOList;
+  }
+
   public PlayerDTO convertToDTO(Player player) {
     PlayerDTO playerDTO = new PlayerDTO();
     playerDTO.setPlayerId(player.getPlayer_id());
@@ -83,6 +97,7 @@ public class PlayerService {
     return playerDTO;
   }
 
+
   private int calcAge(Player player) {
     LocalDate today = LocalDate.now();
     if (player.getDate_of_birth() != null) {
@@ -100,5 +115,4 @@ public class PlayerService {
     String value = player.getHighest_market_value_in_eur();
     return PlayerUtils.calculateMarketValueUtils(value);
   }
-
 }
