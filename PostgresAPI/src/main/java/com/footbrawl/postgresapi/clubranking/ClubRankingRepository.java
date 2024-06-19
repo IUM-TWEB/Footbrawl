@@ -19,6 +19,9 @@ public interface ClubRankingRepository extends JpaRepository<ClubRanking, Long> 
   @Query(value = "SELECT * FROM club_ranking WHERE LOWER(competition_name) LIKE LOWER(CONCAT('%', :name, '%')) AND season = 2023", nativeQuery = true)
   Optional<List<ClubRanking>> findLastCompetitionRankingByCompetitionNameCustomQuery(String name);
 
+  @Query(value = "SELECT * FROM club_ranking WHERE LOWER(competition_id) LIKE LOWER(CONCAT('%', :id, '%')) AND season = 2023", nativeQuery = true)
+  Optional<List<ClubRanking>> findLastCompetitionRankingByCompetitionIdCustomQuery(String id);
+
   @Query(value = "SELECT * FROM club_ranking WHERE LOWER(competition_name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
   Optional<List<ClubRanking>> findCompetitionRankingByCompetitionNameCustomQuery(String name);
 
