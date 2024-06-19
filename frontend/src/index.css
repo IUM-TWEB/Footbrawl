@@ -13,12 +13,14 @@
 
 
 .menu {
-  background-color: black;
-  padding: 10px;
-  display: flex; /* Assicurati che flex sia abilitato */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    padding-right: 50px;
+    background-color: black; /* Sfondo chiaro, modifica se necessario */
+
   flex-direction: row; /* Disponi gli elementi in una riga */
-  justify-content: space-between; /* Distribuisce gli elementi uniformemente */
-  align-items: center; /* Centra gli elementi verticalmente */
   width: 100%; /* Imposta la larghezza al 100% dell'elemento genitore */
 }
 
@@ -287,6 +289,27 @@ hr.solid {
 }
 
 /* Ending of section for the SingleChat page */
+
+/*top scorer*/
+
+.top-scorer-list {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0;
+}
+.top-scorer-item,
+.top-market-value-item {
+    cursor: pointer; /* Aggiungi il puntatore per indicare che è cliccabile */
+}
+
+.top-scorer-item:hover,
+.top-market-value-item:hover {
+    background-color: chocolate;
+}
+
+
+/*end top scorer*/
+
 .ff {
   background-color: #d2691e; /* Chocolate color */
   color: white; /* White text color */

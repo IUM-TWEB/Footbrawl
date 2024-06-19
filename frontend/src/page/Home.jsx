@@ -11,19 +11,30 @@ const Home = () => {
   const [isOpaque, setIsOpaque] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [newsList, setNewsList] = useState([]);
+  const [competitionsList, setCompetitionsList] = useState([]);
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/home/news`)
+    // Richiesta per i dati delle news
+    axios.get('http://localhost:3000/home/news')
       .then(response => {
-        console.log("Dati ricevuti:", response.data);
-        setNewsList(response.data);
+        setNewsList(response.data);  // Presumendo che ogni notizia abbia un ID unico
       })
       .catch(error => {
-        console.error('Errore durante il recupero della notizia:', error);
+        console.error('Errore durante il recupero delle notizie:', error);
       });
-  }, []);
+
+    // Richiesta per i dati di ranking di Serie A
+    axios.get('http://localhost:3000/ranking/serie-a')
+      .then(response => {
+        setCompetitionsList(response.data);
+      })
+      .catch(error => {
+        console.error('Errore durante il recupero dei dati di ranking:', error);
+      });
+  }, []); // L'array vuoto [] assicura che l'effetto venga eseguito solo una volta dopo il primo rendering
+
 
   const toggleOpacity = (opacity) => {
     setIsOpaque(opacity);
@@ -54,12 +65,8 @@ const Home = () => {
       <div className="container-fluid padding" style={{opacity: isOpaque ? 0.2 : 1}}>
         <div className="row justify-content-md-center">
           <div className="col-md-3">
-            <LeaderBoard className="leaderboard" competitions="serie A" first="Milan" second="Juventus" third="Inter"
-                         firstValue="11" secondValue="16" thirdValue="21"/>
-            <LeaderBoard className="leaderboard" competitions="serie B" first="Milan" second="Juventus" third="Inter"
-                         firstValue="11" secondValue="16" thirdValue="21"/>
-            <LeaderBoard className="leaderboard" competitions="serie C" first="Milan" second="Juventus" third="Inter"
-                         firstValue="11" secondValue="16" thirdValue="21"/>
+            <LeaderBoard rankings={competitionsList} />
+
           </div>
           <div className="col-md-6">
             <Carousel
@@ -91,10 +98,7 @@ const Home = () => {
             </div>
           </div>
           <div className="col-md-3">
-            <LeaderBoard className="leaderboard" competitions="serie D" first="Milan" second="Juventus" third="Inter"
-                         firstValue="11" secondValue="16" thirdValue="21"/>
-            <LeaderBoard className="leaderboard" competitions="serie D" first="Milan" second="Juventus" third="Inter"
-                         firstValue="11" secondValue="16" thirdValue="21"/>
+
           </div>
         </div>
       </div>

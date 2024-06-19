@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -109,7 +109,7 @@ function SearchBar({ setOpacity }) {
                     <h3>Competitions</h3>
                     {competitions.map((competition, index) => (
                       <div key={`competition-${competition.competition_id}-${index}`}
-                           className="card card-body p-2 results-card" onClick={() => navigate(`/club/${competition.competitionId}`)}>
+                           className="card card-body p-2 results-card" onClick={() => navigate(`/campionati/${competition.competitionId}`)}>
                         <h6 className="card-title mb-0">{competition.name}</h6>
                       </div>
                     ))}

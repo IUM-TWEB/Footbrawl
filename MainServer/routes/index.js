@@ -6,6 +6,39 @@ const axios = require('axios');
 router.get('/', function (req, res, next) {
   res.render('index', {title: 'Express'});
 });
+
+router.get('/ranking/:competition_name', async (req, res) => {
+  const competitionName = req.params.competition_name;
+  const url = `http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${competitionName}`;
+
+  try {
+    const response = await axios.get(url);
+    const rankingData = response.data;
+
+    console.log(rankingData);
+    res.send(rankingData);
+  } catch (error) {
+    console.error('ERRORE nella richiesta al server Postgres:', error);
+    res.status(500).send('Errore nella richiesta al server Postgres');
+  }
+});
+
+router.get('/ranking/:id_campionato', async (req, res) => {
+  const idCampionato = req.params.id_campionato;
+  const url = `http://localhost:8080/lastCompetitionRankingByCompetitionId?id=${idCampionato}`;
+
+  try {
+    const response = await axios.get(url);
+    const rankingData = response.data;
+
+    console.log(rankingData);
+    res.send(rankingData);
+  } catch (error) {
+    console.error('ERRORE nella richiesta al server Postgres:', error);
+    res.status(500).send('Errore nella richiesta al server Postgres');
+  }
+});
+
 router.get('/home/news', async (req, res) => {
   try {
     const response = await axios.get(`http://localhost:3001/news`);
@@ -99,7 +132,31 @@ router.get('/home/news/:id', async (req, res) => {
     res.status(500).send('Errore nella richiesta al server MongoDB');
   }
 })
+router.get('/campionati/top_scorer/:competition_id', async (req, res) => {
+  try {
+    const competitionId = req.params.competition_id;
+    const response = await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`);
+    const topScorerData = response.data;
+    console.log(topScorerData);
 
+    res.send(topScorerData);
+  } catch (error) {
+    console.error('ERRORE nella richiesta al server MongoDB:', error);
+    res.status(500).send('Errore nella richiesta al server MongoDB');
+  }
+});
 
+router.get('/top_market_value/:competition_id', async (req, res) => {
+  const competitionId = req.params.competition_id;
+  const url = `http://localhost:8080/topMarketPlayerCompetition?competitionId=${competitionId}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+  }
+});
 
 module.exports = router;
