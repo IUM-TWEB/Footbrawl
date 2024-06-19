@@ -149,4 +149,10 @@ router.get('/player_clubs/:id', async (req, res) => {
     }
 })
 
+router.get('/games/:club_id/:competition/:season', async (req, res) => {
+    console.log(req.params)
+    const resp_db = await axios.get(`http://localhost:3001/games/${req.params.competition}/${req.params.season}/${req.params.club_id}`)
+    res.send(resp_db.data)
+})
+
 module.exports = router;
