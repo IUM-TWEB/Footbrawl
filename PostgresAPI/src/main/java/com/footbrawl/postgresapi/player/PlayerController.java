@@ -47,4 +47,12 @@ public class PlayerController {
     return ResponseEntity.ok(playerDTOList);
   }
 
+  @GetMapping("/topMarketPlayerCompetition")
+  public ResponseEntity<List<PlayerDTO>> getTopMarketPlayersByCompetitionId(@RequestParam String competitionId) {
+    List<PlayerDTO> topMarketPlayerDTOList = playerService.getTopMarketPlayersByCompetitionId(competitionId);
+    if (topMarketPlayerDTOList == null || topMarketPlayerDTOList.isEmpty())
+      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(topMarketPlayerDTOList);
+  }
+
 }

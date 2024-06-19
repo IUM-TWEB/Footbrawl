@@ -40,6 +40,16 @@ public class ClubRankingService {
     return competitionRankingList;
   }
 
+  public List<ClubRanking> getLastCompetitionRankingById(String id) {
+    List<ClubRanking> competitionRankingList = clubRankingRepository.findLastCompetitionRankingByCompetitionIdCustomQuery(id).orElse(null);
+
+    //ordino la lista delle squadre per posizione crescente
+    if (competitionRankingList != null) {
+      competitionRankingList.sort(Comparator.comparingInt(ClubRanking::getPosition));
+    }
+    return competitionRankingList;
+  }
+
   public List<ClubRanking> getCompetitionRanking(String name) {
     List<ClubRanking> rankingList = clubRankingRepository.findCompetitionRankingByCompetitionNameCustomQuery(name).orElse(null);
 
