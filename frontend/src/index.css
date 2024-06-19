@@ -281,14 +281,15 @@ hr.solid {
     margin: 0 auto;
     padding: 0;
 }
-
-.top-scorer-item {
-    cursor: pointer;
-    transition: background-color 0.3s;
+.top-scorer-item,
+.top-market-value-item {
+    cursor: pointer; /* Aggiungi il puntatore per indicare che è cliccabile */
 }
 
-.top-scorer-item:hover {
+.top-scorer-item:hover,
+.top-market-value-item:hover {
     background-color: chocolate;
 }
+
 
 /*end top scorer*/
