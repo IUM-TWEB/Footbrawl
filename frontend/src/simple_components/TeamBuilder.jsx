@@ -201,7 +201,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         </div>
       );
     };
-;
 
     const listItemStyle = {
       position: 'relative',  // This makes it a reference for absolute positioning
@@ -212,7 +211,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       switch (position) {
         case 'Attack':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Attaccante">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Attaccante">
               <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
                    data-name="Layer 1">
                 <path
@@ -222,7 +221,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           );
         case 'Defender':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Difensore">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Difensore">
 
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
@@ -234,7 +233,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           );
         case 'Goalkeeper':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="portiere">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="portiere">
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
                 <path
@@ -245,7 +244,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
         case 'Midfield':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Centrocampista">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Centrocampista">
 
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
@@ -272,15 +271,15 @@ const TeamFormationSelector = ({favoritePlayers}) => {
                     <p></p>
                   </div>
 
-                  <div className={'col-6'}
+                  <button className={'col-6 btn'}
                        onMouseOver={() => togglePopup(player.playerId, context)}
                        onMouseLeave={() => togglePopup(player.playerId, context)}>
                     {player.name}
-                  </div>
+                  </button>
 
                   {svgSelector(position)}
 
-                  <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '1%'}}
+                  <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '3%'}}
                      onClick={() => {
                        navigate(`/giocatori/${player.playerId}`)
                      }}
