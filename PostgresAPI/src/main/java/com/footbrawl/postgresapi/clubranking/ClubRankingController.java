@@ -53,6 +53,17 @@ public class ClubRankingController {
     }
   }
 
+  /*Restituisce la classifica del campionato dell'ultima stagione*/
+  @GetMapping("/lastCompetitionRankingByCompetitionId")
+  public ResponseEntity<List<ClubRanking>> getLastCompetitionRankingById(@RequestParam String id) {
+    List<ClubRanking> clubRankingList = clubRankingService.getLastCompetitionRankingById(id);
+    if (clubRankingList == null || clubRankingList.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      return ResponseEntity.ok(clubRankingList);
+    }
+  }
+
   /*Restituisce la classifica del campionato nelle diverse stagioni*/
   @GetMapping("/competitionRankingByCompetitionName")
   public ResponseEntity<List<ClubRanking>> getCompetitionRanking(@RequestParam String name) {

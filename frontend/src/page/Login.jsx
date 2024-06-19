@@ -23,7 +23,7 @@ function Login() {
     if (e.target.value !== null) setLoginValid(null);
   };
 
-  const handleError = (res) => {
+  const handleError = async (res) => {
     if (res === 0) {
       console.log("handle ", res);
       setLoginValid(false);
@@ -38,7 +38,7 @@ function Login() {
       });
     } else {
       setLoginValid(true);
-      login({username});
+      await login({username, password});
       //localStorage.setItem("username", username);
       //localStorage.setItem("isLogged", "true");
       navigate('/paginauser');
@@ -59,6 +59,7 @@ function Login() {
         })
         .catch(err => {
           console.log(err);
+          setError('Error logging in');
         });
     }
   };

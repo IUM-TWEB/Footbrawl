@@ -40,7 +40,6 @@ async function getChartData(player_id, endpoint, label_name) {
                 }],
             };
         } else {
-            console.log("Returning null: ", endpoint);
             return null;
         }
     } catch (error) {
@@ -53,25 +52,24 @@ function show_graph(data) {
     if (data) {
         return <Line options={options} data={data} />;
     } else {
-        return;
+        return null;
     }
 }
 
-function show_info(player) {
+function show_info(player, player_id) {
     if (player) {
         return (
             <PlayerPres
                 name={player.name}
                 data={player.dateOfBirth}
-                posizione={player.position}
+                position={player.position}
                 img={player.imageUrl}
-                squadra={player.currentClubName}
+                team={player.currentClubName}
                 hight={player.heightInCm}
                 lastSeason={player.lastSeason}
+                playerId={player_id}
             />
         );
-    } else {
-        return;
     }
 }
 
@@ -83,7 +81,7 @@ export default function PaginaGiocatori() {
     const [player, setPlayer] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    useEffect( () => {
         const fetchData = async () => {
             try {
                 const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
@@ -126,7 +124,7 @@ export default function PaginaGiocatori() {
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-sm-3 p-3">{show_info(player)}</div>
+                <div className="col-sm-3 p-3">{show_info(player, playerId)}</div>
                 <div className="col-sm-6">
                     <div className={"m-3"}>
                         <div>{show_graph(chartGoalData)}</div>

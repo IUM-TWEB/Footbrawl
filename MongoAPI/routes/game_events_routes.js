@@ -1,5 +1,5 @@
 const mid = require("../middlewares/game_events_mid")
-
+const queries = require("../queries/game_events_queries")
 const express = require('express')
 const router = express.Router()
 

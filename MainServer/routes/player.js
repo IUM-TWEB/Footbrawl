@@ -132,17 +132,27 @@ router.get('/player_clubs/:id', async (req, res) => {
         }
         for (let i of response.data) {
             if (!clubs_id.includes(i.club_id)) {
-                const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
-                data.clubs.push(club_name.data.name);
-                clubs_id.push(i.club_id);
-
+                try {
+                    const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
+                    if(club_name) {
+                        data.clubs.push(club_name.data.name);
+                        clubs_id.push(i.club_id);
+                    }
+                }catch (e){}
 
             }
         }
         res.send(data)
     } catch (err) {
-        res.status(500).send("Errore nella richiesta al server Spring Boot")
+        console.log(err)
+        res.status(500).send(err.name)
     }
+})
+
+router.get('/games/:club_id/:competition/:season', async (req, res) => {
+    console.log(req.params)
+    const resp_db = await axios.get(`http://localhost:3001/games/${req.params.competition}/${req.params.season}/${req.params.club_id}`)
+    res.send(resp_db.data)
 })
 
 module.exports = router;
