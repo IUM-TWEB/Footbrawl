@@ -15,6 +15,11 @@ const Home = () => {
   const [premierLeague, setPremierLeague] = useState([]);
   const [laLiga, setLaLiga] = useState([]);
   const [lastGames, setLastGames] = useState({});
+  const [topScorers, setTopScorers] = useState({
+    IT1: null,
+    GB1: null,
+    ES1: null
+  });
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
@@ -25,6 +30,18 @@ const Home = () => {
         return response.data;
       } catch (error) {
         console.error(`Errore durante il recupero dell'ultima partita per ${competitionId}:`, error);
+        return null;
+      }
+    };
+
+    const fetchTopScorer = async (competitionId) => {
+      try {
+        const response = await axios.get(`http://localhost:3000/campionati/top_scorer/${competitionId}`, {
+          timeout: 100000000 // Aumenta il timeout a 10 secondi
+        });
+        return response.data;
+      } catch (error) {
+        console.error(`Errore durante il recupero del capocannoniere per ${competitionId}:`, error);
         return null;
       }
     };
@@ -50,6 +67,23 @@ const Home = () => {
           GB1: lastGameGB1,
           ES1: lastGameES1
         });
+
+        // Fetch top scorers asynchronously
+        const topScorerPromises = [
+          fetchTopScorer('IT1'),
+          fetchTopScorer('GB1'),
+          fetchTopScorer('ES1')
+        ];
+
+        // Utilizziamo Promise.allSettled per evitare di bloccare le altre richieste
+        const topScorerResults = await Promise.allSettled(topScorerPromises);
+        const topScorersData = {
+          IT1: topScorerResults[0].status === 'fulfilled' ? topScorerResults[0].value : null,
+          GB1: topScorerResults[1].status === 'fulfilled' ? topScorerResults[1].value : null,
+          ES1: topScorerResults[2].status === 'fulfilled' ? topScorerResults[2].value : null
+        };
+
+        setTopScorers(topScorersData);
       } catch (error) {
         console.error('Errore durante il recupero dei dati:', error);
       }
@@ -58,7 +92,6 @@ const Home = () => {
     fetchData();
   }, []);
 
-  console.log("lastMAtch",lastGames);
   const toggleOpacity = (opacity) => {
     setIsOpaque(opacity);
   };
@@ -85,6 +118,10 @@ const Home = () => {
     navigate('/news-params', { state: { news } });
   };
 
+  const handleScorerClick = (playerId) => {
+    navigate(`/giocatori/${playerId}`);
+  };
+console.log(topScorers);
   return (
     <>
       <SearchBar setOpacity={toggleOpacity} />
@@ -95,17 +132,17 @@ const Home = () => {
             <h1>Classifiche</h1>
             <div className="card">
               <div className="card-body">
-                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub} />
+                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body">
-                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub} />
+                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body">
-                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub} />
+                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
               </div>
             </div>
           </div>
@@ -121,8 +158,8 @@ const Home = () => {
               stopOnHover={false}
             >
               {newsList.map((item) => (
-                <div key={item.id} onClick={() => handleClickNews(item)} style={{ cursor: 'pointer' }}>
-                  <News singleNews={item} />
+                <div key={item.id} onClick={() => handleClickNews(item)} style={{cursor: 'pointer'}}>
+                  <News singleNews={item}/>
                 </div>
               ))}
             </Carousel>
@@ -136,44 +173,54 @@ const Home = () => {
             </div>
           </div>
           <div className="col-md-3">
-            <h1>Ultime Partite</h1>
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Serie A</h5>
-                {lastGames.IT1 ? (
-                  <p className="card-text">
-                    {lastGames.IT1[0].home_club_id} {lastGames.IT1[0].home_club_goals} - {lastGames.IT1[0].away_club_goals} {lastGames.IT1[0].away_club_id}
-                  </p>
-                ) : (
-                  <p className="card-text">Caricamento...</p>
-                )}
-              </div>
+            <div>
+              <h1>Ultime Partite</h1>
+
+              {['IT1', 'GB1', 'ES1'].map(league => (
+                <div key={league} className="card mt-4">
+                  <div className="card-body">
+                    <h5
+                      className="card-title">{league === 'IT1' ? 'Serie A' : league === 'GB1' ? 'Premier League' : 'La Liga'}</h5>
+                    {lastGames[league] ? (
+                      <p className="card-text">
+                        {lastGames[league][0].home_club_id} {lastGames[league][0].home_club_goals} - {lastGames[league][0].away_club_goals} {lastGames[league][0].away_club_id}
+                      </p>
+                    ) : (
+                      <p className="card-text">Caricamento...</p>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="card mt-4">
-              <div className="card-body">
-                <h5 className="card-title">Premiere League</h5>
-                {lastGames.GB1 ? (
-                  <p className="card-text">
-                    {lastGames.GB1[0].home_club_id} {lastGames.GB1[0].home_club_goals} - {lastGames.GB1[0].away_club_goals} {lastGames.GB1[0].away_club_id}
-                  </p>
-                ) : (
-                  <p className="card-text">Caricamento...</p>
-                )}
-              </div>
-            </div>
-            <div className="card mt-4">
-              <div className="card-body">
-                <h5 className="card-title">La Liga</h5>
-                {lastGames.ES1 ? (
-                  <p className="card-text">
-                    {lastGames.ES1[0].home_club_id} {lastGames.ES1[0].home_club_goals} - {lastGames.ES1[0].away_club_goals} {lastGames.ES1[0].away_club_id}
-                  </p>
-                ) : (
-                  <p className="card-text">Caricamento...</p>
-                )}
-              </div>
+            <div className="mt-4">
+              <h1>Top Scorers</h1>
+
+              {['IT1', 'GB1', 'ES1'].map(league => (
+                topScorers[league] && (
+                  <div key={league} className="card mt-3">
+                    <div className="card-body">
+                      <h5
+                        className="card-title">{league === 'IT1' ? 'Serie A' : league === 'GB1' ? 'Premier League' : 'La Liga'}</h5>
+                      <div
+                        className="mb-3"
+                        style={{
+                          backgroundColor: '#fff',
+                          transition: 'background-color 0.3s',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => handleScorerClick(topScorers[league][0].player_id)}
+                      >
+                        <p className="card-text" style={{marginBottom: '0.5rem'}}>
+                          {topScorers[league][0].player_id} ({topScorers[league][0].totalGoals} gol)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              ))}
             </div>
           </div>
+
         </div>
       </div>
     </>

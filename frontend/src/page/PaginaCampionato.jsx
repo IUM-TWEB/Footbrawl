@@ -172,7 +172,7 @@ const PaginaCampionato = () => {
                   onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
                   style={{ cursor: 'pointer' }}
                 >
-                  {scorer.playerName} - {scorer.totalGoals} goals
+                  {scorer.player_id} - {scorer.totalGoals} goals
                   <span className="badge badge-primary badge-pill">{scorer.position}</span>
                 </li>
               ))}
