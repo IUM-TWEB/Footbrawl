@@ -27,52 +27,39 @@ public class PlayerService {
 
   public List<PlayerDTO> getPlayerByName(String name) {
     List<Player> playerList = playerRepository.findPlayerByNameCustomQuery(name).orElse(null);
-    if (playerList == null || playerList.isEmpty())
-      return null;
-
-    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
-    for (Player player : playerList)
-      playerDTOList.add(convertToDTO(player));
-
-    return playerDTOList;
+    return getPlayerDTOList(playerList);
   }
 
   public List<PlayerDTO> getPlayerByName2(String firstName, String lastName) {
     List<Player> playerList = playerRepository.findPlayerByName2CustomQuery(firstName, lastName).orElse(null);
-    if (playerList == null || playerList.isEmpty())
-      return null;
-
-    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
-    for (Player player : playerList)
-      playerDTOList.add(convertToDTO(player));
-
-    return playerDTOList;
+    return getPlayerDTOList(playerList);
   }
 
   public List<PlayerDTO> getPlayersByClubId(int id) {
     List<Player> playerList = playerRepository.findPlayersByCurrent_club_id(id).orElse(null);
-    if (playerList == null || playerList.isEmpty())
-      return null;
-
-    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
-    for (Player player : playerList)
-      playerDTOList.add(convertToDTO(player));
-
-    return playerDTOList;
+    return getPlayerDTOList(playerList);
   }
 
   public List<PlayerDTO> getTopMarketPlayersByCompetitionId(String competitionId) {
     List<Player> topMarketPlayers = playerRepository.findTopMarketPlayersByCompetitionId(competitionId);
-    if (topMarketPlayers == null || topMarketPlayers.isEmpty()) {
+    List<Player> top15MarketPlayers = null;
+    if(topMarketPlayers != null && !topMarketPlayers.isEmpty() && topMarketPlayers.size()>15){
+      top15MarketPlayers = topMarketPlayers.subList(0, 15);
+    }
+    return getPlayerDTOList(top15MarketPlayers);
+  }
+
+  private List<PlayerDTO> getPlayerDTOList(List<Player> playerList) {
+    if (playerList == null || playerList.isEmpty()) {
       return null;
     }
 
-    List<PlayerDTO> topMarketPlayerDTOList = new ArrayList<>(topMarketPlayers.size());
-    for (Player player : topMarketPlayers) {
-      topMarketPlayerDTOList.add(convertToDTO(player));
+    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
+    for (Player player : playerList) {
+      playerDTOList.add(convertToDTO(player));
     }
 
-    return topMarketPlayerDTOList;
+    return playerDTOList;
   }
 
   public PlayerDTO convertToDTO(Player player) {
@@ -96,7 +83,6 @@ public class PlayerService {
     playerDTO.setCurrentClubName(player.getCurrent_club_name());
     return playerDTO;
   }
-
 
   private int calcAge(Player player) {
     LocalDate today = LocalDate.now();
