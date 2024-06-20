@@ -62,4 +62,19 @@ router.post('/getfav', async (req, res) => {
   }
 })
 
+router.post('/postFormations', async (req,res)=>{
+  console.log(req.body);
+  try {
+    const response = await axios.post(`http://localhost:3001/user/fav/formation`, {
+      username: req.body.username,
+      pwd: req.body.pwd,
+      formation: req.body.formation,
+    })
+
+    res.send(response.data)
+  } catch (e) {
+    res.sendStatus(500)
+  }
+})
+
 module.exports = router;

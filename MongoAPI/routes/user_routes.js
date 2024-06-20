@@ -122,6 +122,39 @@ router.post('/fav/player/', mid.addFavoritePlayer);
 
 /**
  * @swagger
+ * /user/fav/player/:
+ *   post:
+ *     summary: Add favorite formation
+ *     description: This endpoint allows users to save the selected formation
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - userName
+ *           properties:
+ *             userName:
+ *               type: string
+ *             firstName:
+ *               type: string
+ *             lastName:
+ *               type: string
+ *     responses:
+ *       '200':
+ *         description: Player added to favorites successfully.
+ *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Unauthorized. Invalid username or password.
+ *       '404':  # Assuming a 404 error is returned for not found user
+ *         description: User not found.
+ *       '500':
+ *         description: Internal server error.
+ */
+router.post('/fav/formation', mid.addFormation)
+
+/**
+ * @swagger
  * /user/getfav/player/:
  *   post:
  *     summary: Get user's favorite players
@@ -149,4 +182,6 @@ router.post('/getfav/player', async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
+
 module.exports = router

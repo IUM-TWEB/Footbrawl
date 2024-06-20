@@ -4,8 +4,11 @@ import SearchBarUserTemp from "./SearchBarUserTemp.jsx";
 import PopupPlayer from "./PopupPlayer.jsx";
 import {Alert} from 'reactstrap';
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const TeamFormationSelector = ({favoritePlayers}) => {
+    const {username, password} = useAuth();
     const [alert, setAlert] = useState(false)
     const navigate = useNavigate()
     const [popupsOpen, setPopupsOpen] = useState({});
@@ -19,6 +22,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       goalkeeper: ['0']
     });
 
+
     useEffect(() => {
       if (alert[0])
         setTimeout(() => {
@@ -29,6 +33,20 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     useEffect(() => {
       setPlayerNames(favoritePlayers);
     }, [favoritePlayers]);
+
+    const sendFormation = async () => {
+      axios.post('http://localhost:3000/users/postFormations', {
+        username: username,
+        pwd: password,
+        formation: selectedFormation
+      })
+        .then(resp => {
+          console.log(resp.data)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
 
     const showError = () => {
       if (alert[0])
@@ -72,7 +90,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       if (selectedFormation.forwards.includes(player) ||
         selectedFormation.midfielders.includes(player) ||
         selectedFormation.defenders.includes(player) ||
-        selectedFormation.goalkeeper.includes( player)) {
+        selectedFormation.goalkeeper.includes(player)) {
 
         return setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore"]);
       }
@@ -90,14 +108,21 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       if (!playerNames.some(player => player.playerId === newPlayer.playerId)) {
         setPlayerNames([...playerNames, newPlayer]);
         handlePlayerSelection(newPlayer);
-      }else{
+      } else {
         setAlert([true, "Giocatore già aggiunto ai selezionati"])
       }
     }
 
     const removePlayer = (pos, index) => {
-      if(pos[index]!=='0')
-      pos[index]='0'
+      if (pos[index] !== '0') {
+        const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos)
+        setSelectedFormation(prevState => {
+          const tmp = {...prevState}
+          pos[index] = '0'
+          tmp[pos_key] = pos
+          return tmp
+        })
+      }
     };
 
 
@@ -320,6 +345,10 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             </div>
           </div>
         </div>
+        <button className={"btn btn-primary"} onClick={() => {
+          sendFormation()
+        }}>Salva
+        </button>
       </>
     );
   }

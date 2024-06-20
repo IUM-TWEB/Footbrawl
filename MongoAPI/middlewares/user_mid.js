@@ -71,3 +71,16 @@ module.exports.addFavoriteTeam = (req, res) => {
     });
 };
 
+module.exports.addFormation = (req,res) => {
+  console.log(req.body)
+  const {username, pwd, formation} = req.body
+  queries.addFormation(username,pwd,formation)
+    .then(() => {
+      res.sendStatus(200); // Send a status code of 200 if successful
+    })
+    .catch((err) => {
+      console.error('Error adding favorite team:', err);
+      res.status(500).send(err.message); // Send a 500 status code if there is an error
+    });
+}
+
