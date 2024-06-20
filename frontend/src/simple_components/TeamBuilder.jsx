@@ -20,9 +20,9 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     });
 
     useEffect(() => {
-      if (alert)
+      if (alert[0])
         setTimeout(() => {
-          setAlert(!alert)
+          setAlert(!alert[0])
         }, 3000)
     }, [alert]);
 
@@ -31,20 +31,20 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     }, [favoritePlayers]);
 
     const showError = () => {
-      if (alert)
+      if (alert[0])
         return (
           <Alert key={'danger'} color={'danger'} style={{position: "absolute", marginTop: '1%'}}>
-            Seleziona prima una posizione, in seguito il giocatore
+            {alert[1]}
           </Alert>);
       return null
     }
 
-    const togglePopup = (id, context) => {
-      setPopupsOpen(prev => ({
-        ...prev,
-        [`${id}-${context}`]: !prev[`${id}-${context}`]
-      }));
-    };
+  const togglePopup = (id, context) => {
+    setPopupsOpen(prev => ({
+      ...prev,
+      [`${id}-${context}`]: !prev[`${id}-${context}`]
+    }));
+  };
 
 
     const filterPlayersByPosition = (position) => {
@@ -69,31 +69,39 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     };
 
     const handlePlayerSelection = (player) => {
+      if (selectedFormation.forwards.includes(player) ||
+        selectedFormation.midfielders.includes(player) ||
+        selectedFormation.defenders.includes(player) ||
+        selectedFormation.goalkeeper === player) {
+        return setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore"]);
+      }
+
+
       setSelectedFormation(prevFormation => {
         const newFormation = {...prevFormation};
         switch (selectedPosition[1]) {
           case 0:
-            if (!newFormation.forwards.includes(player))
-              newFormation.forwards[selectedPosition[0]] = player;
+            if(!newFormation.forwards.includes(player))
+            newFormation.forwards[selectedPosition[0]] = player;
             break;
 
           case 1:
-            if (!newFormation.forwards.includes(player))
-              newFormation.midfielders[selectedPosition[0]] = player;
+            if(!newFormation.forwards.includes(player))
+            newFormation.midfielders[selectedPosition[0]] = player;
             break;
 
           case 2:
-            if (!newFormation.forwards.includes(player))
-              newFormation.defenders[selectedPosition[0]] = player;
+            if(!newFormation.forwards.includes(player))
+            newFormation.defenders[selectedPosition[0]] = player;
             break;
 
           case 3:
-            if (!newFormation.forwards.includes(player))
-              newFormation.goalkeeper = player;
+            if(!newFormation.forwards.includes(player))
+            newFormation.goalkeeper = player;
             break;
 
           default:
-            setAlert(true)
+            setAlert([true, "seleziona prima una posizione"])
             break;
         }
         return newFormation;
@@ -107,31 +115,31 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       }
     }
 
-    const removePlayer = (pos, index) => {
-      setSelectedFormation(prevFormation => {
-        const newFormation = {...prevFormation};
-        switch (pos) {
-          case 0:
-            newFormation.forwards[index] = '0';
-            break;
-          case 1:
-            newFormation.midfielders[index] = '0';
-            break;
-          case 2:
-            newFormation.defenders[index] = '0';
-            break;
-          case 3:
-            newFormation.goalkeeper = '0';
-            break;
-          default:
-            break;
-        }
-        return newFormation;
-      });
-    };
+  const removePlayer = (pos, index) => {
+    setSelectedFormation(prevFormation => {
+      const newFormation = { ...prevFormation };
+      switch (pos) {
+        case 0:
+          newFormation.forwards[index] = '0';
+          break;
+        case 1:
+          newFormation.midfielders[index] = '0';
+          break;
+        case 2:
+          newFormation.defenders[index] = '0';
+          break;
+        case 3:
+          newFormation.goalkeeper = '0';
+          break;
+        default:
+          break;
+      }
+      return newFormation;
+    });
+  };
 
 
-    const buttonSelector = (index, pos) => {
+  const buttonSelector = (index, pos) => {
       if (index !== selectedPosition[0] || pos !== selectedPosition[1]) {
         return 'image-overlay'
       } else
@@ -213,7 +221,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       switch (position) {
         case 'Attack':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Attaccante">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Attaccante">
               <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
                    data-name="Layer 1">
                 <path
@@ -223,7 +231,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           );
         case 'Defender':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Difensore">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Difensore">
 
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
@@ -235,7 +243,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           );
         case 'Goalkeeper':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="portiere">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="portiere">
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
                 <path
@@ -246,7 +254,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
         case 'Midfield':
           return (
-            <div className={'col-1'} style={{marginBottom: '1%'}} title="Centrocampista">
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Centrocampista">
 
               <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
                    width="20">
@@ -267,29 +275,28 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             if (!player.playerId) return null;
 
             return (
-              <li key={player.playerId} onClick={context === 'left' ? () => handlePlayerSelection(player) : null}
-                  style={listItemStyle}>
+              <li key={player.playerId} onClick={context === 'left' ? () => handlePlayerSelection(player) : null} style={listItemStyle}>
                 <div className={'row'}>
                   <div className={'col-3'}>
                     <p></p>
                   </div>
 
-                  <div className={'col-6'}
-                       onMouseOver={() => togglePopup(player.playerId, context)}
-                       onMouseLeave={() => togglePopup(player.playerId, context)}>
+                  <button className={'col-6 btn'}
+                          onMouseOver={() => togglePopup(player.playerId, context)}
+                          onMouseLeave={() => togglePopup(player.playerId, context)}>
                     {player.name}
-                  </div>
+                  </button>
 
                   {svgSelector(position)}
 
-                  <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '1%'}}
+                  <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '3%'}}
                      onClick={() => {
                        navigate(`/giocatori/${player.playerId}`)
                      }}
                      title="Dettagli giocatore">
                   </i>
                 </div>
-                {popupsOpen[`${player.playerId}-${context}`] && <PopupPlayer isOpen={true} player={player}/>}
+                {popupsOpen[`${player.playerId}-${context}`] && <PopupPlayer isOpen={true} player={player} />}
               </li>
             );
           })}
@@ -324,22 +331,23 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           </div>
         </div>
 
+
         <div className="row">
-          <div className="col-md-4 min-width-tb">
+          <div className="col-md-4">
             <div className={"text-center"}>
               <h3>Seleziona i giocatori:</h3>
 
-              {listPlayers('Attack', filterPlayersByPosition('Attack'), 'left')}
+              {listPlayers('Attack', filterPlayersByPosition('Attack'),'left')}
 
-              {listPlayers('Midfield', filterPlayersByPosition('Midfield'), 'left')}
+              {listPlayers('Midfield', filterPlayersByPosition('Midfield'),'left')}
 
-              {listPlayers('Defender', filterPlayersByPosition('Defender'), 'left')}
+              {listPlayers('Defender',filterPlayersByPosition('Defender'),'left')}
 
-              {listPlayers('Goalkeeper', filterPlayersByPosition('Goalkeeper'), 'left')}
+              {listPlayers('Goalkeeper',filterPlayersByPosition('Goalkeeper'),'left')}
             </div>
           </div>
 
-          <div className="col-md-4 min-width-tb d-flex align-items-stretch justify-content-center">
+          <div className=" col-md-4 d-flex align-items-stretch justify-content-center">
             {showError()}
 
             <div
@@ -353,14 +361,14 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             </div>
           </div>
 
-          <div className="col-md-4 min-width-tb">
+          <div className="col-md-4">
             <h3 className="text-center">Giocatori selezionati:</h3>
             <div className="text-center">
               <ul className="list-unstyled">
                 {listPlayers('Attack', selectedFormation.forwards, 'right')}
               </ul>
               <ul className="list-unstyled">
-                {listPlayers('Midfield', selectedFormation.midfielders, 'right')}
+                {listPlayers('Midfield', selectedFormation.midfielders,  'right')}
               </ul>
               <ul className="list-unstyled">
                 {listPlayers('Defender', selectedFormation.defenders, 'right')}
