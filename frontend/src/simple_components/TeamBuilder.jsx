@@ -35,17 +35,23 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     }, [favoritePlayers]);
 
     const sendFormation = async () => {
+      await getFormations()
       axios.post('http://localhost:3000/users/postFormations', {
         username: username,
         pwd: password,
         formation: selectedFormation
       })
         .then(resp => {
-          console.log(resp.data)
+          console.log("ECCOLO",resp.data)
         })
         .catch(e => {
           console.log(e)
         })
+    }
+
+    const getFormations = async ()=>{
+      const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {username:username,pwd:password})
+      console.log(axios_resp.data)
     }
 
     const showError = () => {

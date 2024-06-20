@@ -52,11 +52,14 @@ const addFavoriteTeam = (name, pwd, teamId) => {
 };
 
 const addFormation = (username, pwd, formation) => {
-  console.log(username, pwd, formation)
   return model.updateOne(
     {user_name: username, pwd: pwd},
     {$push: {formations: formation}}
   );
 }
 
-module.exports = {getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoritePlayer, addFormation};
+const getFormation = (username,pwd)=>{
+  return model.findOne({user_name:username, pwd:pwd},{}, null)
+}
+
+module.exports = {getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoritePlayer, addFormation, getFormation};

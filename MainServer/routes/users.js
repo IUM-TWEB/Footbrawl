@@ -62,8 +62,7 @@ router.post('/getfav', async (req, res) => {
   }
 })
 
-router.post('/postFormations', async (req,res)=>{
-  console.log(req.body);
+router.post('/postFormations', async (req, res) => {
   try {
     const response = await axios.post(`http://localhost:3001/user/fav/formation`, {
       username: req.body.username,
@@ -72,6 +71,18 @@ router.post('/postFormations', async (req,res)=>{
     })
 
     res.send(response.data)
+  } catch (e) {
+    res.sendStatus(500)
+  }
+})
+
+router.post('/getFormations', async (req, res) => {
+  try {
+    const resp = await axios.post('http://localhost:3001/user/getfav/formation', {
+      username: req.body.username,
+      pwd: req.body.pwd,
+    })
+    res.send(resp.data.formations)
   } catch (e) {
     res.sendStatus(500)
   }

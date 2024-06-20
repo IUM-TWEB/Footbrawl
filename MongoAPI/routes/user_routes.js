@@ -155,6 +155,39 @@ router.post('/fav/formation', mid.addFormation)
 
 /**
  * @swagger
+ * /user/fav/player/:
+ *   post:
+ *     summary: Add favorite formation
+ *     description: This endpoint allows users to save the selected formation
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - userName
+ *           properties:
+ *             userName:
+ *               type: string
+ *             firstName:
+ *               type: string
+ *             lastName:
+ *               type: string
+ *     responses:
+ *       '200':
+ *         description: Player added to favorites successfully.
+ *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Unauthorized. Invalid username or password.
+ *       '404':  # Assuming a 404 error is returned for not found user
+ *         description: User not found.
+ *       '500':
+ *         description: Internal server error.
+ */
+router.post('/getfav/formation', mid.getFormation)
+
+/**
+ * @swagger
  * /user/getfav/player/:
  *   post:
  *     summary: Get user's favorite players
