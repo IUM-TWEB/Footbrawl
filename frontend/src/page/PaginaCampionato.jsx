@@ -43,22 +43,25 @@ const PaginaCampionato = () => {
       console.log('Top Market Value Data:', topMarketValueData);
       setTopMarketValueData(topMarketValueData);
     } catch (error) {
-      console.error('Errore nella richiesta al server:', error);
-      setError(error);
+      console.log("competizione Europea, Top Market Value non disponibili");
+      //fetchLastWinner(competition_id);
+      //console.error('Errore nella richiesta al server:', error);
+      //setError(error);
     }
   };
 
   const fetchRanking = async (id_campionato) => {
     try {
-      const response = await axios.get(`http://localhost:3000/ranking/serie-a`, {
+      const response = await axios.get(`http://localhost:3000/rankingId/${id_campionato}`, {
         timeout: 10000
       });
       const ranking = response.data.slice(0, 15);
       console.log('ranking:', ranking);
       setRankingData(ranking);
     } catch (error) {
-      console.error('Errore nella richiesta al server:', error);
-      setError(error);
+      console.log("competizione Europea, classifica non disponibile")
+      //console.error('Errore nella richiesta al server:', error);
+      //setError(error);
     }
   };
 
@@ -79,7 +82,7 @@ const PaginaCampionato = () => {
     fetchData();
     fetchTopScorer(id_campionato); // Chiama fetchTopScorer qui
     fetchTopMarketValue(id_campionato); // Chiama fetchTopMarketValue qui
-    fetchRanking()
+    fetchRanking(id_campionato)
   }, [id_campionato, lower_id_campionato]);
 
   if (loading) {
@@ -102,7 +105,11 @@ const PaginaCampionato = () => {
                   src={`https://tmssl.akamaized.net/images/logo/header/${lower_id_campionato}.png`}
                   alt="Competition Logo"
                   className="img-fluid"
-                  //style={{ maxHeight: "400px" }} // Imposta l'altezza massima dell'immagine
+                  style={{
+                    width: "200px", // Imposta la larghezza fissa desiderata
+                    height: "auto", // Imposta l'altezza su "auto" per mantenere l'aspetto proporzionato
+                    maxHeight: "400px" // Imposta l'altezza massima, se necessario
+                  }}
                 />
                 <div className="col-md-4 d-flex align-items-center justify-content-center p-3">
                 </div>

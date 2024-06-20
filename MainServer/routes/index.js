@@ -10,12 +10,11 @@ router.get('/', function (req, res, next) {
 router.get('/ranking/:competition_name', async (req, res) => {
   const competitionName = req.params.competition_name;
   const url = `http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${competitionName}`;
-
   try {
     const response = await axios.get(url);
     const rankingData = response.data;
 
-    console.log(rankingData);
+    //console.log(rankingData);
     res.send(rankingData);
   } catch (error) {
     console.error('ERRORE nella richiesta al server Postgres:', error);
@@ -23,10 +22,10 @@ router.get('/ranking/:competition_name', async (req, res) => {
   }
 });
 
-router.get('/ranking/:id_campionato', async (req, res) => {
+router.get('/rankingId/:id_campionato', async (req, res) => {
   const idCampionato = req.params.id_campionato;
   const url = `http://localhost:8080/lastCompetitionRankingByCompetitionId?id=${idCampionato}`;
-
+  console.log("entro");
   try {
     const response = await axios.get(url);
     const rankingData = response.data;
@@ -137,7 +136,7 @@ router.get('/campionati/top_scorer/:competition_id', async (req, res) => {
     const competitionId = req.params.competition_id;
     const response = await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`);
     const topScorerData = response.data;
-    console.log(topScorerData);
+    //console.log(topScorerData);
 
     res.send(topScorerData);
   } catch (error) {
@@ -158,5 +157,20 @@ router.get('/top_market_value/:competition_id', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the data.' });
   }
 });
+
+router.get('/last_game/:competition_id', async (req, res) => {
+  const competitionId = req.params.competition_id;
+  const url = `http://localhost:3001/games/last_game/${competitionId}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+  }
+});
+
+
 
 module.exports = router;

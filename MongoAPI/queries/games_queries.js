@@ -7,6 +7,11 @@ const getById = (id) => {
 const getByComp = (comp, season) => {
     return games.find({competition_id:comp, season:season}, {}, null)
 }
+const getByCompLast = (comp, season) => {
+    return games.find({ competition_id: comp })
+      .sort({ date: -1 })
+      .limit(1);
+}
 
 const getByClub = (comp, season, club_id) => {
     return games.find({competition_id:comp, season:season, home_club_id :club_id }, {}, null)
@@ -56,4 +61,4 @@ const getPosition = (teamId) => {
     ])
 }
 
-module.exports = {getByClub, getByComp, getById, getPosition}
+module.exports = {getByClub, getByComp, getById, getPosition, getByCompLast}
