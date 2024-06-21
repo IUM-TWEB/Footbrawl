@@ -197,6 +197,33 @@ router.get('/last_game/:competition_id', async (req, res) => {
   }
 });
 
+router.get('/last_game_by_club/:club_id', async (req, res) => {
+  const clubId = req.params.club_id;
+  console.log('entrato')
+  const url = `http://localhost:3001/games/last_game_club/${clubId}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+  }
+});
+
+
+router.get('/top_market_value/:competition_id', async (req, res) => {
+  const competitionId = req.params.competition_id;
+  const url = `http://localhost:8080/topMarketPlayerCompetition?competitionId=${competitionId}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+  }
+});
 
 
 module.exports = router;

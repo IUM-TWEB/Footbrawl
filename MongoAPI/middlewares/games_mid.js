@@ -34,6 +34,18 @@ module.exports.getByCompLast = async (req, res) => {
       })
 }
 
+module.exports.getByClubLast = async (req, res) => {
+    await queries.getByClubLast(req.params.club_id)
+      .then(resp => {
+          console.log('entrato')
+          res.send(resp)
+      })
+      .catch((err) => {
+          console.log(err)
+          res.send(err.name)
+      })
+}
+
 module.exports.getByClub = async (req, res) => {
     await queries.getByClub(req.params.comp, parseInt(req.params.season), req.params.game_id)
         .then(resp => {
