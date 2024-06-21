@@ -78,9 +78,9 @@ const SingleChat = () => {
   };
 
   return (
-    <div className="container mt-5 w-100 min-height-75" id="message_container">
-      <div className="row mb-2">
-        <h2 className="col-md-10">Benvenuto nella chat {currentRoom}</h2>
+    <div className="container mt-4 mb-3 w-100 min-height-75" id="message_container">
+      <div className="row mb-2 mb-3">
+        <h2 className="col-md-10">Benvenuto nella chat di {currentRoom}</h2>
         <button
           id="logout"
           className="btn btn-small btn-danger col-md-2"
