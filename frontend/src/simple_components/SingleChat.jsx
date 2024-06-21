@@ -1,50 +1,47 @@
 import React, {useState, useEffect} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import io from "socket.io-client";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const SingleChat = () => {
   const {id: currentRoom} = useParams();
+  const {username} = useAuth();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  let myName = "";
-  myName = localStorage.getItem("username");
-
   useEffect(() => {
     const socket = io("http://localhost:3000");
     setSocket(socket);
 
-    socket.emit('create or join', currentRoom, myName);
-    const joinMessage = {text: ` has joined the conversation`, author: `Me`};
+    socket.emit('create or join', currentRoom, username);
+    const joinMessage = {text: `you joined the conversation`, author: `Me`};
     setMessages(prevMessages => [...prevMessages, joinMessage]);
     localStorage.setItem('room', currentRoom);
 
     socket.on('create or join', (name) => {
-      if (name !== myName) {
-        const joinMessage = {text: ` has joined the conversation`, author: `${name}`};
-        setMessages(prevMessages => [...prevMessages, joinMessage]);
-      }
+      const joinMessage = {text: ` has joined the conversation`, author: `${name}`};
+      setMessages(prevMessages => [...prevMessages, joinMessage]);
     });
 
     socket.on('chat message', (msg, name) => {
-      const newMessage = {text: msg, author: name === myName ? "Me" : name};
+      const newMessage = {text: msg, author: name};
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
     socket.on('leave conversation', (name) => {
-      const newMessage = {text: ' has left the conversation', author: `${name}`};
+      const newMessage = {text: ` has left the conversation`, author: `${name}`};
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
     socket.on('disconnected', (name) => {
-      const newMessage = {text: ' has left the conversation', author: `${name}`};
+      const newMessage = {text: ` has left the conversation`, author: `${name}`};
       setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
     const handleUnload = () => {
-      socket.emit('disconnected', currentRoom, myName);
+      socket.emit('disconnected', currentRoom, username);
     };
 
     window.addEventListener('beforeunload', handleUnload);
@@ -52,7 +49,7 @@ const SingleChat = () => {
     return () => {
       socket.off('chat message');
       socket.off('create or join');
-      socket.emit('leave conversation', currentRoom, myName);
+      socket.emit('leave conversation', currentRoom, username);
       socket.close();
       window.removeEventListener('beforeunload', handleUnload);
       localStorage.removeItem('room');
@@ -61,8 +58,7 @@ const SingleChat = () => {
 
   const sendMessage = () => {
     if (message && socket) {
-      console.log(message);
-      socket.emit('chat message', currentRoom, message, myName);
+      socket.emit('chat message', currentRoom, message, username);
       setMessages(prevMessages => [...prevMessages, {text: message, author: "Me"}]);
       setMessage('');
     }
@@ -70,7 +66,7 @@ const SingleChat = () => {
 
   const logout = () => {
     if (socket) {
-      socket.emit('leave conversation', currentRoom, myName);
+      socket.emit('leave conversation', currentRoom, username);
       socket.close();
     }
     localStorage.removeItem('room');
