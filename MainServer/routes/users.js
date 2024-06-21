@@ -82,7 +82,7 @@ router.post('/getFormations', async (req, res) => {
       username: req.body.username,
       pwd: req.body.pwd,
     })
-    res.send(resp.data.formations)
+    res.send(resp.data)
   } catch (e) {
     res.sendStatus(500)
   }

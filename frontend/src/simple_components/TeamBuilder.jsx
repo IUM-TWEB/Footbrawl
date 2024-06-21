@@ -9,59 +9,97 @@ import {useAuth} from "../context/AuthContext.jsx";
 
 const TeamFormationSelector = ({favoritePlayers}) => {
     const {username, password} = useAuth();
-    const [alert, setAlert] = useState(false)
+    const [alert, setAlert] = useState([false, ""])
     const navigate = useNavigate()
     const [popupsOpen, setPopupsOpen] = useState({});
     const [selectedPosition, setSelectedPosition] = useState([null, null])
     const [playerNames, setPlayerNames] = useState([]);
     const [formation, setFormation] = useState('4-4-2');
+    const [savedFormations, setSavedFormations] = useState([])
     const [selectedFormation, setSelectedFormation] = useState({
       forwards: ['0', '0'],
       midfielders: ['0', '0', '0', '0'],
       defenders: ['0', '0', '0', '0'],
       goalkeeper: ['0']
     });
+    useEffect(() => {
+      const fetchData = async () => {
+        const resp = await getFormations();
+        if (resp && Array.isArray(resp)) {
+          setSavedFormations(resp);
+          console.log("saved:", savedFormations)
+        }
+      };
 
+      fetchData();
+    }, []);
 
     useEffect(() => {
-      if (alert[0])
-        setTimeout(() => {
-          setAlert(!alert[0])
-        }, 3000)
-    }, [alert]);
+
+      const ss = savedFormations.find(i => i.type === formation)
+      console.log("trovata: ", ss)
+      if (ss)
+        setSelectedFormation(ss.formation)
+
+    }, [formation, savedFormations]);
+
+
+  useEffect(() => {
+    if (alert[0]) {
+      const timeout = setTimeout(() => {
+        setAlert([false, ""]);
+        console.log(alert);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [alert]);
+
 
     useEffect(() => {
       setPlayerNames(favoritePlayers);
     }, [favoritePlayers]);
 
     const sendFormation = async () => {
-      await getFormations()
       axios.post('http://localhost:3000/users/postFormations', {
-        username: username,
-        pwd: password,
-        formation: selectedFormation
-      })
+          username: username,
+          pwd: password,
+          formation: {
+            type: formation,
+            formation: selectedFormation,
+            name: "ciao"
+          }
+        }
+      )
         .then(resp => {
-          console.log("ECCOLO",resp.data)
+          setAlert([true, "Formazione salvata correttamente", "success"])
         })
         .catch(e => {
           console.log(e)
         })
     }
 
-    const getFormations = async ()=>{
-      const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {username:username,pwd:password})
-      console.log(axios_resp.data)
+    const getFormations = async () => {
+      const axios_resp = await
+        axios.post('http://localhost:3000/users/getFormations', {
+          username: username,
+          pwd: password
+        })
+      console.log("in axios", axios_resp.data)
+      return axios_resp.data
     }
 
     const showError = () => {
-      if (alert[0])
+      if (alert[0]) {
+        console.log(alert);
         return (
-          <Alert key={'danger'} color={'danger'} style={{position: "absolute", marginTop: '1%'}}>
+          <Alert key={'danger'} color={alert[2]} style={{position: "absolute", marginTop: '1%'}}>
             {alert[1]}
-          </Alert>);
-      return null
-    }
+          </Alert>
+        );
+      }
+      return null;
+    };
+
 
     const togglePopup = (id, context) => {
       setPopupsOpen(prev => ({
@@ -92,30 +130,32 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
     };
 
-    const handlePlayerSelection = (player) => {
-      if (selectedFormation.forwards.includes(player) ||
-        selectedFormation.midfielders.includes(player) ||
-        selectedFormation.defenders.includes(player) ||
-        selectedFormation.goalkeeper.includes(player)) {
+  const handlePlayerSelection = (player) => {
+    if (selectedFormation.forwards.includes(player) ||
+      selectedFormation.midfielders.includes(player) ||
+      selectedFormation.defenders.includes(player) ||
+      selectedFormation.goalkeeper.includes(player)) {
+      setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore", "danger"]);
+      return
+    }
 
-        return setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore"]);
-      }
+    setSelectedFormation(prevFormation => {
+      const newFormation = { ...prevFormation };
+      if (selectedPosition[1] && !selectedPosition[1].includes(player))
+        selectedPosition[1][selectedPosition[0]] = player;
+      else
+        setAlert([true, "Selezionare prima una posizione, ed in seguito un giocatore","danger"]);
+      return newFormation;
+    });
+  };
 
-
-      setSelectedFormation(prevFormation => {
-        const newFormation = {...prevFormation};
-        if (!selectedPosition[1].includes(player))
-          selectedPosition[1][selectedPosition[0]] = player;
-        return newFormation;
-      });
-    };
 
     let addPlayer = (newPlayer) => {
       if (!playerNames.some(player => player.playerId === newPlayer.playerId)) {
         setPlayerNames([...playerNames, newPlayer]);
         handlePlayerSelection(newPlayer);
       } else {
-        setAlert([true, "Giocatore già aggiunto ai selezionati"])
+        setAlert([true, "Giocatore già aggiunto ai selezionati", "danger"])
       }
     }
 
@@ -130,7 +170,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         })
       }
     };
-
 
     const buttonSelector = (index, pos) => {
       if (index !== selectedPosition[0] || pos !== selectedPosition[1]) {
@@ -279,6 +318,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
     return (
       <>
+        <button onClick={() => setAlert([true, "ciao"])}>Trigger Alert</button>
         <h2>Crea la tua squadra</h2>
         <div>
           <p>
@@ -305,7 +345,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
 
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-4 min-width-tb">
             <div className={"text-center"}>
               <h3>Seleziona i giocatori:</h3>
 
@@ -319,7 +359,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             </div>
           </div>
 
-          <div className=" col-md-4 d-flex align-items-stretch justify-content-center">
+          <div className=" col-md-4 d-flex align-items-stretch justify-content-center min-width-tb">
             {showError()}
 
             <div
@@ -333,7 +373,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             </div>
           </div>
 
-          <div className="col-md-4">
+          <div className="col-md-4 min-width-tb">
             <h3 className="text-center">Giocatori selezionati:</h3>
             <div className="text-center">
               <ul className="list-unstyled">

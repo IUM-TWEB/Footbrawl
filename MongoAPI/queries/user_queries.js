@@ -51,11 +51,26 @@ const addFavoriteTeam = (name, pwd, teamId) => {
   );
 };
 
-const addFormation = (username, pwd, formation) => {
-  return model.updateOne(
-    {user_name: username, pwd: pwd},
-    {$push: {formations: formation}}
-  );
+const addFormation = async (username, pwd, formation) => {
+  try {
+    const updateResult = await model.updateOne(
+      {user_name: username, pwd: pwd, "formations.type": formation.type},
+      {$set: {"formations.$": formation}}
+    );
+
+    if (updateResult.matchedCount === 0) {
+      // Se l'oggetto non è stato trovato, aggiungilo
+      const pushResult = await model.updateOne(
+        {user_name: username, pwd: pwd},
+        {$push: {formations: formation}}
+      );
+      console.log("Formation added successfully!", pushResult);
+    } else {
+      console.log("Formation updated successfully!", updateResult);
+    }
+  } catch (error) {
+    console.error("Error updating or adding formation:", error);
+  }
 }
 
 const getFormation = (username,pwd)=>{
