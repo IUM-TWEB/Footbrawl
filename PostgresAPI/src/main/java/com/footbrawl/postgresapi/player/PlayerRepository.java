@@ -43,7 +43,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
       "ORDER BY first_name, last_name, name", nativeQuery = true)
   Optional<List<Object>> findPlayerAndClubByNameCustomQuery(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("name") String name);
 
-
   @Query("SELECT p FROM Player p WHERE p.market_value_in_eur IS NOT NULL AND p.current_club_domestic_competition_id = :competitionId ORDER BY p.market_value_in_eur DESC")
   List<Player> findTopMarketPlayersByCompetitionId(@Param("competitionId") String competitionId);
 }

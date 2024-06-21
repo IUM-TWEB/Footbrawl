@@ -4,7 +4,6 @@ import Menu from "./simple_components/Menu.jsx";
 import PaginaCampionati from "./page/PaginaCampionati.jsx";
 import PaginaClub from "./page/PaginaClub.jsx";
 import PaginaGiocatori from "./page/PaginaGiocatori.jsx";
-import PaginaMercato from "./page/PaginaMercato.jsx";
 import Home from "./page/Home.jsx";
 import Login from "./page/Login.jsx";
 import GridNews from "./simple_components/GridNews.jsx";
@@ -24,7 +23,6 @@ function App() {
         <Route path="/" element={<Home/>
         } exact/>
 
-        <Route path="/mercato" element={<PaginaMercato/>}/>
         <Route path="/reg" element={<Register/>}/>
         <Route path="/chat" element={<ProtectedRoute> <PaginaChat/> </ProtectedRoute>}/>
         <Route path="/chat/:id" element={<ProtectedRoute> <SingleChat/> </ProtectedRoute>}/>
@@ -35,7 +33,6 @@ function App() {
         <Route path="/campionati/:id_campionato" element={<PaginaCampionato />} />
         <Route path="/club/:clubId" element={<PaginaClub />} />
         <Route path="/giocatori/:playerId" element={<PaginaGiocatori />} />
-        <Route path="/mercato" element={<PaginaMercato />} />
         <Route path="/login" element={<Login />} />
         <Route path="/chat" element={<PaginaChat />} />
         <Route path="/chat/:id" element={<SingleChat />} />
