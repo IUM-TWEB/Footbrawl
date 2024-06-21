@@ -14,11 +14,14 @@ const Home = () => {
   const [serieA, setSerieA] = useState([]);
   const [premierLeague, setPremierLeague] = useState([]);
   const [laLiga, setLaLiga] = useState([]);
+  const [ligue1, setLigue1] = useState([]);
   const [lastGames, setLastGames] = useState({});
   const [topScorers, setTopScorers] = useState({
     IT1: null,
     GB1: null,
-    ES1: null
+    ES1: null,
+    CL: null,
+    EL: null
   });
   const carouselRef = useRef(null);
   const navigate = useNavigate();
@@ -37,7 +40,7 @@ const Home = () => {
     const fetchTopScorer = async (competitionId) => {
       try {
         const response = await axios.get(`http://localhost:3000/campionati/top_scorer/${competitionId}`, {
-          timeout: 100000000 // Aumenta il timeout a 10 secondi
+          timeout: 100000000
         });
         return response.data;
       } catch (error) {
@@ -48,39 +51,49 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const [newsResponse, serieAResponse, premierLeagueResponse, laLigaResponse, lastGameIT1, lastGameGB1, lastGameES1] = await Promise.all([
+        const [newsResponse, serieAResponse, premierLeagueResponse, laLigaResponse, ligue1Response, lastGameIT1, lastGameGB1, lastGameES1, lastGameCL, lastGameEL] = await Promise.all([
           axios.get('http://localhost:3000/home/news'),
           axios.get('http://localhost:3000/ranking/serie-a'),
           axios.get('http://localhost:3000/ranking/premier-league'),
           axios.get('http://localhost:3000/ranking/laLiga'),
+          axios.get('http://localhost:3000/ranking/ligue-1'),
           fetchLastGame('IT1'),
           fetchLastGame('GB1'),
-          fetchLastGame('ES1')
+          fetchLastGame('ES1'),
+          fetchLastGame('CL'),
+          fetchLastGame('EL')
         ]);
 
         setNewsList(newsResponse.data);
         setSerieA(serieAResponse.data.slice(0, 3));
         setPremierLeague(premierLeagueResponse.data.slice(0, 3));
         setLaLiga(laLigaResponse.data.slice(0, 3));
+        setLigue1(ligue1Response.data.slice(0, 3));
         setLastGames({
           IT1: lastGameIT1,
           GB1: lastGameGB1,
-          ES1: lastGameES1
+          ES1: lastGameES1,
+          CL: lastGameCL,
+          EL: lastGameEL
         });
 
         // Fetch top scorers asynchronously
         const topScorerPromises = [
           fetchTopScorer('IT1'),
           fetchTopScorer('GB1'),
-          fetchTopScorer('ES1')
+          fetchTopScorer('ES1'),
+          fetchTopScorer('CL'),
+          fetchTopScorer('EL')
         ];
 
-        // Utilizziamo Promise.allSettled per evitare di bloccare le altre richieste
+        // Use Promise.allSettled to avoid blocking other requests
         const topScorerResults = await Promise.allSettled(topScorerPromises);
         const topScorersData = {
           IT1: topScorerResults[0].status === 'fulfilled' ? topScorerResults[0].value : null,
           GB1: topScorerResults[1].status === 'fulfilled' ? topScorerResults[1].value : null,
-          ES1: topScorerResults[2].status === 'fulfilled' ? topScorerResults[2].value : null
+          ES1: topScorerResults[2].status === 'fulfilled' ? topScorerResults[2].value : null,
+          CL: topScorerResults[3].status === 'fulfilled' ? topScorerResults[3].value : null,
+          EL: topScorerResults[4].status === 'fulfilled' ? topScorerResults[4].value : null
         };
 
         setTopScorers(topScorersData);
@@ -121,7 +134,7 @@ const Home = () => {
   const handleScorerClick = (playerId) => {
     navigate(`/giocatori/${playerId}`);
   };
-console.log(topScorers);
+
   return (
     <>
       <SearchBar setOpacity={toggleOpacity} />
@@ -143,6 +156,11 @@ console.log(topScorers);
             <div className="card mt-4">
               <div className="card-body">
                 <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
+              </div>
+            </div>
+            <div className="card mt-4">
+              <div className="card-body">
+                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
               </div>
             </div>
           </div>
@@ -171,20 +189,25 @@ console.log(topScorers);
                 Riprendi
               </button>
             </div>
-          </div>
-          <div className="col-md-3">
-            <div>
+            <div className="mt-4">
               <h1>Ultime Partite</h1>
-
-              {['IT1', 'GB1', 'ES1'].map(league => (
+              {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
                 <div key={league} className="card mt-4">
                   <div className="card-body">
-                    <h5
-                      className="card-title">{league === 'IT1' ? 'Serie A' : league === 'GB1' ? 'Premier League' : 'La Liga'}</h5>
+                    <h5 className="card-title">
+                      {league === 'IT1' ? 'Serie A' :
+                        league === 'ES1' ? 'La Liga' :
+                          league === 'GB1' ? 'Premier League' :
+                            league === 'CL' ? 'Champions League' :
+                              league === 'EL' ? 'Europa League' :
+                                'Errore'} {/* Fallback in caso nessuna delle condizioni precedenti è soddisfatta */}
+                    </h5>
                     {lastGames[league] ? (
-                      <p className="card-text">
-                        {lastGames[league][0].home_club_id} {lastGames[league][0].home_club_goals} - {lastGames[league][0].away_club_goals} {lastGames[league][0].away_club_id}
-                      </p>
+                      lastGames[league].map(game => (
+                        <p key={game._id} className="card-text">
+                          {game.home_club_name} {game.home_club_goals} - {game.away_club_goals} {game.away_club_name}
+                        </p>
+                      ))
                     ) : (
                       <p className="card-text">Caricamento...</p>
                     )}
@@ -192,35 +215,40 @@ console.log(topScorers);
                 </div>
               ))}
             </div>
-            <div className="mt-4">
+          </div>
+          <div className="col-md-3">
+            <div>
               <h1>Top Scorers</h1>
-
-              {['IT1', 'GB1', 'ES1'].map(league => (
+              {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
                 topScorers[league] && (
                   <div key={league} className="card mt-3">
                     <div className="card-body">
                       <h5
-                        className="card-title">{league === 'IT1' ? 'Serie A' : league === 'GB1' ? 'Premier League' : 'La Liga'}</h5>
-                      <div
-                        className="mb-3"
-                        style={{
-                          backgroundColor: '#fff',
-                          transition: 'background-color 0.3s',
-                          cursor: 'pointer'
-                        }}
-                        onClick={() => handleScorerClick(topScorers[league][0].player_id)}
-                      >
-                        <p className="card-text" style={{marginBottom: '0.5rem'}}>
-                          {topScorers[league][0].player_id} ({topScorers[league][0].totalGoals} gol)
-                        </p>
-                      </div>
+                        className="card-title">{league === 'IT1' ? 'Serie A' : league === 'ES1' ? 'La Liga' : league === 'GB1' ? 'Premier League' : league === 'CL' ? 'Champions League' : 'Europa League'}</h5>
+                      {topScorers[league].slice(0, 3).map((scorer) => (
+                        <div
+                          key={scorer.player_id}
+                          className="mb-3"
+                          style={{
+                            transition: 'background-color 0.3s',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => handleScorerClick(scorer.player_id)}
+                        >
+                          <p className="card-text" style={{ marginBottom: '0.5rem' }}>
+                            <img src={scorer.imageUrl} alt={scorer.name} style={{ width: '50px', height: '50px', marginRight: '10px', borderRadius: '50%' }} />
+                            {scorer.name} ({scorer.totalGoals} gol)
+                            <br />
+                            <small>{scorer.position} - {scorer.currentClubName}</small>
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </>

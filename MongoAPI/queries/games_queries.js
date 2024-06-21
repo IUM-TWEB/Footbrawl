@@ -10,7 +10,7 @@ const getByComp = (comp, season) => {
 const getByCompLast = (comp, season) => {
     return games.find({ competition_id: comp })
       .sort({ date: -1 })
-      .limit(1);
+      .limit(3);
 }
 
 const getByClub = (comp, season, club_id) => {
