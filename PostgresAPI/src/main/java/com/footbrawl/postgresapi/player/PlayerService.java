@@ -1,5 +1,6 @@
 package com.footbrawl.postgresapi.player;
 
+import com.footbrawl.postgresapi.clubranking.ClubRanking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.footbrawl.postgresapi.utils.PlayerUtils;
@@ -7,6 +8,7 @@ import com.footbrawl.postgresapi.utils.PlayerUtils;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -58,6 +60,18 @@ public class PlayerService {
     for (Player player : playerList)
       playerDTOList.add(convertToDTO(player));
 
+    return playerDTOList;
+  }
+
+  public List<PlayerDTO> getLastSeasonPlayersByClubId(int id) {
+    List<Player> playerList = playerRepository.findLastSeasonPlayersByCurrent_club_id(id).orElse(null);
+    if (playerList == null || playerList.isEmpty())
+      return null;
+
+    List<PlayerDTO> playerDTOList = new ArrayList<>(playerList.size());
+    for (Player player : playerList)
+      playerDTOList.add(convertToDTO(player));
+    playerDTOList.sort(Comparator.comparingInt(PlayerDTO::getMarketValue).reversed());
     return playerDTOList;
   }
 

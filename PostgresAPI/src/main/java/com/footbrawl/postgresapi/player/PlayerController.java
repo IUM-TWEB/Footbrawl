@@ -47,6 +47,14 @@ public class PlayerController {
     return ResponseEntity.ok(playerDTOList);
   }
 
+  @GetMapping("/playersOfClubLastSeason")
+  public ResponseEntity<List<PlayerDTO>> getLastSeasonPlayersByClubId(@RequestParam int id) {
+    List<PlayerDTO> playerDTOList = playerService.getLastSeasonPlayersByClubId(id);
+    if (playerDTOList == null || playerDTOList.isEmpty())
+      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(playerDTOList);
+  }
+
   @GetMapping("/topMarketPlayerCompetition")
   public ResponseEntity<List<PlayerDTO>> getTopMarketPlayersByCompetitionId(@RequestParam String competitionId) {
     List<PlayerDTO> topMarketPlayerDTOList = playerService.getTopMarketPlayersByCompetitionId(competitionId);

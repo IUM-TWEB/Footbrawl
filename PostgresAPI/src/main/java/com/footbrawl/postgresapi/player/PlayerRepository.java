@@ -17,6 +17,9 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
   @Query(value = "SELECT * FROM players WHERE current_club_id = :id", nativeQuery = true)
   Optional<List<Player>> findPlayersByCurrent_club_id(int id);
 
+  @Query(value = "SELECT * FROM players WHERE current_club_id = :id AND last_season = 2023", nativeQuery = true)
+  Optional<List<Player>> findLastSeasonPlayersByCurrent_club_id(int id);
+
   @Query(value = "SELECT * FROM players WHERE LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) LIMIT 10", nativeQuery = true)
   Optional<List<Player>> findPlayerByNameCustomQuery(@Param("name") String name);
 

@@ -1,5 +1,6 @@
 package com.footbrawl.postgresapi.club;
 
+import com.footbrawl.postgresapi.competition.CompetitionRepository;
 import com.footbrawl.postgresapi.player.Player;
 import com.footbrawl.postgresapi.player.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import static com.footbrawl.postgresapi.utils.PlayerUtils.calculateMarketValueUt
 public class ClubService {
   private final ClubRepository clubRepository;
   private final PlayerRepository playerRepository;
+  private final CompetitionRepository competitionRepository;
 
   @Autowired
-  public ClubService(ClubRepository clubRepository, PlayerRepository playerRepository) {
+  public ClubService(ClubRepository clubRepository, PlayerRepository playerRepository, CompetitionRepository competitionRepository) {
     this.clubRepository = clubRepository;
     this.playerRepository = playerRepository;
+    this.competitionRepository = competitionRepository;
   }
 
   public ClubDTO getClub(int id) {
@@ -45,7 +48,9 @@ public class ClubService {
     clubDTO.setClubId(club.getClub_id());
     clubDTO.setClubCode(club.getClub_code());
     clubDTO.setName(club.getName());
-    clubDTO.setDomesticCompetitionId(club.getDomestic_competition_id());
+    String id = club.getDomestic_competition_id();
+    clubDTO.setDomesticCompetitionId(id);
+    clubDTO.setDomesticCompetitionName(competitionRepository.findCompetitionNameById(id).orElse(null));
     clubDTO.setSquadSize(club.getSquad_size());
     clubDTO.setAverageAge(club.getAverage_age());
     clubDTO.setForeignersNumber(club.getForeigners_number());
@@ -54,7 +59,7 @@ public class ClubService {
     clubDTO.setStadiumName(club.getStadium_name());
     clubDTO.setCoachName(club.getCoach_name());
     clubDTO.setLast_season(club.getLast_season());
-    clubDTO.setUrl(club.getClub_code());
+    clubDTO.setUrl(club.getUrl());
     clubDTO.setNetTransferRec(calculateNetTransferRecord(club));
     clubDTO.setTotalMarketVal(calculateTotalMarketVal(club.getClub_id(), club.getLast_season()));
     return clubDTO;

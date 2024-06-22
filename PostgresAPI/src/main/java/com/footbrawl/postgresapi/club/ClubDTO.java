@@ -5,6 +5,7 @@ public class ClubDTO {
   private String clubCode;
   private String name;
   private String domesticCompetitionId;
+  private String domesticCompetitionName;
   private Integer squadSize;
   private Float averageAge;
   private Integer foreignersNumber;
@@ -17,13 +18,17 @@ public class ClubDTO {
   private Integer netTransferRec;
   private Integer totalMarketVal;
 
-  public ClubDTO(){
+  public ClubDTO() {
 
   }
 
-  public Long getClubId(){return clubId;}
+  public Long getClubId() {
+    return clubId;
+  }
 
-  public void setClubId(Long clubId){this.clubId = clubId;}
+  public void setClubId(Long clubId) {
+    this.clubId = clubId;
+  }
 
   public String getClubCode() {
     return clubCode;
@@ -47,6 +52,14 @@ public class ClubDTO {
 
   public void setDomesticCompetitionId(String domesticCompetitionId) {
     this.domesticCompetitionId = domesticCompetitionId;
+  }
+
+  public String getDomesticCompetitionName() {
+    return domesticCompetitionName;
+  }
+
+  public void setDomesticCompetitionName(String domesticCompetitionName) {
+    this.domesticCompetitionName = domesticCompetitionName;
   }
 
   public int getSquadSize() {
