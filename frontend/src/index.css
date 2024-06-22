@@ -9,6 +9,7 @@
 .logo {
   height: 50px;
   width: 100px;
+  cursor: pointer;
 }
 
 
@@ -410,3 +411,11 @@ hr.solid {
   transform: translateY(2px); /* Simulates the button being pressed down */
   box-shadow: 1px 0 2px rgba(0,0,0,0.5); /* Adjust shadow to look closer to the surface */
 }
+
+
+/*aumenta il padding tra i top scorer della home per arrivare a livello sotto con le altre colonne */
+.mb-custom {
+  margin-bottom: 3rem;
+}
+
+

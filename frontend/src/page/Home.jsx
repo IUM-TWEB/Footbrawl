@@ -6,6 +6,7 @@ import News from "../simple_components/News.jsx";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
+import '../index.css';
 
 const Home = () => {
   const [isOpaque, setIsOpaque] = useState(false);
@@ -16,13 +17,7 @@ const Home = () => {
   const [laLiga, setLaLiga] = useState([]);
   const [ligue1, setLigue1] = useState([]);
   const [lastGames, setLastGames] = useState({});
-  const [topScorers, setTopScorers] = useState({
-    IT1: null,
-    GB1: null,
-    ES1: null,
-    CL: null,
-    EL: null
-  });
+  const [topScorers, setTopScorers] = useState({IT1: null, GB1: null, ES1: null, CL: null, EL: null});
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
@@ -69,13 +64,7 @@ const Home = () => {
         setPremierLeague(premierLeagueResponse.data.slice(0, 3));
         setLaLiga(laLigaResponse.data.slice(0, 3));
         setLigue1(ligue1Response.data.slice(0, 3));
-        setLastGames({
-          IT1: lastGameIT1,
-          GB1: lastGameGB1,
-          ES1: lastGameES1,
-          CL: lastGameCL,
-          EL: lastGameEL
-        });
+        setLastGames({IT1: lastGameIT1, GB1: lastGameGB1, ES1: lastGameES1, CL: lastGameCL, EL: lastGameEL});
 
         // Fetch top scorers asynchronously
         const topScorerPromises = [
@@ -141,30 +130,7 @@ const Home = () => {
       <div className="padding home"></div>
       <div className="container-fluid padding" style={{ opacity: isOpaque ? 0.2 : 1 }}>
         <div className="row justify-content-md-center">
-          <div className="col-md-3">
-            <h1>Classifiche</h1>
-            <div className="card">
-              <div className="card-body">
-                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
-              </div>
-            </div>
-            <div className="card mt-4">
-              <div className="card-body">
-                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
-              </div>
-            </div>
-            <div className="card mt-4">
-              <div className="card-body">
-                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
-              </div>
-            </div>
-            <div className="card mt-4">
-              <div className="card-body">
-                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6">
+          <div className="col-md-12 col-lg-6 order-1 order-lg-2">
             <Carousel
               ref={carouselRef}
               showThumbs={false}
@@ -216,13 +182,36 @@ const Home = () => {
               ))}
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-12 col-lg-3 order-2 order-lg-1">
+            <h1>Classifiche</h1>
+            <div className="card">
+              <div className="card-body">
+                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
+              </div>
+            </div>
+            <div className="card mt-4">
+              <div className="card-body">
+                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
+              </div>
+            </div>
+            <div className="card mt-4">
+              <div className="card-body">
+                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
+              </div>
+            </div>
+            <div className="card mt-4">
+              <div className="card-body">
+                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12 col-lg-3 order-3">
             <div>
               <h1>Top Scorers</h1>
-              {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
+              {['IT1', 'GB1', 'ES1', 'CL'].map(league => (
                 topScorers[league] && (
-                  <div key={league} className="card mt-3">
-                    <div className="card-body">
+                  <div key={league} className="card mb-custom">
+                    <div className="card-body card-top-scorer">
                       <h5
                         className="card-title">{league === 'IT1' ? 'Serie A' : league === 'ES1' ? 'La Liga' : league === 'GB1' ? 'Premier League' : league === 'CL' ? 'Champions League' : 'Europa League'}</h5>
                       {topScorers[league].slice(0, 3).map((scorer) => (
