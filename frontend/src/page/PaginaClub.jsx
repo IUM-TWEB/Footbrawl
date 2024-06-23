@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from 'axios';
 
 const PaginaClub = () => {
@@ -9,6 +9,7 @@ const PaginaClub = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -54,6 +55,21 @@ const PaginaClub = () => {
       fetchGames();
     }
   }, [clubId]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      document.querySelector('.parallax-slow').style.transform = `translateY(${scrollTop * 0.3}px)`;
+      document.querySelector('.parallax-medium').style.transform = `translateY(${scrollTop * 0.5}px)`;
+      document.querySelector('.parallax-fast').style.transform = `translateY(${scrollTop * 0.7}px)`;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const svgSelector = (position) => {
     switch (position) {
@@ -108,21 +124,24 @@ const PaginaClub = () => {
 
   const renderPlayer = (player) => {
     return (
-      <div className="col-md-6" key={player.playerId}>
-        <div className="card">
-          <div className="card-body p-2">
+      <div className="col-md-6 p-1" key={player.playerId}>
+        <div className="card h-100">
+          <div className="card-body p-2 btn" onClick={() => navigate(`/giocatori/${player.playerId}`)}>
             <div className="row">
-              <div className="col-md-10">
-                <h6 className="card-title">{player.name}</h6>
+              <div className="col-md-3">
+                <img src={`${player.imageUrl}`} alt="immagine giocatore" className="img-fluid"
+                     style={{maxWidth: '90%'}}></img>
               </div>
-              <div className="col-md-2">
+              <div className="col-md-8 d-flex align-items-center justify-content-center">
+                <div className="row">
+                  <h6 className="card-title">{player.name}</h6>
+                  <p>{player.countryOfBirth}, {player.age} anni</p>
+                </div>
+              </div>
+              <div className="col-md-1 d-flex align-items-center justify-content-center">
                 {svgSelector(player.position)}
               </div>
             </div>
-
-            <p className="card-text">Età: {player.age}</p>
-            <p className="card-text">Nazionalità: {player.countryOfBirth}</p>
-            <p className="card-text">Market Value: {player.marketValue}</p>
           </div>
         </div>
       </div>
@@ -133,44 +152,52 @@ const PaginaClub = () => {
   // if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div className="container-fluid">
       {clubData && (
-        <div className="mt-4 mx-4 mb-4">
+        <div className="mt-4 mx-4 mb-4 flex-grow-1">
           <h2 className="mb-5">{clubData.name}</h2>
           <div className="row">
-            <div className="col-md-3 d-flex flex-column align-items-center">
+
+            <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
               <div className="mb-3">
                 <img src={`https://tmssl.akamaized.net/images/wappen/head/${clubData.clubId}.png`} alt={'club logo'}/>
               </div>
               <div className="text-center mt-2">
                 <hr/>
-                <p>Competizione in cui gioca il club:</p>
+                <p className="h6">Competizione in cui gioca il club</p>
                 <p>{clubData.domesticCompetitionName}</p>
                 <hr/>
-                <p>Numero di giocatori:</p>
+                <p className="h6">Numero di giocatori</p>
                 <p>{clubData.squadSize}</p>
                 <hr/>
-                <p>Numero di giocatori stranieri:</p>
+                <p className="h6">Numero di giocatori stranieri</p>
                 <p>{clubData.foreignersNumber}</p>
                 <hr/>
-                <p>Percentuale di giocatori stranieri:</p>
+                <p className="h6">Percentuale di giocatori stranieri</p>
                 <p>{clubData.foreignersPercentage + "%"}</p>
                 <hr/>
-                <p>Età media dei giocatori:</p>
+                <p className="h6">Età media dei giocatori</p>
                 <p>{clubData.averageAge}</p>
                 <hr/>
-                <p>Stadio in cui gioca il club:</p>
+                <p className="h6">Allenatore</p>
+                <p>{clubData.coachName}</p>
+                <hr/>
+                <p className="h6">Stadio in cui gioca il club</p>
                 <p>{clubData.stadiumName}</p>
                 <hr/>
-                <p>Valore di mercato totale del club:</p>
+                <p className="h6">Capienza dello stadio</p>
+                <p>{clubData.stadiumSeats} posti</p>
+                <hr/>
+                <p className="h6">Valore di mercato totale del club</p>
                 <p>{clubData.totalMarketVal + " euro"}</p>
                 <hr/>
-                <p>Record di trasferimento del club:</p>
+                <p className="h6">Record di trasferimento del club</p>
                 <p>{clubData.netTransferRec + " euro"}</p>
                 <hr/>
               </div>
             </div>
-            <div className="col-md-6 d-flex flex-column align-items-center">
+
+            <div className="col-md-6 d-flex flex-column align-items-center parallax parallax-fast">
               <h2 className="d-flex flex-column align-items-center">Giocatori</h2>
               {players.length > 0 ? (
                 <div className="container">
@@ -182,7 +209,8 @@ const PaginaClub = () => {
                 <p>Non sono stati trovati giocatori per questo club.</p>
               )}
             </div>
-            <div className="col-md-3 d-flex flex-column align-items-center">
+
+            <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
               {games.length > 0 ? (
                 <ul className="list-unstyled">
                   {games.map((game, index) => (

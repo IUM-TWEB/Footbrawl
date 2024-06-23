@@ -12,6 +12,7 @@ public class ClubDTO {
   private Float foreignersPercentage;
   private Integer nationalTeamPlayers;
   private String stadiumName;
+  private int stadiumSeats;
   private String coachName;
   private Integer last_season;
   private String url;
@@ -108,6 +109,14 @@ public class ClubDTO {
 
   public void setStadiumName(String stadiumName) {
     this.stadiumName = stadiumName;
+  }
+
+  public int getStadiumSeats() {
+    return stadiumSeats;
+  }
+
+  public void setStadiumSeats(int stadiumSeats) {
+    this.stadiumSeats = stadiumSeats;
   }
 
   public String getCoachName() {

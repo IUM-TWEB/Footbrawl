@@ -57,6 +57,7 @@ public class ClubService {
     clubDTO.setForeignersPercentage(club.getForeigners_percentage());
     clubDTO.setNationalTeamPlayers(club.getNational_team_players());
     clubDTO.setStadiumName(club.getStadium_name());
+    clubDTO.setStadiumSeats(club.getStadium_seats());
     clubDTO.setCoachName(club.getCoach_name());
     clubDTO.setLast_season(club.getLast_season());
     clubDTO.setUrl(club.getUrl());
