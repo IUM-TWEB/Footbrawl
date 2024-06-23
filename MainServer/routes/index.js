@@ -225,5 +225,18 @@ router.get('/top_market_value/:competition_id', async (req, res) => {
   }
 });
 
+router.get('/manager_name/:club_id', async (req, res) => {
+  const clubId = req.params.club_id;
+  const url = `http://localhost:3001/games/manager_by_club_id/${clubId}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+  }
+});
+
 
 module.exports = router;
