@@ -8,9 +8,9 @@ function PlayerPres({name, data, team, position, img, hight, lastSeason, handleF
   const [x, setX] = useState("ff")
   const {username, password, setNewPlayer} = useAuth()
 
-    handleFavorite = () => {
-        setNewPlayer(playerId)
-        axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
+  handleFavorite = () => {
+    setNewPlayer(playerId)
+    axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
       .then(res => {
         console.log(res)
       })
@@ -31,33 +31,33 @@ function PlayerPres({name, data, team, position, img, hight, lastSeason, handleF
         <img src={img} className="center-img" alt="Player"/>
         <h2 className="center-text card-title">{name}</h2>
 
-              <p className="center-text card-text card-subtitle">Data:</p>
-              <p className="center-text card-text">{data}</p>
+        <p className="center-text card-text card-subtitle">Data:</p>
+        <p className="center-text card-text">{data}</p>
 
-              <hr className="solid"></hr>
+        <hr className="solid"></hr>
 
-              <p className="center-text card-text card-subtitle">Squadra:</p>
-              <p className="center-text card-text">{team}</p>
+        <p className="center-text card-text card-subtitle">Squadra:</p>
+        <p className="center-text card-text">{team}</p>
 
-              <hr className="solid"></hr>
+        <hr className="solid"></hr>
 
-              <p className="center-text card-text card-subtitle">Posizione:</p>
-              <p className="center-text card-text">{position}</p>
+        <p className="center-text card-text card-subtitle">Posizione:</p>
+        <p className="center-text card-text">{position}</p>
 
-              <hr className="solid"></hr>
+        <hr className="solid"></hr>
 
-              <p className="center-text card-text card-subtitle">Ultima Stagione:</p>
-              <p className="center-text card-text">{lastSeason}</p>
+        <p className="center-text card-text card-subtitle">Ultima Stagione:</p>
+        <p className="center-text card-text">{lastSeason}</p>
 
-              <hr className="solid"></hr>
+        <hr className="solid"></hr>
 
-              <p className="center-text card-text card-subtitle">Altezza:</p>
+        <p className="center-text card-text card-subtitle">Altezza:</p>
 
-              <p className="center-text card-text">{hight}</p>
+        <p className="center-text card-text">{hight}</p>
 
-          </div>
       </div>
-    );
+    </div>
+  );
 }
 
 export default PlayerPres;

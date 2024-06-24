@@ -125,27 +125,35 @@ const PaginaClub = () => {
   const renderPlayer = (player) => {
     return (
       <div className="col-md-6 p-1" key={player.playerId}>
-        <div className="card h-100">
-          <div className="card-body p-2 btn" onClick={() => navigate(`/giocatori/${player.playerId}`)}>
-            <div className="row">
-              <div className="col-md-3">
-                <img src={`${player.imageUrl}`} alt="immagine giocatore" className="img-fluid"
-                     style={{maxWidth: '90%'}}></img>
+        <div className="h-100 border border-dark p-2 btn custom-button"
+             onClick={() => navigate(`/giocatori/${player.playerId}`)}>
+          <div className="row">
+            <div className="col-md-3">
+              <img src={`${player.imageUrl}`} alt="immagine giocatore" className="img-fluid"
+                   style={{maxWidth: '90%'}}></img>
+            </div>
+            <div className="col-md-8 d-flex align-items-center justify-content-center">
+              <div className="row">
+                <h6 className="card-title">{player.name}</h6>
+                <p
+                  className="mb-0">{player.countryOfBirth ? `${player.countryOfBirth}, ${player.age} anni` : `${player.age} anni`}</p>
               </div>
-              <div className="col-md-8 d-flex align-items-center justify-content-center">
-                <div className="row">
-                  <h6 className="card-title">{player.name}</h6>
-                  <p>{player.countryOfBirth}, {player.age} anni</p>
-                </div>
-              </div>
-              <div className="col-md-1 d-flex align-items-center justify-content-center">
-                {svgSelector(player.position)}
-              </div>
+            </div>
+            <div className="col-md-1 d-flex align-items-center justify-content-center">
+              {svgSelector(player.position)}
             </div>
           </div>
         </div>
       </div>
     );
+  };
+
+  const handleChatClick = (nameRoom) => {
+    if (localStorage.getItem("username")) {
+      navigate(`/chat/${nameRoom}`);
+    } else {
+      navigate('/login');
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -155,7 +163,20 @@ const PaginaClub = () => {
     <div className="container-fluid">
       {clubData && (
         <div className="mt-4 mx-4 mb-4 flex-grow-1">
-          <h2 className="mb-5">{clubData.name}</h2>
+          <div className="row">
+            <h2 className="col-md-7 mb-5">{clubData.name}</h2>
+            <div className="col-md-5 h-50 d-flex justify-content-end">
+              <button
+                key={clubData.name}
+                onClick={() => handleChatClick(clubData.name)}
+                aria-label="chat button"
+                className="btn btn-primary mb-2"
+              >
+                {"Unisciti alla chat di " + clubData.name}
+              </button>
+            </div>
+          </div>
+
           <div className="row">
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
@@ -164,8 +185,12 @@ const PaginaClub = () => {
               </div>
               <div className="text-center mt-2">
                 <hr/>
-                <p className="h6">Competizione in cui gioca il club</p>
-                <p>{clubData.domesticCompetitionName}</p>
+                <div className="border border-light-subtle p-2 btn custom-button" onClick={() => {
+                  navigate(`/campionati/${clubData.domesticCompetitionId}`)
+                }}>
+                  <p className="h6">Competizione in cui gioca il club</p>
+                  <p className="mb-1">{clubData.domesticCompetitionName}</p>
+                </div>
                 <hr/>
                 <p className="h6">Numero di giocatori</p>
                 <p>{clubData.squadSize}</p>

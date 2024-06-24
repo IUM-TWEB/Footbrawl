@@ -442,3 +442,11 @@ hr.solid {
 .flex-grow-1 {
   flex-grow: 1;
 }
+
+/* Modifica per i bottoni nelle pagine club e player */
+
+.custom-button:hover {
+  transform: scale(1.03);
+}
+
+/* Fine CSS bottone */

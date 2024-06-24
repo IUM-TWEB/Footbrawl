@@ -146,14 +146,16 @@ export default function PaginaGiocatori() {
           <div className="mb-5">
             <PlayerClubs playerInfo={playerClubs}></PlayerClubs>
           </div>
-          <button
-            key={player.name}
-            onClick={() => handleChatClick(player.name)}
-            aria-label="chat button"
-            className="btn btn-primary mb-2"
-          >
-            {"Unisciti alla chat di " + player.name}
-          </button>
+          <div className="d-flex justify-content-center">
+            <button
+              key={player.name}
+              onClick={() => handleChatClick(player.name)}
+              aria-label="chat button"
+              className="btn btn-primary mb-2"
+            >
+              {"Unisciti alla chat di " + player.name}
+            </button>
+          </div>
         </div>
       </div>
     </div>
