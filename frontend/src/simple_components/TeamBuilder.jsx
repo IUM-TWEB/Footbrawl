@@ -34,6 +34,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       fetchData();
     }, []);
 
+
     useEffect(() => {
 
       const ss = savedFormations.find(i => i.type === formation)
@@ -44,15 +45,15 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     }, [formation, savedFormations]);
 
 
-  useEffect(() => {
-    if (alert[0]) {
-      const timeout = setTimeout(() => {
-        setAlert([false, ""]);
-        console.log(alert);
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [alert]);
+    useEffect(() => {
+      if (alert[0]) {
+        const timeout = setTimeout(() => {
+          setAlert([false, ""]);
+          console.log(alert);
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
+    }, [alert]);
 
 
     useEffect(() => {
@@ -70,7 +71,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
           }
         }
       )
-        .then(resp => {
+        .then(() => {
           setAlert([true, "Formazione salvata correttamente", "success"])
         })
         .catch(e => {
@@ -101,11 +102,8 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     };
 
 
-    const togglePopup = (id, context) => {
-      setPopupsOpen(prev => ({
-        ...prev,
-        [`${id}-${context}`]: !prev[`${id}-${context}`]
-      }));
+    const togglePopup = (id, isOpen, context) => {
+      setPopupsOpen([id, isOpen, context])
     };
 
 
@@ -130,30 +128,31 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
     };
 
-  const handlePlayerSelection = (player) => {
-    if (selectedFormation.forwards.includes(player) ||
-      selectedFormation.midfielders.includes(player) ||
-      selectedFormation.defenders.includes(player) ||
-      selectedFormation.goalkeeper.includes(player)) {
-      setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore", "danger"]);
-      return
-    }
+    const handlePlayerSelection = (player) => {
+      if (selectedFormation.forwards.includes(player) ||
+        selectedFormation.midfielders.includes(player) ||
+        selectedFormation.defenders.includes(player) ||
+        selectedFormation.goalkeeper.includes(player)) {
+        setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore", "danger"]);
+        return
+      }
 
-    setSelectedFormation(prevFormation => {
-      const newFormation = { ...prevFormation };
-      if (selectedPosition[1] && !selectedPosition[1].includes(player))
-        selectedPosition[1][selectedPosition[0]] = player;
-      else
-        setAlert([true, "Selezionare prima una posizione, ed in seguito un giocatore","danger"]);
-      return newFormation;
-    });
-  };
+      setSelectedFormation(prevFormation => {
+        const newFormation = {...prevFormation};
+        if (selectedPosition[1] && !selectedPosition[1].includes(player)) {
+          selectedPosition[1][selectedPosition[0]] = player;
+          removeFromList(player)
+        } else
+          setAlert([true, "Selezionare prima una posizione, ed in seguito un giocatore", "danger"]);
+        return newFormation;
+      });
+    };
 
 
     let addPlayer = (newPlayer) => {
       if (!playerNames.some(player => player.playerId === newPlayer.playerId)) {
         setPlayerNames([...playerNames, newPlayer]);
-        handlePlayerSelection(newPlayer);
+        // handlePlayerSelection(newPlayer);
       } else {
         setAlert([true, "Giocatore già aggiunto ai selezionati", "danger"])
       }
@@ -164,12 +163,34 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos)
         setSelectedFormation(prevState => {
           const tmp = {...prevState}
+          addToList(pos[index])
           pos[index] = '0'
           tmp[pos_key] = pos
           return tmp
         })
+
       }
     };
+
+    const removeFromList = (player) => {
+      if (playerNames.includes(player)) {
+        let tmp = playerNames
+        tmp.splice(tmp.indexOf(player), 1)
+        setPlayerNames(tmp)
+      } else {
+        console.error("Tentativo di eliminare un giocatore non esistente")
+        setAlert([true, "Errore", "danger"])
+      }
+    }
+
+    const addToList = (player) => {
+      if (!playerNames.includes(player)) {
+        setPlayerNames([...playerNames, player]);
+      } else {
+        console.error("Tentativo di aggiungere un giocatore non già esistente")
+        setAlert([true, "Errore", "danger"])
+      }
+    }
 
     const buttonSelector = (index, pos) => {
       if (index !== selectedPosition[0] || pos !== selectedPosition[1]) {
@@ -213,7 +234,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
                 )}
                 <button className={`tb-player ${buttonSelector(index, elements)}`}
                         onClick={() => selectPlayerPosition(index, elements)}>
-                  <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt="ciao"/>
+                  <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
 
                 </button>
 
@@ -293,12 +314,11 @@ const TeamFormationSelector = ({favoritePlayers}) => {
                   <div className={'col-3'}></div>
 
                   <button className={'col-6 btn'}
-                          onMouseOver={() => togglePopup(player.playerId, context)}
-                          onMouseLeave={() => togglePopup(player.playerId, context)}>
+                          onMouseOver={() => togglePopup(player.playerId,  true,context)}
+                          onMouseLeave={() => togglePopup(player.playerId, false,context)}>
                     {player.name}
                   </button>
-
-                  {svgSelector(position)}
+                  {svgSelector(player.position)}
 
                   <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '3%'}}
                      onClick={() => {
@@ -307,7 +327,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
                      title="Dettagli giocatore">
                   </i>
                 </div>
-                {popupsOpen[`${player.playerId}-${context}`] && <PopupPlayer isOpen={true} player={player}/>}
+                {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId && <PopupPlayer isOpen={true} player={player}/>}
               </li>
             );
           })}
@@ -318,7 +338,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
     return (
       <>
-        <button onClick={() => setAlert([true, "ciao"])}>Trigger Alert</button>
         <h2>Crea la tua squadra</h2>
         <div>
           <p>
