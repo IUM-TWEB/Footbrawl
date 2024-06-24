@@ -4,7 +4,7 @@ import {useState} from "react";
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
 
-function PlayerPres({name, data, team, position, img, hight, lastSeason, handleFavorite, playerId}) {
+function PlayerPres({name, data, età, nazionalità, team, position, img, hight, lastSeason, handleFavorite, foot, playerId}) {
   const [x, setX] = useState("ff")
   const {username, password, setNewPlayer} = useAuth()
 
@@ -31,13 +31,23 @@ function PlayerPres({name, data, team, position, img, hight, lastSeason, handleF
         <img src={img} className="center-img" alt="Player"/>
         <h2 className="center-text card-title">{name}</h2>
 
-        <p className="center-text card-text card-subtitle">Data:</p>
+        <p className="center-text card-text card-subtitle">Data di nascita:</p>
         <p className="center-text card-text">{data}</p>
+
+        <hr className="solid"></hr>
+
+        <p className="center-text card-text card-subtitle">Età:</p>
+        <p className="center-text card-text">{età}</p>
 
         <hr className="solid"></hr>
 
         <p className="center-text card-text card-subtitle">Squadra:</p>
         <p className="center-text card-text">{team}</p>
+
+        <hr className="solid"></hr>
+
+        <p className="center-text card-text card-subtitle">Nazionalità:</p>
+        <p className="center-text card-text">{nazionalità}</p>
 
         <hr className="solid"></hr>
 
@@ -52,8 +62,12 @@ function PlayerPres({name, data, team, position, img, hight, lastSeason, handleF
         <hr className="solid"></hr>
 
         <p className="center-text card-text card-subtitle">Altezza:</p>
-
         <p className="center-text card-text">{hight}</p>
+
+        <hr className="solid"></hr>
+
+        <p className="center-text card-text card-subtitle">Piede preferito:</p>
+        <p className="center-text card-text">{foot}</p>
 
       </div>
     </div>

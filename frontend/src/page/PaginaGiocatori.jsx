@@ -62,11 +62,14 @@ function show_info(player, player_id) {
       <PlayerPres
         name={player.name}
         data={player.dateOfBirth}
+        età={player.age}
+        nazionalità={player.countryOfBirth}
         position={player.position}
         img={player.imageUrl}
         team={player.currentClubName}
         hight={player.heightInCm}
         lastSeason={player.lastSeason}
+        foot={player.foot}
         playerId={player_id}
       />
     );
