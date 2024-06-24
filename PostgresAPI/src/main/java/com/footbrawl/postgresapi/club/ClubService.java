@@ -69,16 +69,12 @@ public class ClubService {
   private int calculateTotalMarketVal(long id, int lastSeason) { // qui prendo un long ma nella tabella players è un Integer
     List<Player> lista = playerRepository.findClubPlayersMVByCurrent_club_id(id, lastSeason).orElse(null);
     int tot = 0;
-    int count = 0;
     if (lista == null) {
       return 0;
     }
     for (Player p : lista) {
-      count++;
-      System.out.println(p.getName() + ", " + p.getLast_season() + ", " + p.getPosition() + ", " + p.getAge());
       tot += calculateMarketValueUtils(p.getMarket_value_in_eur());
     }
-    System.out.println(count);
     return tot;
   }
 
