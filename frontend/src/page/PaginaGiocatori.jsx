@@ -52,7 +52,7 @@ function show_graph(data) {
   if (data) {
     return <Line options={options} data={data}/>;
   } else {
-    return null;
+    return <p className="h3 d-flex justify-content-center">Non ci sono abbastanza dati sul giocatore</p>;
   }
 }
 
@@ -67,6 +67,7 @@ function show_info(player, player_id) {
         position={player.position}
         img={player.imageUrl}
         team={player.currentClubName}
+        teamId={player.currentClubId}
         hight={player.heightInCm}
         lastSeason={player.lastSeason}
         foot={player.foot}
@@ -97,7 +98,7 @@ export default function PaginaGiocatori() {
         ]);
 
         if (assistsChartData) {
-          goalsChartData.datasets.push(assistsChartData.datasets);
+          goalsChartData.datasets.push(...assistsChartData.datasets);
         }
 
         setPlayerClubs(playerClubs.data.clubs)

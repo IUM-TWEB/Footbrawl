@@ -18,8 +18,7 @@ function PlayerPres({playerInfo}) {
           <h1 className={"center-text"}>Clubs in cui ha giocato</h1>
           {playerInfo.map((club, index) => (
             <div key={index}>
-              <hr className="solid"></hr>
-              <div className="btn custom-button d-flex justify-content-center align-items-center" onClick={async () => {
+              <div className="border  btn custom-button d-flex justify-content-center align-items-center" onClick={async () => {
                 try {
                   const response = await axios.get(`http://localhost:3000/clubByName/${club}`);
                   const clubData = response.data[0];

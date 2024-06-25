@@ -1,12 +1,28 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import {useState} from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
-function PlayerPres({name, data, età, nazionalità, team, position, img, hight, lastSeason, handleFavorite, foot, playerId}) {
+function PlayerPres({
+                      name,
+                      data,
+                      età,
+                      nazionalità,
+                      team,
+                      position,
+                      img,
+                      hight,
+                      lastSeason,
+                      handleFavorite,
+                      foot,
+                      playerId,
+                      teamId
+                    }) {
   const [x, setX] = useState("ff")
   const {username, password, setNewPlayer} = useAuth()
+  const navigate = useNavigate();
 
   handleFavorite = () => {
     setNewPlayer(playerId)
@@ -41,8 +57,14 @@ function PlayerPres({name, data, età, nazionalità, team, position, img, hight,
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Squadra:</p>
-        <p className="center-text card-text">{team}</p>
+        <div className="d-flex justify-content-center border btn custom-button" onClick={() => {
+          navigate(`/club/${teamId}`)
+        }}>
+          <div className="row">
+            <p className="center-text card-text card-subtitle">Squadra:</p>
+            <p className="center-text card-text">{team}</p>
+          </div>
+        </div>
 
         <hr className="solid"></hr>
 
