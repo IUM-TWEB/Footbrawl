@@ -33,11 +33,9 @@ const PopupPlayer = ({isOpen, player}) => {
             <p>Età: {player.age} anni</p>
             <p>Altezza: {player.heightInCm} cm</p>
             <p>Nazionalità: {player.countryOfBirth}</p>
-            <p>Posizione: {player.position}</p>
             <p>Squadra: {player.currentClubName}</p>
             <p>Ultima stagione: {player.lastSeason}</p>
             <p>Valore di mercato: {formatValue(player.marketValue)}</p>
-            <p>Valore di mercato più alto: {formatValue(player.highestMarketValue)}</p>
           </div>
         </div>
       </div>

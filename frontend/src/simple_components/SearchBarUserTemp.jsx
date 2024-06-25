@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import PopupPlayer from "./PopupPlayer.jsx";
-import { useNavigate } from 'react-router-dom';
 
 function SearchBar({ callback }) {
   const [popupsOpen, setPopupsOpen] = useState({});

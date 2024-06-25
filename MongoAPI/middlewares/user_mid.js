@@ -71,3 +71,27 @@ module.exports.addFavoriteTeam = (req, res) => {
     });
 };
 
+module.exports.addFormation = (req,res) => {
+  const {username, pwd, formation} = req.body
+  queries.addFormation(username,pwd,formation)
+    .then(() => {
+      res.sendStatus(200); // Send a status code of 200 if successful
+    })
+    .catch((err) => {
+      console.error('Error adding formations:', err);
+      res.status(500).send(err.message); // Send a 500 status code if there is an error
+    });
+}
+
+module.exports.getFormation = (req,res) => {
+  const {username, pwd} = req.body
+  queries.getFormation(username,pwd)
+    .then((resp) => {
+      res.send(resp.formations);
+    })
+    .catch((err) => {
+      console.error('Error getting saved formations:', err);
+      res.status(500).send(err.message); // Send a 500 status code if there is an error
+    });
+}
+
