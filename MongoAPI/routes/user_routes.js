@@ -124,6 +124,39 @@ router.post('/fav/player/', mid.addFavoritePlayer);
  * @swagger
  * /user/fav/player/:
  *   post:
+ *     summary: Add favorite player to user
+ *     description: This endpoint allows users to add a player to their favorite players list.
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - userName
+ *           properties:
+ *             userName:
+ *               type: string
+ *             firstName:
+ *               type: string
+ *             lastName:
+ *               type: string
+ *     responses:
+ *       '200':
+ *         description: Player added to favorites successfully.
+ *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Unauthorized. Invalid username or password.
+ *       '404':  # Assuming a 404 error is returned for not found user
+ *         description: User not found.
+ *       '500':
+ *         description: Internal server error.
+ */
+router.post('/fav/team/', mid.addFavoriteTeam);
+
+/**
+ * @swagger
+ * /user/fav/player/:
+ *   post:
  *     summary: Add favorite formation
  *     description: This endpoint allows users to save the selected formation
  *     parameters:
@@ -216,5 +249,37 @@ router.post('/getfav/player', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /user/getfav/:
+ *   post:
+ *     summary: Get user's favorite players, clubs and saved formations
+ *     description: This endpoint retrieves an object of user's favorite players, clubs and saved formations.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *
+ */
+router.post('/getfav/', async (req, res) => {
+  try {
+    const resp = await model.findOne(
+      {user_name: req.body.username, pwd: req.body.pwd}, {}, null
+    );
+    if (resp) {
+      res.send({
+        "favorite_players": resp.favorite_players,
+        "favorite_teams" : resp.favorite_teams,
+        "formations" : resp.formations
+      });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
 
 module.exports = router

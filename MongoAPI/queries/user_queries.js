@@ -51,6 +51,14 @@ const addFavoriteTeam = (name, pwd, teamId) => {
   );
 };
 
+const getFavoriteTeam = async (username, pwd) => {
+  try {
+    return result = await model.findOne({user_name: username, pwd: pwd}, {}, null)
+  } catch (e) {
+    return null
+  }
+}
+
 const addFormation = async (username, pwd, formation) => {
   try {
     const updateResult = await model.updateOne(
@@ -77,4 +85,4 @@ const getFormation = (username,pwd)=>{
   return model.findOne({user_name:username, pwd:pwd},{}, null)
 }
 
-module.exports = {getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoritePlayer, addFormation, getFormation};
+module.exports = {getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoriteTeam ,getFavoritePlayer, addFormation, getFormation};

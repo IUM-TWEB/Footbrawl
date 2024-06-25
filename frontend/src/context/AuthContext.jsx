@@ -57,17 +57,16 @@ export const AuthProvider = ({children}) => {
     localStorage.setItem('favoriteClubs', JSON.stringify(favoriteClubs));
   }, [isAuthenticated, username, password, favoritePlayers, favoriteClubs]);
 
-  //const login = () => setIsAuthenticated(true);
   const login = async (userInfo) => {
-    const favoritePlayers = (await axios.post('http://localhost:3000/users/getfav', {
+    const saved_data = (await axios.post('http://localhost:3000/users/getfav', {
       username: userInfo.username,
       pwd: userInfo.password
     })).data;
     setIsAuthenticated(true);
     setUsername(userInfo.username);
     setPassword(userInfo.password);
-    setFavoritePlayers(favoritePlayers || []);
-    setFavoriteClubs(userInfo.favoriteClubs || []);
+    setFavoritePlayers(saved_data.favorite_players || []);
+    setFavoriteClubs(saved_data.favorite_teams || []);
   };
 
   const setNewPlayer = (player_id) => {
