@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
 
 
-const FavouriteUserTeam = ({clubNames}) => {
+const FavouriteUserTeam = ({clubs}) => {
   const [selectedClub, setSelectedClub] = useState(null);
-  const [clubDetails, setClubDetails] = useState(null);
+
 
   useEffect(() => {
-    setSelectedClub(clubNames[0])
+    setSelectedClub(clubs[0])
 
-  }, [clubNames]);
+  }, [clubs]);
 
   const handleClubClick = (club) => {
     setSelectedClub(club);
@@ -18,11 +18,11 @@ const FavouriteUserTeam = ({clubNames}) => {
   return (
     <div className="my-5">
       <h2>Club Preferiti:</h2>
-      {clubNames.length > 0 ? (
+      {clubs.length > 0 ? (
         <div className="row align-items-center" style={{minHeight: '50vh'}}>
           <div className="col-md-3">
             <ul className="list-group">
-              {clubNames.map((club, index) => (
+              {clubs.map((club, index) => (
                 <li
                   className={`list-group-item ${selectedClub && selectedClub.id === club.id ? 'active' : ''}`}
                   key={index}
@@ -38,12 +38,15 @@ const FavouriteUserTeam = ({clubNames}) => {
               ))}
             </ul>
           </div>
+
           <div className="col-md-8">
-            {selectedClub && clubDetails && (
+            {selectedClub && (
               <div className="p-3 border border-primary rounded">
-                <h3>Club: {clubDetails.name}</h3>
-                <p>Fondato nel: {clubDetails.founded}</p>
-                <p>Stadio: {clubDetails.stadium}</p>
+                <h3>Club: {selectedClub.name}</h3>
+                <p>Fondato nel: {selectedClub.founded}</p>
+                <p>Stadio: {selectedClub.stadiumName}</p>
+                <p>Ultima Stagione: {selectedClub.last_season}</p>
+                <p>Valore di mercato: {selectedClub.totalMarketVal}</p>
               </div>
             )}
           </div>

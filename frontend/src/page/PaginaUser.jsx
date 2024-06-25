@@ -9,10 +9,7 @@ import FavouriteUserTeam from "../simple_components/FavouriteUserTeam.jsx";
 const PaginaUser = () => {
   const {username, favoritePlayers, favoriteClubs, logout} = useAuth();
   const navigate = useNavigate();
-  const [selectedClub, setSelectedClub] = useState(null);
-  const [clubDetails, setClubDetails] = useState(null);
-  const [favouriteClubs, setFavouriteClubs] = useState([]);
-
+  const [clubs, setClubs] = useState([])
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
@@ -33,32 +30,19 @@ const PaginaUser = () => {
 
   useEffect(() => {
     if (favoriteClubs.length > 0) {
-      // Faccio la fetch dei nomi dei club
+      // Faccio la fetch dei nomi dei player
       Promise.all(favoriteClubs.map(selectedClub =>
         axios.get(`http://localhost:3000/club/${selectedClub}`)
           .then(response => response.data)
       ))
-        .then(clubs => {
-          setFavouriteClubs(clubs);
-          setSelectedClub(clubs[0]);
+        .then(club => {
+          setClubs(club);
         })
         .catch(error => {
-          console.error('Errore nel recuperare i nomi dei club:', error);
+          console.error('Errore nel recuperare i nomi dei giocatori:', error);
         });
     }
   }, [favoriteClubs]);
-
-  useEffect(() => {
-    if (selectedClub && selectedClub.id) {
-      axios.get(`http://localhost:3000/club/${selectedClub.id}`)
-        .then(response => {
-          setClubDetails(response.data);
-        })
-        .catch(error => {
-          console.error('Errore nel recuperare i dettagli del club:', error);
-        });
-    }
-  }, [selectedClub]);
 
   const handleLogout = () => {
     logout();
@@ -74,7 +58,7 @@ const PaginaUser = () => {
           <FavoriteUserPlayers Players={players}></FavoriteUserPlayers>
           <hr className="my-custom-hr"/>
 
-          <FavouriteUserTeam clubNames={favouriteClubs}></FavouriteUserTeam>
+          <FavouriteUserTeam clubs={clubs}></FavouriteUserTeam>
           <hr className="my-custom-hr"/>
 
           <TeamBuilder  favoritePlayers={players}></TeamBuilder>

@@ -48,15 +48,50 @@ router.post('/favplayer', async (req, res) => {
   }
 });
 
+router.post('/favteam', async (req, res) => {
+  try {
+    const response = await axios.post("http://localhost:3001/user/fav/team", req.body);
+    res.send(response.data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({error: 'Errore nel server'});
+  }
+});
+
 router.post('/getfav', async (req, res) => {
   console.log(req.body);
   try {
-    const response = await axios.post(`http://localhost:3001/user/getfav/player`, {
+    const response = await axios.post(`http://localhost:3001/user/getfav/`, {
       username: req.body.username,
       pwd: req.body.pwd
     })
+    res.send(response.data)
+  } catch (e) {
+    res.sendStatus(500)
+  }
+})
+
+router.post('/postFormations', async (req, res) => {
+  try {
+    const response = await axios.post(`http://localhost:3001/user/fav/formation`, {
+      username: req.body.username,
+      pwd: req.body.pwd,
+      formation: req.body.formation,
+    })
 
     res.send(response.data)
+  } catch (e) {
+    res.sendStatus(500)
+  }
+})
+
+router.post('/getFormations', async (req, res) => {
+  try {
+    const resp = await axios.post('http://localhost:3001/user/getfav/formation', {
+      username: req.body.username,
+      pwd: req.body.pwd,
+    })
+    res.send(resp.data)
   } catch (e) {
     res.sendStatus(500)
   }

@@ -7,7 +7,46 @@ const getById = (id) => {
 const getByComp = (comp, season) => {
     return games.find({competition_id:comp, season:season}, {}, null)
 }
+const getByCompLast = (comp, season) => {
+    return games.find({ competition_id: comp })
+      .sort({ date: -1 })
+      .limit(3);
+}
 
+async function getManagerNameByClubId(clubId) {
+    const parsedClubId = parseInt(clubId);
+
+    const game = await games.findOne({
+        $or: [
+            { home_club_id: parsedClubId },
+            { away_club_id: parsedClubId }
+        ]
+    }).sort({ season: -1 });
+
+    if (!game) {
+        return null;
+    }
+
+    if (game.home_club_id === parsedClubId) {
+        return game.home_club_manager_name;
+    } else if (game.away_club_id === parsedClubId) {
+        return game.away_club_manager_name;
+    }
+
+    return null;
+}
+
+const getByClubLast = (club, season) => {
+    console.log('club',club)
+    return games.find({
+        $or: [
+            { away_club_id: club },
+            { home_club_id: club }
+        ]
+    })
+      .sort({ date: -1 })
+      .limit(3);
+}
 const getByClub = (comp, season, club_id) => {
     return games.find({competition_id:comp, season:season, home_club_id :club_id }, {}, null)
 }
@@ -56,4 +95,4 @@ const getPosition = (teamId) => {
     ])
 }
 
-module.exports = {getByClub, getByComp, getById, getPosition}
+module.exports = {getByClub, getByComp, getById, getPosition, getByCompLast, getByClubLast, getManagerNameByClubId}
