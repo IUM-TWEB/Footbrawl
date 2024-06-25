@@ -81,7 +81,7 @@ const SingleChat = () => {
           id="logout"
           className="btn btn-small btn-danger col-md-2"
           aria-label="logout"
-          onClick={logout}>Exit
+          onClick={logout}>Abbandona la chat
         </button>
       </div>
 

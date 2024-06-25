@@ -40,7 +40,18 @@ async function getChartData(player_id, endpoint, label_name) {
         }],
       };
     } else {
-      return null;
+      const labels = [];
+      const data = [];
+
+      return {
+        labels,
+        datasets: [{
+          label: `No ${label_name} data`,
+          data,
+          borderColor: 'rgb(210,105,30)',
+          backgroundColor: 'rgba(210,105,30, 1)',
+        }],
+      };
     }
   } catch (error) {
     console.error(`Error fetching ${endpoint} data:`, error);
@@ -52,7 +63,7 @@ function show_graph(data) {
   if (data) {
     return <Line options={options} data={data}/>;
   } else {
-    return null;
+    return <p className="h3 d-flex justify-content-center">Non ci sono abbastanza dati sul giocatore</p>;
   }
 }
 
@@ -62,11 +73,15 @@ function show_info(player, player_id) {
       <PlayerPres
         name={player.name}
         data={player.dateOfBirth}
+        età={player.age}
+        nazionalità={player.countryOfBirth}
         position={player.position}
         img={player.imageUrl}
         team={player.currentClubName}
+        teamId={player.currentClubId}
         hight={player.heightInCm}
         lastSeason={player.lastSeason}
+        foot={player.foot}
         playerId={player_id}
       />
     );
@@ -85,17 +100,12 @@ export default function PaginaGiocatori() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
+        const [playerClubs, playerData, goalsChartData, marketValueChartData] = await Promise.all([
           axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
           axios.get(`http://localhost:3000/player/${playerId}`),
           getChartData(playerId, 'goals_date', 'goals'),
-          getChartData(playerId, 'assist_date', 'assists'),
           getChartData(playerId, 'market_value', 'market value')
         ]);
-
-        if (assistsChartData) {
-          goalsChartData.datasets.push(assistsChartData.datasets);
-        }
 
         setPlayerClubs(playerClubs.data.clubs)
         setPlayer(playerData.data);
@@ -146,14 +156,16 @@ export default function PaginaGiocatori() {
           <div className="mb-5">
             <PlayerClubs playerInfo={playerClubs}></PlayerClubs>
           </div>
-          <button
-            key={player.name}
-            onClick={() => handleChatClick(player.name)}
-            aria-label="chat button"
-            className="btn btn-primary mb-2"
-          >
-            {"Unisciti alla chat di " + player.name}
-          </button>
+          <div className="d-flex justify-content-center">
+            <button
+              key={player.name}
+              onClick={() => handleChatClick(player.name)}
+              aria-label="chat button"
+              className="btn btn-primary mb-2"
+            >
+              {"Unisciti alla chat di " + player.name}
+            </button>
+          </div>
         </div>
       </div>
     </div>

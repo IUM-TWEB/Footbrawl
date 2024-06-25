@@ -221,7 +221,33 @@ router.get('/top_market_value/:competition_id', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+    res.status(500).json({error: 'An error occurred while fetching the data.'});
+  }
+});
+
+router.get('/club/:club_id', async (req, res) => {
+  const id = req.params.club_id;
+  const url = `http://localhost:8080/club?id=${id}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({error: 'An error occurred while fetching the data.'});
+  }
+});
+
+router.get('/clubByName/:club_name', async (req, res) => {
+  const name = req.params.club_name;
+  const url = `http://localhost:8080/clubByName?name=${name}`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    res.status(500).json({error: 'An error occurred while fetching the data.'});
   }
 });
 

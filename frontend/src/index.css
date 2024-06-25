@@ -415,14 +415,50 @@ hr.solid {
   box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5); /* Adjust shadow to look closer to the surface */
 }
 
+/* Effetto parallax per la pagina club */
+
+.parallax {
+  position: relative;
+  will-change: transform;
+}
+
+.parallax-slow {
+  transform: translateZ(0);
+}
+
+.parallax-medium {
+  transform: translateZ(0);
+}
+
+.parallax-fast {
+  transform: translateZ(0);
+}
+
+/* Fine CSS effetto parallax */
+
+.container-fluid {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* Modifica per i bottoni nelle pagine club e player */
+
+.custom-button:hover {
+  transform: scale(1.03);
+}
+
+/* Fine CSS bottone */
+
 .min-width-tb {
   min-width: 400px;
 }
-
 
 /*aumenta il padding tra i top scorer della home per arrivare a livello sotto con le altre colonne */
 .mb-custom {
   margin-bottom: 3rem;
 }
-
-
