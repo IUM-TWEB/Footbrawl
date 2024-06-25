@@ -40,7 +40,18 @@ async function getChartData(player_id, endpoint, label_name) {
         }],
       };
     } else {
-      return null;
+      const labels = [];
+      const data = [];
+
+      return {
+        labels,
+        datasets: [{
+          label: `No ${label_name} data`,
+          data,
+          borderColor: 'rgb(210,105,30)',
+          backgroundColor: 'rgba(210,105,30, 1)',
+        }],
+      };
     }
   } catch (error) {
     console.error(`Error fetching ${endpoint} data:`, error);
@@ -89,17 +100,12 @@ export default function PaginaGiocatori() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [playerClubs, playerData, goalsChartData, assistsChartData, marketValueChartData] = await Promise.all([
+        const [playerClubs, playerData, goalsChartData, marketValueChartData] = await Promise.all([
           axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
           axios.get(`http://localhost:3000/player/${playerId}`),
           getChartData(playerId, 'goals_date', 'goals'),
-          getChartData(playerId, 'assist_date', 'assists'),
           getChartData(playerId, 'market_value', 'market value')
         ]);
-
-        if (assistsChartData) {
-          goalsChartData.datasets.push(...assistsChartData.datasets);
-        }
 
         setPlayerClubs(playerClubs.data.clubs)
         setPlayer(playerData.data);
