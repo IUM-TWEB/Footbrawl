@@ -9,6 +9,7 @@
 .logo {
   height: 50px;
   width: 100px;
+  cursor: pointer;
 }
 
 
@@ -370,6 +371,8 @@ hr.solid {
   width: 100%; /* larghezza completa dentro il bottone */
   height: auto; /* altezza automatica per mantenere le proporzioni */
   display: block; /* rimuove eventuali spazi extra sotto l'immagine */
+  max-width: 50px; /* Imposta una larghezza massima */
+  max-height: 50px; /* Imposta un'altezza massima */
 }
 
 .image-overlay-container {
@@ -450,3 +453,12 @@ hr.solid {
 }
 
 /* Fine CSS bottone */
+
+.min-width-tb {
+  min-width: 400px;
+}
+
+/*aumenta il padding tra i top scorer della home per arrivare a livello sotto con le altre colonne */
+.mb-custom {
+  margin-bottom: 3rem;
+}

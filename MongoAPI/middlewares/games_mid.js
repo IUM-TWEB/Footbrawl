@@ -23,6 +23,39 @@ module.exports.getBySeasonAndComp = async (req, res) => {
         })
 }
 
+module.exports.getByCompLast = async (req, res) => {
+    await queries.getByCompLast(req.params.comp)
+      .then(resp => {
+          res.send(resp)
+      })
+      .catch((err) => {
+          console.log(err)
+          res.send(err.name)
+      })
+}
+
+module.exports.getByClubLast = async (req, res) => {
+    await queries.getByClubLast(req.params.club_id)
+      .then(resp => {
+          res.send(resp)
+      })
+      .catch((err) => {
+          console.log(err)
+          res.send(err.name)
+      })
+}
+
+module.exports.getManagerNameByClubId = async (req, res) => {
+  await queries.getManagerNameByClubId(req.params.club_id)
+    .then(resp => {
+      res.send(resp)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.send(err.name)
+    })
+}
+
 module.exports.getByClub = async (req, res) => {
     await queries.getByClub(req.params.comp, parseInt(req.params.season), req.params.game_id)
         .then(resp => {
