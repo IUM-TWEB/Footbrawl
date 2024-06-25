@@ -16,16 +16,31 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+/**
+ * REST controller for managing player valuation related operations.
+ */
 @RestController
 @Tag(name = "Player Valuation Controller", description = "Operations related to player valuations")
 public class PlayerValuationController {
+
   private final PlayerValuationService playerValuationService;
 
+  /**
+   * Constructor for PlayerValuationController.
+   *
+   * @param playerValuationService the player valuation service
+   */
   @Autowired
   public PlayerValuationController(PlayerValuationService playerValuationService) {
     this.playerValuationService = playerValuationService;
   }
 
+  /**
+   * Retrieves player valuation by player ID.
+   *
+   * @param id the ID of the player
+   * @return the ResponseEntity with status 200 (OK) and the list of PlayerValuationDTO if found, or status 404 (Not Found) if not found
+   */
   @Operation(summary = "Get player valuation by ID", description = "Retrieve player valuation by player ID")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved player valuation",
@@ -40,7 +55,12 @@ public class PlayerValuationController {
     return ResponseEntity.ok(playerValuationDTOList);
   }
 
-
+  /**
+   * Retrieves player valuation by player name.
+   *
+   * @param name the name of the player
+   * @return the ResponseEntity with status 200 (OK) and the list of PlayerValuationDTO if found, or status 404 (Not Found) if not found
+   */
   @Operation(summary = "Get player valuation by name", description = "Retrieve player valuation by player name")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved player valuation",
