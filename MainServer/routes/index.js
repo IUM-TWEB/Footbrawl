@@ -6,7 +6,34 @@ const axios = require('axios');
 router.get('/', function (req, res) {
   res.render('index', {title: 'Express'});
 });
-
+/**
+ * @swagger
+ * /user/log/:
+ *   post:
+ *     summary: Login user (using middleware)
+ *     description: This endpoint allows users to login by providing their username and password.
+ *                  The functionality is implemented in the middleware layer.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *     responses:
+ *       '200':
+ *         description: Login successful. User data returned.
+ *       '401':
+ *         description: Unauthorized. Invalid username or password.
+ *       '500':
+ *         description: Internal server error.
+ */
 router.get('/ranking/:competition_name', async (req, res) => {
   try {
     const response = (await axios.get(`http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${req.params.competition_name}`)).data;
