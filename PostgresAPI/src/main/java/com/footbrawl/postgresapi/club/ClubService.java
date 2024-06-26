@@ -24,8 +24,8 @@ public class ClubService {
   /**
    * Constructor for ClubService.
    *
-   * @param clubRepository the club repository
-   * @param playerRepository the player repository
+   * @param clubRepository        the club repository
+   * @param playerRepository      the player repository
    * @param competitionRepository the competition repository
    */
   @Autowired
@@ -98,7 +98,7 @@ public class ClubService {
   /**
    * Calculates the total market value of the club's players for a given season.
    *
-   * @param id the ID of the club
+   * @param id         the ID of the club
    * @param lastSeason the last season year
    * @return the total market value of the club's players
    */

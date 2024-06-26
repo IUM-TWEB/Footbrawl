@@ -164,7 +164,7 @@ const PaginaClub = () => {
       {clubData && (
         <div className="mt-4 mx-4 mb-4 flex-grow-1">
           <div className="row">
-            <h2 className="col-md-7 mb-5">{clubData.name}</h2>
+            <h2 className="col-md-7 mb-4">{clubData.name}</h2>
             <div className="col-md-5 h-50 d-flex justify-content-end">
               <button
                 key={clubData.name}
@@ -177,6 +177,7 @@ const PaginaClub = () => {
             </div>
           </div>
 
+          <hr className="mb-4"/>
           <div className="row">
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
@@ -236,14 +237,21 @@ const PaginaClub = () => {
             </div>
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+              <h2 className="mb-4 d-flex flex-column align-items-center">Ultime Partite</h2>
               {games.length > 0 ? (
-                <ul className="list-unstyled">
+                <div>
                   {games.map((game, index) => (
-                    <li key={index}>{game.date}: {game.opponent} - {game.result}</li>
+                    <div className="mb-5 p-2 border border-light-subtle rounded" key={index}>
+                      <p className="text-center mb-0"><span
+                        className="fw-semibold">{game.home_club_name}</span> {game.home_club_goals}</p>
+                      <p className="text-center mb-0"> - </p>
+                      <p className="text-center mb-0"><span
+                        className="fw-semibold">{game.away_club_name}</span> {game.away_club_goals}</p>
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
-                <p>No games found for this club.</p>
+                <p>Non sono state trovate partite per questo club.</p>
               )}
             </div>
 
