@@ -314,20 +314,20 @@ const TeamFormationSelector = ({favoritePlayers}) => {
                   <div className={'col-3'}></div>
 
                   <button className={'col-6 btn'}
-                          onMouseOver={() => togglePopup(player.playerId,  true,context)}
-                          onMouseLeave={() => togglePopup(player.playerId, false,context)}>
+                          onMouseOver={() => togglePopup(player.playerId, true, context)}
+                          onMouseLeave={() => togglePopup(player.playerId, false, context)}>
                     {player.name}
                   </button>
                   {svgSelector(player.position)}
-
-                  <i className="fa-solid fa-up-right-from-square col-1" style={{marginTop: '3%'}}
-                     onClick={() => {
-                       navigate(`/giocatori/${player.playerId}`)
-                     }}
-                     title="Dettagli giocatore">
-                  </i>
+                    <button className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 col-1 bottone-info" style={{marginTop: '3%'}}
+                       onClick={() => {
+                         navigate(`/giocatori/${player.playerId}`)
+                       }}
+                       title="Dettagli giocatore">
+                    </button>
                 </div>
-                {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId && <PopupPlayer isOpen={true} player={player}/>}
+                {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId &&
+                  <PopupPlayer isOpen={true} player={player}/>}
               </li>
             );
           })}
@@ -384,10 +384,10 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             <div
               className=" background-image">
               <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
-                {lineFormation(selectedFormation.forwards, '')}
-                {lineFormation(selectedFormation.midfielders, '')}
+                {lineFormation(selectedFormation.forwards, 'h-100')}
+                {lineFormation(selectedFormation.midfielders, 'h-75')}
                 {lineFormation(selectedFormation.defenders, 'h-50')}
-                {lineFormation(selectedFormation.goalkeeper, 'h-50')}
+                {lineFormation(selectedFormation.goalkeeper, 'h-75')}
               </div>
             </div>
           </div>
@@ -410,10 +410,15 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             </div>
           </div>
         </div>
-        <button className={"btn btn-primary"} onClick={() => {
-          sendFormation()
-        }}>Salva
-        </button>
+        <div className="row">
+          <div className="col-md-10"></div>
+          <button
+            className="col-sm-2 btn btn-primary"
+            onClick={() => {
+              sendFormation()
+            }}>Salva
+          </button>
+        </div>
       </>
     );
   }

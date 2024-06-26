@@ -462,3 +462,14 @@ hr.solid {
 .mb-custom {
   margin-bottom: 3rem;
 }
+
+/*Bottone info per il componente team builder*/
+
+.bottone-info:hover{
+  background-color: lightgray;
+}
+.bottone-info{
+  background-color: #ffffff;
+}
+
+/*Fine bottone info per il componente team builder*/
