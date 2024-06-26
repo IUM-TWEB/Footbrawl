@@ -1,4 +1,4 @@
-.csv
+*.csv
 .env
 .idea
-./data
+./data/
