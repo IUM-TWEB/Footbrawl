@@ -50,7 +50,7 @@ const swaggerOptions = {
                 paths: ['/app/users'] // Paths to user routes
               }]
         },
-        servers: ['http://localhost:3001'], // Update with your server URL if needed
+        servers: ['http://localhost:3001'],
     },
     apis: [
         './routes/*.js', // Scan all route files for API definitions (assuming Swagger comments)

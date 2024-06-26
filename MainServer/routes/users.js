@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
 router.post('/log', async (req, res) => {
   try {
     console.log(req.body)
-    const response = await axios.post(`http://localhost:3001/user/log/`, req.body)
+    const response = (await axios.post(`http://localhost:3001/user/log/`, req.body)).data
     console.log(response.data)
     if (Array.isArray(response.data) && response.data.length)
       res.send("1")
@@ -24,11 +24,11 @@ router.post('/log', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const exist = await axios.post(`http://localhost:3001/user/ex`, req.body)
+    const exist = (await axios.post(`http://localhost:3001/user/ex`, req.body)).data
 
     console.log(exist.data);
     if (Array.isArray(exist.data) && !exist.data.length) {
-      const newUser = await axios.post(`http://localhost:3001/user`, req.body);
+      const newUser = (await axios.post(`http://localhost:3001/user`, req.body)).data;
       res.send("1");
     } else {
       res.send("0");
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 
 router.post('/favplayer', async (req, res) => {
   try {
-    const response = await axios.post("http://localhost:3001/user/fav/player", req.body);
+    const response = (await axios.post("http://localhost:3001/user/fav/player", req.body)).data;
     res.send(response.data);
   } catch (e) {
     console.error(e);
@@ -50,7 +50,7 @@ router.post('/favplayer', async (req, res) => {
 
 router.post('/favteam', async (req, res) => {
   try {
-    const response = await axios.post("http://localhost:3001/user/fav/team", req.body);
+    const response = (await axios.post("http://localhost:3001/user/fav/team", req.body)).data;
     res.send(response.data);
   } catch (e) {
     console.error(e);
@@ -61,10 +61,10 @@ router.post('/favteam', async (req, res) => {
 router.post('/getfav', async (req, res) => {
   console.log(req.body);
   try {
-    const response = await axios.post(`http://localhost:3001/user/getfav/`, {
+    const response = (await axios.post(`http://localhost:3001/user/getfav/`, {
       username: req.body.username,
       pwd: req.body.pwd
-    })
+    })).data
     res.send(response.data)
   } catch (e) {
     res.sendStatus(500)
@@ -73,11 +73,11 @@ router.post('/getfav', async (req, res) => {
 
 router.post('/postFormations', async (req, res) => {
   try {
-    const response = await axios.post(`http://localhost:3001/user/fav/formation`, {
+    const response = (await axios.post(`http://localhost:3001/user/fav/formation`, {
       username: req.body.username,
       pwd: req.body.pwd,
       formation: req.body.formation,
-    })
+    })).data
 
     res.send(response.data)
   } catch (e) {
@@ -87,10 +87,10 @@ router.post('/postFormations', async (req, res) => {
 
 router.post('/getFormations', async (req, res) => {
   try {
-    const resp = await axios.post('http://localhost:3001/user/getfav/formation', {
+    const resp = (await axios.post('http://localhost:3001/user/getfav/formation', {
       username: req.body.username,
       pwd: req.body.pwd,
-    })
+    })).data
     res.send(resp.data)
   } catch (e) {
     res.sendStatus(500)

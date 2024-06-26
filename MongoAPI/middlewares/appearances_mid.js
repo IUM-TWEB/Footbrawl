@@ -1,49 +1,115 @@
 const queries = require('../queries/appearances_queries')
 
-const getById = (req, res) => {
+const getById = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getById(req.params.id))
+    if(mongo_resp === ''){
+      res.json({
+        success:false,
+        status:404,
+        message: "No resource found",
+        data: null
+      })
+    }else{
+      res.json({
+        success:true,
+        status:200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success:false,
+      status:500,
+      message: "internal server error",
+      data: null
+    })
+  }
 
-    queries.getById(req.params.id)
-        .then((resp) => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
 }
 
-const getByPlayer = (req, res) => {
-    console.log(req.params)
-    queries.getByPlayer(parseInt( req.params.player))
-        .then((resp) => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+const getByPlayer = async(req, res) => {
+  try {
+    const mongo_resp = (await queries.getById(req.params.player_id))
+    if(mongo_resp === ''){
+      res.json({
+        success:false,
+        status:404,
+        message: "No resource found",
+        data: null
+      })
+    }else{
+      res.json({
+        success:true,
+        status:200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success:false,
+      status:500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 const getByGame = async (req, res) => {
-    await queries.getByGame(req.params.game_id)
-        .then((resp) => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+  try {
+    const mongo_resp = (await queries.getById(req.params.game_id))
+    if(mongo_resp === ''){
+      res.json({
+        success:false,
+        status:404,
+        message: "No resource found",
+        data: null
+      })
+    }else{
+      res.json({
+        success:true,
+        status:200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success:false,
+      status:500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
-const getByGP = (req, res) => {
-    console.log(req.params)
-    queries.getByGP(parseInt(req.params.game_id), parseInt(req.params.player_id))
-        .then((resp) => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+const getByGP = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getByGP(parseInt(req.params.game_id), parseInt(req.params.player_id)))
+    if(mongo_resp === ''){
+      res.json({
+        success:false,
+        status:404,
+        message: "No resource found",
+        data: null
+      })
+    }else{
+      res.json({
+        success:true,
+        status:200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success:false,
+      status:500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 module.exports = {getById, getByGame, getByPlayer, getByGP}

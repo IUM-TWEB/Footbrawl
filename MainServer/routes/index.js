@@ -3,21 +3,16 @@ const router = express.Router();
 const axios = require('axios');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
   res.render('index', {title: 'Express'});
 });
 
 router.get('/ranking/:competition_name', async (req, res) => {
-  const competitionName = req.params.competition_name;
-  const url = `http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${competitionName}`;
   try {
-    const response = await axios.get(url);
-    const rankingData = response.data;
-
-    //console.log(rankingData);
-    res.send(rankingData);
+    const response = (await axios.get(`http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${req.params.competition_name}`)).data;
+    res.send(response);
   } catch (error) {
-    console.error('ERRORE nella richiesta al server Postgres:', error);
+    // console.error('ERRORE nella richiesta al server Postgres:', error);
     res.status(500).send('Errore nella richiesta al server Postgres');
   }
 });
@@ -25,12 +20,10 @@ router.get('/ranking/:competition_name', async (req, res) => {
 router.get('/rankingId/:id_campionato', async (req, res) => {
   const idCampionato = req.params.id_campionato;
   const url = `http://localhost:8080/lastCompetitionRankingByCompetitionId?id=${idCampionato}`;
-  console.log("entro");
   try {
     const response = await axios.get(url);
     const rankingData = response.data;
 
-    console.log(rankingData);
     res.send(rankingData);
   } catch (error) {
     console.error('ERRORE nella richiesta al server Postgres:', error);
@@ -40,7 +33,7 @@ router.get('/rankingId/:id_campionato', async (req, res) => {
 
 router.get('/home/news', async (req, res) => {
   try {
-    const response = await axios.get(`http://localhost:3001/news`);
+    const response = (await axios.get(`http://localhost:3001/news/`)).data;
     const newsArray = response.data;
     res.send(newsArray);
   } catch (error) {
@@ -137,7 +130,7 @@ router.get('/home/news/:id', async (req, res) => {
 router.get('/campionati/top_scorer/:competition_id', async (req, res) => {
   try {
     const competitionId = req.params.competition_id;
-    const response = await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`);
+    const response = (await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`)).data;
     const topScorerData = response.data;
 
     // Fetch details for each player and merge the information
@@ -185,11 +178,9 @@ router.get('/campionati/top_scorer/:competition_id', async (req, res) => {
 });
 
 router.get('/last_game/:competition_id', async (req, res) => {
-  const competitionId = req.params.competition_id;
-  const url = `http://localhost:3001/games/last_game/${competitionId}`;
-
   try {
-    const response = await axios.get(url);
+    const response = (await axios.get(`http://localhost:3001/games/last_game/${req.params.competition_id}`)).data;
+    console.log(response)
     res.json(response.data);
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
@@ -199,7 +190,6 @@ router.get('/last_game/:competition_id', async (req, res) => {
 
 router.get('/last_game_by_club/:club_id', async (req, res) => {
   const clubId = req.params.club_id;
-  console.log('entrato')
   const url = `http://localhost:3001/games/last_game_club/${clubId}`;
 
   try {
@@ -215,19 +205,6 @@ router.get('/last_game_by_club/:club_id', async (req, res) => {
 router.get('/top_market_value/:competition_id', async (req, res) => {
   const competitionId = req.params.competition_id;
   const url = `http://localhost:8080/topMarketPlayerCompetition?competitionId=${competitionId}`;
-
-  try {
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({error: 'An error occurred while fetching the data.'});
-  }
-});
-
-router.get('/club/:club_id', async (req, res) => {
-  const id = req.params.club_id;
-  const url = `http://localhost:8080/club?id=${id}`;
 
   try {
     const response = await axios.get(url);
