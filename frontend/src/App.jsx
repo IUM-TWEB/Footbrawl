@@ -14,11 +14,13 @@ import Register from "./page/Registrazione.jsx";
 import PaginaUser from "./page/PaginaUser.jsx";
 import ProtectedRoute from './simple_components/ProtectedRoute.jsx';
 import PaginaCampionato from "./page/PaginaCampionato.jsx";
+import ScrollToTop from "./simple_components/ScrollToTop.jsx";
 
 function App() {
   return (
     <Router>
       <Menu/>
+      <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Home/>
         } exact/>

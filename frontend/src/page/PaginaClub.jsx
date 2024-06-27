@@ -9,10 +9,10 @@ const PaginaClub = () => {
   const [players, setPlayers] = useState([]);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [x, setX] = useState("ff");
   const [error, setError] = useState(null);
-  const {username, password, setNewClub} = useAuth();
+  const {username, password, setNewClub, favoriteClubs} = useAuth();
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -73,6 +73,23 @@ const PaginaClub = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Controlla se il club è tra i preferiti quando il componente viene montato
+  useEffect(() => {
+    setIsFavorite(favoriteClubs.includes(clubId));
+  }, [favoriteClubs, clubId]);
+
+  const handleFavorite = () => {
+    setNewClub(clubId);
+    axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
+      .then(res => {
+        console.log(res);
+        setIsFavorite(true);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 
   const svgSelector = (position) => {
     switch (position) {
@@ -159,18 +176,6 @@ const PaginaClub = () => {
     }
   };
 
-  const handleFavorite = () => {
-    setNewClub(clubId)
-    axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
-      .then(res => {
-        console.log(res)
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    setX("ff-not")
-  }
-
   if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error: {error}</p>;
 
@@ -194,10 +199,10 @@ const PaginaClub = () => {
 
           <hr className="mb-4"/>
           <button
-            className={`mt-2 center-block ${x}`}
-            onClick={() => handleFavorite(clubId)}
+            className={`mt-2 center-block btn ${isFavorite ? 'btn-success' : 'btn-outline-success'}`}
+            onClick={handleFavorite}
           >
-            <i className="fas fa-heart"></i>
+            <i className={`fas ${isFavorite ? 'fa-check' : 'fa-heart'}`}></i>
           </button>
           <div className="row">
 

@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const FavouriteUserTeam = ({clubs}) => {
   const [selectedClub, setSelectedClub] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     setSelectedClub(clubs[0])
@@ -43,8 +45,20 @@ const FavouriteUserTeam = ({clubs}) => {
             {selectedClub && (
               <div className="p-3 border border-primary rounded">
                 <div className="row align-items-center">
-                  <div>
-                    <h3>Club: {selectedClub.name}</h3>
+                  <div className="pe-0">
+                    <div className="row">
+                      <div className="h3 col-sm-11">Club: {selectedClub.name}</div>
+                      <div className="col-sm-1">
+                        <button
+                          className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 p-2 bottone-info"
+                          style={{marginTop: '3%'}}
+                          onClick={() => {
+                            navigate(`/club/${selectedClub.clubId}`)
+                          }}
+                          title="Dettagli club">
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div className="col-md-8 border-2 border-end">
                     <p>Campionato in cui gioca: {selectedClub.domesticCompetitionName}</p>
@@ -55,7 +69,8 @@ const FavouriteUserTeam = ({clubs}) => {
                     <p>Valore totale di mercato: {formatValue(selectedClub.totalMarketVal)}</p>
                   </div>
                   <div className="col-md-4 text-center">
-                    <img src={`https://tmssl.akamaized.net/images/wappen/head/${selectedClub.clubId}.png`} alt={selectedClub.name} className="img-fluid mb-3"
+                    <img src={`https://tmssl.akamaized.net/images/wappen/head/${selectedClub.clubId}.png`}
+                         alt={selectedClub.name} className="img-fluid mb-3"
                          style={{maxWidth: '200px'}}/>
                   </div>
                 </div>

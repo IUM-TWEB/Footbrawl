@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import React, {useState} from "react";
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
+import {useState, useEffect} from 'react';
 
 function PlayerPres({
                       name,
@@ -15,16 +15,20 @@ function PlayerPres({
                       img,
                       hight,
                       lastSeason,
-                      handleFavorite,
                       foot,
                       playerId,
                       teamId
                     }) {
-  const [x, setX] = useState("ff")
-  const {username, password, setNewPlayer} = useAuth()
+  const {username, password, setNewPlayer, favoritePlayers} = useAuth()
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  handleFavorite = () => {
+  // Controlla se il giocatore è tra i preferiti quando il componente viene montato
+  useEffect(() => {
+    setIsFavorite(favoritePlayers.includes(playerId));
+  }, [favoritePlayers, playerId]);
+
+  const handleFavorite = () => {
     setNewPlayer(playerId)
     axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
       .then(res => {
@@ -33,16 +37,16 @@ function PlayerPres({
       .catch(e => {
         console.log(e)
       })
-    setX("ff-not")
   }
+
   return (
     <div className="card player-card">
       <div className="card-body">
         <button
-          className={`mt-2 center-block ${x}`}
-          onClick={() => handleFavorite(playerId)}
+          className={`mt-2 center-block btn ${isFavorite ? 'btn-success' : 'btn-outline-success'}`}
+          onClick={handleFavorite}
         >
-          <i className="fas fa-heart"></i>
+          <i className={`fas ${isFavorite ? 'fa-check' : 'fa-heart'}`}></i>
         </button>
         <img src={img} className="center-img" alt="Player"/>
         <h2 className="center-text card-title">{name}</h2>

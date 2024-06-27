@@ -1,7 +1,9 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const FavouriteUserPlayers = ({Players}) => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     setSelectedPlayer(Players[0])
@@ -44,8 +46,20 @@ const FavouriteUserPlayers = ({Players}) => {
             {selectedPlayer && selectedPlayer && (
               <div className="p-3 border border-primary rounded">
                 <div className="row align-items-center">
-                  <div>
-                    <h3>Giocatore: {selectedPlayer.name}</h3>
+                  <div className="pe-0">
+                    <div className="row">
+                      <div className="h3 col-sm-11">Giocatore: {selectedPlayer.name}</div>
+                      <div className="col-sm-1">
+                        <button
+                          className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 p-2 bottone-info"
+                          style={{marginTop: '3%'}}
+                          onClick={() => {
+                            navigate(`/giocatori/${selectedPlayer.playerId}`)
+                          }}
+                          title="Dettagli club">
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div className="col-md-8 border-2 border-end">
                     <p>Età: {selectedPlayer.age} anni</p>

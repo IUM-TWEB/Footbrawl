@@ -309,28 +309,7 @@ hr.solid {
   background-color: chocolate;
 }
 
-
 /*end top scorer*/
-
-.ff {
-  background-color: #d2691e; /* Chocolate color */
-  color: white; /* White text color */
-  border-width: 0;
-  border-radius: 10%;
-
-}
-
-.ff:hover {
-  background-color: #4d2e07;
-  color: black;
-}
-
-.ff-not {
-  background-color: #4d2e07;
-  color: black;
-  border-width: 0;
-  border-radius: 10%;
-}
 
 .nav-item .nav-link.active {
   color: blue;
