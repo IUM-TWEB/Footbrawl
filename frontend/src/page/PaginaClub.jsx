@@ -13,6 +13,7 @@ const PaginaClub = () => {
   const {username, password, setNewClub, favoriteClubs, removeClub} = useAuth();
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -80,7 +81,7 @@ const PaginaClub = () => {
   }, [favoriteClubs, clubId]);
 
   const handleFavorite = () => {
-    if(!favoriteClubs.includes(clubId)) {
+    if (!favoriteClubs.includes(clubId)) {
       console.log("non contenuto")
       setNewClub(clubId)
       axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
@@ -90,7 +91,7 @@ const PaginaClub = () => {
         .catch(e => {
           console.log(e)
         })
-    }else{
+    } else {
       console.log(" contenuto")
       removeClub(clubId)
       axios.post("http://localhost:3000/users/removeTeam", {username: username, pwd: password, teamId: clubId})
@@ -210,12 +211,16 @@ const PaginaClub = () => {
           </div>
 
           <hr className="mb-4"/>
-          <button
-            className={`mt-2 center-block btn ${isFavorite ? 'btn-success' : 'btn-outline-success'}`}
-            onClick={handleFavorite}
-          >
-            <i className={`fas ${isFavorite ? 'fa-check' : 'fa-heart'}`}></i>
-          </button>
+          <div className="col-md-1 px-1">
+            <button
+              className={`mt-2 center-block btn w-50 ${isFavorite ? (hover ? 'btn-danger' : 'btn-success') : 'btn-outline-dark'}`}
+              onClick={handleFavorite}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+            >
+              <i className={`fas ${isFavorite ? (hover ? 'fa-times' : 'fa-check text-white') : 'fa-heart'}`}></i>
+            </button>
+          </div>
           <div className="row">
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">

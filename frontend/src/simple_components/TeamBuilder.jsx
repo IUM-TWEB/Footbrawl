@@ -34,7 +34,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       fetchData();
     }, []);
 
-
     useEffect(() => {
 
       const ss = savedFormations.find(i => i.type === formation)
@@ -43,7 +42,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         setSelectedFormation(ss.formation)
 
     }, [formation, savedFormations]);
-
 
     useEffect(() => {
       if (alert[0]) {
@@ -54,7 +52,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         return () => clearTimeout(timeout);
       }
     }, [alert]);
-
 
     useEffect(() => {
       setPlayerNames(favoritePlayers);
@@ -101,11 +98,9 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       return null;
     };
 
-
     const togglePopup = (id, isOpen, context) => {
       setPopupsOpen([id, isOpen, context])
     };
-
 
     const filterPlayersByPosition = (position) => {
       return playerNames.filter((player) => player.position === position);
@@ -147,7 +142,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         return newFormation;
       });
     };
-
 
     let addPlayer = (newPlayer) => {
       if (!playerNames.some(player => player.playerId === newPlayer.playerId)) {
@@ -335,7 +329,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       );
     };
 
-
     return (
       <>
         <h2>Crea la tua squadra</h2>
@@ -361,7 +354,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
             <SearchBarUserTemp callback={addPlayer}></SearchBarUserTemp>
           </div>
         </div>
-
 
         <div className="row">
           <div className="col-md-4 min-width-tb">

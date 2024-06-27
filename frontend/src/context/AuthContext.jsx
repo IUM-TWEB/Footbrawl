@@ -100,6 +100,7 @@ export const AuthProvider = ({children}) => {
     localStorage.setItem("favoriteClubs", JSON.stringify(fav_clubs));
     setFavoriteClubs(fav_clubs);
   };
+
   const removePlayer = (player_id) => {
     let fav_players = localStorage.getItem('favoritePlayers');
     fav_players = fav_players ? JSON.parse(fav_players) : [];
@@ -115,7 +116,7 @@ export const AuthProvider = ({children}) => {
     localStorage.setItem('favoriteClubs', JSON.stringify(fav_clubs));
     setFavoriteClubs(fav_clubs);
   };
-  //const logout = () => setIsAuthenticated(false);
+
   const logout = () => {
     setIsAuthenticated(false);
     setUsername(null);

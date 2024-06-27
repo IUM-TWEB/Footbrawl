@@ -19,7 +19,6 @@ const Menu = () => {
       <Link to="/" className="menu-item">Home</Link>
       <Link to="/news" className="menu-item">News</Link>
       <Link to="/campionati" className="menu-item">Campionati</Link>
-      <Link to="/club" className="menu-item">Club</Link>
       {isAuthenticated ? (<Link to="/paginauser" className="menu-item">User</Link>
       ) : (
         <Link to="/login" className="menu-item">Login</Link>
