@@ -100,7 +100,21 @@ export const AuthProvider = ({children}) => {
     localStorage.setItem("favoriteClubs", JSON.stringify(fav_clubs));
     setFavoriteClubs(fav_clubs);
   };
+  const removePlayer = (player_id) => {
+    let fav_players = localStorage.getItem('favoritePlayers');
+    fav_players = fav_players ? JSON.parse(fav_players) : [];
+    fav_players = fav_players.filter((id) => id !== player_id);
+    localStorage.setItem('favoritePlayers', JSON.stringify(fav_players));
+    setFavoritePlayers(fav_players);
+  };
 
+  const removeClub = (club_id) => {
+    let fav_clubs = localStorage.getItem('favoriteClubs');
+    fav_clubs = fav_clubs ? JSON.parse(fav_clubs) : [];
+    fav_clubs = fav_clubs.filter((id) => id !== club_id);
+    localStorage.setItem('favoriteClubs', JSON.stringify(fav_clubs));
+    setFavoriteClubs(fav_clubs);
+  };
   //const logout = () => setIsAuthenticated(false);
   const logout = () => {
     setIsAuthenticated(false);
@@ -126,7 +140,9 @@ export const AuthProvider = ({children}) => {
         login,
         logout,
         setNewPlayer,
-        setNewClub
+        setNewClub,
+        removePlayer,
+        removeClub,
       }}>
       {children}
     </AuthContext.Provider>

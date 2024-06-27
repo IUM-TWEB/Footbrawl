@@ -10,7 +10,7 @@ const PaginaClub = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {username, password, setNewClub, favoriteClubs} = useAuth();
+  const {username, password, setNewClub, favoriteClubs, removeClub} = useAuth();
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -80,16 +80,28 @@ const PaginaClub = () => {
   }, [favoriteClubs, clubId]);
 
   const handleFavorite = () => {
-    setNewClub(clubId);
-    axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
-      .then(res => {
-        console.log(res);
-        setIsFavorite(true);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
+    if(!favoriteClubs.includes(clubId)) {
+      console.log("non contenuto")
+      setNewClub(clubId)
+      axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }else{
+      console.log(" contenuto")
+      removeClub(clubId)
+      axios.post("http://localhost:3000/users/removeTeam", {username: username, pwd: password, teamId: clubId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
+  }
 
   const svgSelector = (position) => {
     switch (position) {

@@ -1,4 +1,5 @@
 const queries = require('../queries/user_queries')
+const {mongo} = require("mongoose");
 
 module.exports.getUsr = (req, res) => {
   queries.getUsr(req.body.username, req.body.pwd)
@@ -47,9 +48,9 @@ module.exports.addFavoritePlayer = (req, res) => {
     });
 };
 
-module.exports.getFavoritePlayer = (req,res) => {
-  const {username,pwd} = req.body
-  queries.getFavoritePlayer(username,pwd)
+module.exports.getFavoritePlayer = (req, res) => {
+  const {username, pwd} = req.body
+  queries.getFavoritePlayer(username, pwd)
     .then(resp => {
       res.send(resp.favorite_players)
 
@@ -71,9 +72,9 @@ module.exports.addFavoriteTeam = (req, res) => {
     });
 };
 
-module.exports.addFormation = (req,res) => {
+module.exports.addFormation = (req, res) => {
   const {username, pwd, formation} = req.body
-  queries.addFormation(username,pwd,formation)
+  queries.addFormation(username, pwd, formation)
     .then(() => {
       res.sendStatus(200); // Send a status code of 200 if successful
     })
@@ -83,9 +84,9 @@ module.exports.addFormation = (req,res) => {
     });
 }
 
-module.exports.getFormation = (req,res) => {
+module.exports.getFormation = (req, res) => {
   const {username, pwd} = req.body
-  queries.getFormation(username,pwd)
+  queries.getFormation(username, pwd)
     .then((resp) => {
       res.send(resp.formations);
     })
@@ -94,4 +95,89 @@ module.exports.getFormation = (req,res) => {
       res.status(500).send(err.message); // Send a 500 status code if there is an error
     });
 }
+
+
+module.exports.removePlayer = async (req, res) => {
+  const {username, pwd, playerId} = req.body
+  console.log(username,pwd,playerId)
+
+
+  if (!(username && pwd && playerId)) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "Bad request",
+      data: null
+    })
+  }
+
+  try {
+    const mongo_resp = (await queries.removeFavoritePlayer(username,pwd,playerId))
+    console.log(mongo_resp)
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
+}
+
+module.exports.removeTeam = async (req, res) => {
+  const {username, pwd, teamId} = req.body
+  console.log("siamo effettivamente qui ",req.body)
+
+  if (!(username && pwd && teamId)) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "Bad request",
+      data: null
+    })
+  }
+
+  try {
+    const mongo_resp = (await queries.removeFavoriteTeam(username, pwd, teamId))
+    console.log("eccoci ",mongo_resp)
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
+}
+
 
