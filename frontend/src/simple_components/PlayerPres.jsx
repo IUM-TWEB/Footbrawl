@@ -24,7 +24,7 @@ function PlayerPres({
   const {username, password, setNewPlayer} = useAuth()
   const navigate = useNavigate();
 
-  handleFavorite = () => {
+  handleFavorite = () => { // salviamo il relativo giocatore tra i preferiti del utente
     setNewPlayer(playerId)
     axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
       .then(res => {
