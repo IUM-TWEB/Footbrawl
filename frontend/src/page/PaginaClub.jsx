@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
+import {useAuth} from "../context/AuthContext.jsx";
 import axios from 'axios';
 
 const PaginaClub = () => {
@@ -8,7 +9,9 @@ const PaginaClub = () => {
   const [players, setPlayers] = useState([]);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [x, setX] = useState("ff");
   const [error, setError] = useState(null);
+  const {username, password, setNewClub} = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -156,6 +159,18 @@ const PaginaClub = () => {
     }
   };
 
+  const handleFavorite = () => {
+    setNewClub(clubId)
+    axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
+      .then(res => {
+        console.log(res)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+    setX("ff-not")
+  }
+
   if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error: {error}</p>;
 
@@ -178,9 +193,16 @@ const PaginaClub = () => {
           </div>
 
           <hr className="mb-4"/>
+          <button
+            className={`mt-2 center-block ${x}`}
+            onClick={() => handleFavorite(clubId)}
+          >
+            <i className="fas fa-heart"></i>
+          </button>
           <div className="row">
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+
               <div className="mb-3">
                 <img src={`https://tmssl.akamaized.net/images/wappen/head/${clubData.clubId}.png`} alt={'club logo'}/>
               </div>

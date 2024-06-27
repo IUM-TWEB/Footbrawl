@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 const FavouriteUserPlayers = ({Players}) => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-
   useEffect(() => {
     setSelectedPlayer(Players[0])
   }, [Players]);
@@ -17,9 +16,7 @@ const FavouriteUserPlayers = ({Players}) => {
     return value === -1 ? 'non disponibile' : value + ' euro';
   };
 
-
   return (
-
     <div className="my-5">
       <h2>Giocatori Preferiti:</h2>
       {Players.length > 0 ? (
@@ -42,6 +39,7 @@ const FavouriteUserPlayers = ({Players}) => {
               ))}
             </ul>
           </div>
+
           <div className="col-md-8">
             {selectedPlayer && selectedPlayer && (
               <div className="p-3 border border-primary rounded">
