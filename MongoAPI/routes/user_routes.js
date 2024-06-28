@@ -47,13 +47,15 @@ router.post('/log/', mid.getUsr);
  *               username:
  *                 type: string
  *                 description: The username of the user.
+ *                 example: johndoe
  *               pwd:
  *                 type: string
  *                 description: The password of the user.
+ *                 example: password123
  *     responses:
  *       '200':
  *         description: Registration successful.
- *       '400':  # Assuming a 400 error is returned for bad user data
+ *       '400':
  *         description: Bad request. Username might already exist.
  *       '500':
  *         description: Internal server error.

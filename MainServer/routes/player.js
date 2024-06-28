@@ -78,7 +78,7 @@ function extract(raw) {
 
 router.get('/goals_date/:player_id', async (req, res) => {
   try {
-    const response = await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`);
+    const response = (await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`)).data;
     if (Symbol.iterator in Object(response.data)) {
       const res_data = extract(response.data);
       res.send(res_data);
