@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../simple_components/SearchBar.jsx";
 import LeaderBoard from "../simple_components/LeaderBoard.jsx";
@@ -17,14 +17,13 @@ const Home = () => {
   const [laLiga, setLaLiga] = useState([]);
   const [ligue1, setLigue1] = useState([]);
   const [lastGames, setLastGames] = useState({});
-  const [topScorers, setTopScorers] = useState({IT1: null, GB1: null, ES1: null, CL: null, EL: null});
-  const carouselRef = useRef(null);
+  const [topScorers, setTopScorers] = useState({ IT1: null, GB1: null, ES1: null, CL: null, EL: null });
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLastGame = async (competitionId) => {
       try {
-        const response = await axios.get(`http://localhost:3000/last_game/${competitionId}`);
+        const response = await axios.get(`http://localhost:3000/competition/last_game/${competitionId}`);
         return response.data;
       } catch (error) {
         console.error(`Errore durante il recupero dell'ultima partita per ${competitionId}:`, error);
@@ -34,7 +33,7 @@ const Home = () => {
 
     const fetchTopScorer = async (competitionId) => {
       try {
-        const response = await axios.get(`http://localhost:3000/campionati/top_scorer/${competitionId}`, {
+        const response = await axios.get(`http://localhost:3000/competition/top_scorer/${competitionId}`, {
           timeout: 100000000
         });
         return response.data;
@@ -47,11 +46,11 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [newsResponse, serieAResponse, premierLeagueResponse, laLigaResponse, ligue1Response, lastGameIT1, lastGameGB1, lastGameES1, lastGameCL, lastGameEL] = await Promise.all([
-          axios.get('http://localhost:3000/home/news'),
-          axios.get('http://localhost:3000/ranking/serie-a'),
-          axios.get('http://localhost:3000/ranking/premier-league'),
-          axios.get('http://localhost:3000/ranking/laLiga'),
-          axios.get('http://localhost:3000/ranking/ligue-1'),
+          axios.get('http://localhost:3000/news'),
+          axios.get('http://localhost:3000/competition/ranking/serie-a'),
+          axios.get('http://localhost:3000/competition/ranking/premier-league'),
+          axios.get('http://localhost:3000/competition/ranking/laLiga'),
+          axios.get('http://localhost:3000/competition/ranking/ligue-1'),
           fetchLastGame('IT1'),
           fetchLastGame('GB1'),
           fetchLastGame('ES1'),
@@ -64,7 +63,7 @@ const Home = () => {
         setPremierLeague(premierLeagueResponse.data.slice(0, 3));
         setLaLiga(laLigaResponse.data.slice(0, 3));
         setLigue1(ligue1Response.data.slice(0, 3));
-        setLastGames({IT1: lastGameIT1, GB1: lastGameGB1, ES1: lastGameES1, CL: lastGameCL, EL: lastGameEL});
+        setLastGames({ IT1: lastGameIT1, GB1: lastGameGB1, ES1: lastGameES1, CL: lastGameCL, EL: lastGameEL });
 
         // Fetch top scorers asynchronously
         const topScorerPromises = [
@@ -100,16 +99,10 @@ const Home = () => {
 
   const handlePause = () => {
     setIsPaused(true);
-    if (carouselRef.current) {
-      carouselRef.current.pause();
-    }
   };
 
   const handleResume = () => {
     setIsPaused(false);
-    if (carouselRef.current) {
-      carouselRef.current.resume();
-    }
   };
 
   const handleClickClub = (clubId) => {
@@ -132,7 +125,6 @@ const Home = () => {
         <div className="row justify-content-md-center">
           <div className="col-md-12 col-lg-6 order-1 order-lg-2">
             <Carousel
-              ref={carouselRef}
               showThumbs={false}
               showArrows={true}
               autoPlay={!isPaused}

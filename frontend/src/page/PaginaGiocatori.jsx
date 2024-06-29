@@ -4,9 +4,7 @@ import PlayerPres from "../simple_components/PlayerPres.jsx";
 import PlayerClubs from "../simple_components/PlayerClubs.jsx";
 import {Line} from 'react-chartjs-2';
 import axios from "axios";
-
-// Import chart.js components
-import {
+import {// Import chart.js components
   CategoryScale,
   Chart as ChartJS,
   Legend,

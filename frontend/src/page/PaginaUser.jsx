@@ -14,7 +14,6 @@ const PaginaUser = () => {
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
-      // Faccio la fetch dei nomi dei player
       Promise.all(favoritePlayers.map(selectedPlayer =>
         axios.get(`http://localhost:3000/player/${selectedPlayer}`)
           .then(response => response.data)

@@ -462,3 +462,12 @@ hr.solid {
 .mb-custom {
   margin-bottom: 3rem;
 }
+
+/*logo competition*/
+.logo-fixed {
+  width: 200px;
+  height: 200px;
+  object-fit: contain; /* Mantenere le proporzioni originali */
+
+}
+

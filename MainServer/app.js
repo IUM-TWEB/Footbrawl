@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const playerRoutes = require('./routes/player');
 const clubRoutes = require('./routes/club');
+const competitionRoutes = require('./routes/competition');
 
 const app = express();
 
@@ -23,7 +24,7 @@ const corsOption = {
 
 const swaggerOptions = {
   definition: {
-    openapi: '3.0.0', // Assicurati di usare OpenAPI 3.0
+    openapi: '3.0.0',
     info: {
       title: 'Foot Brawl API',
       description: 'API for Foot Brawl application',
@@ -32,17 +33,26 @@ const swaggerOptions = {
     servers: [
       {
         url: 'http://localhost:3000',
-        description: 'Local server'
+        description: 'Main Server'
       },
       {
-        url: 'http://localhost:3000',
-        description: 'Local server'
+        url: 'http://localhost:3001',
+        description: 'Server Mongo'
+      },
+      {
+        url: 'http://localhost:8080',
+        description: 'Postgress'
       }
-    ]
+    ],
+    tags: [
+      { name: 'Clubs', description: 'Operations related to clubs' },
+      { name: 'Competitions', description: 'Operations related to competitions' },
+      { name: 'Players', description: 'Operations related to players' },
+      { name: 'Users', description: 'Operations related to users' },
+    ],
   },
-  apis: ['../routes/index.js']
+  apis: [path.join(__dirname, './routes/*.js')],
 };
-
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 // Serve Swagger UI (optional)
@@ -58,5 +68,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/player', playerRoutes);
 app.use('/club', clubRoutes);
+app.use('/competition', competitionRoutes);
 
 module.exports = app;

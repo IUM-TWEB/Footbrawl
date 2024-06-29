@@ -9,7 +9,7 @@ const GridNews = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:3000/home/news')
+    axios.get('http://localhost:3000/news')
       .then(response => {
         setNewsList(response.data);
       })
