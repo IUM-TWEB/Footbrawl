@@ -99,6 +99,7 @@ router.get('/goals_date/:player_id', async (req, res) => {
 
 });
 
+
 router.get('/assist_date/:player_id', async (req, res) => {
   try {
     const response = await axios.get(`http://localhost:3001/events/player_assist_date/${req.params.player_id}`);
@@ -109,6 +110,8 @@ router.get('/assist_date/:player_id', async (req, res) => {
     console.error('Errore nella richiesta al server Spring Boot:', error);
     res.status(500).send('Errore nella richiesta al server Spring Boot');
   }
+});
+
 
 /**
  * @swagger
@@ -213,57 +216,7 @@ router.get('/player_clubs/:player_id', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /goals_date/{player_id}:
- *   get:
- *     summary: Get player's goal counts by year
- *     description: Returns the count of goals scored by a player each year based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.
- *     tags: [Players]
- *     parameters:
- *       - in: path
- *         name: player_id
- *         required: true
- *         description: ID of the player to get goal counts for
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Player's goal counts by year
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 dates:
- *                   type: array
- *                   items:
- *                     type: integer
- *                     description: Year of the goal data
- *                 goal_counts:
- *                   type: array
- *                   items:
- *                     type: integer
- *                     description: Number of goals scored in that year
- *       500:
- *         description: Error in the request to the Spring Boot server
- */
 
-router.get('/goals_date/:player_id', async (req, res) => {
-  console.log('entro qui');
-  try {
-    const response = (await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`)).data;
-    if (Symbol.iterator in Object(response.data)) {
-      const res_data = extract(response.data);
-      res.send(res_data);
-    } else {
-      res.send('');
-    }
-  } catch (error) {
-    console.error('Error in the request to the Spring Boot server:', error);
-    res.status(500).send('Error in the request to the Spring Boot server');
-  }
-});
 
 /**
  * @swagger

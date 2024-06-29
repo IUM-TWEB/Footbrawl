@@ -7,8 +7,7 @@ import axios from "axios";
 import {useAuth} from '../context/AuthContext';
 
 
-// Import chart.js components
-import {
+
 import {// Import chart.js components
   CategoryScale,
   Chart as ChartJS,
