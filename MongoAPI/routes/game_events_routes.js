@@ -4,156 +4,461 @@ const router = express.Router();
 
 /**
  * @swagger
- * /game-events/{id}:
+ * /events/{id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get event details by ID
- *     description: Retrieves detailed information about a specific game event by its ID.
+ *     summary: Get an event by the event id
+ *     description: Get all the information about an event filtering by the event id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
  *         required: true
- *         description: Unique identifier for the game event.
+ *         in: path
  *         schema:
  *           type: string
+ *         description: The event ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with game event details.
+ *         description: 200 response
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/GameEventResponse'
- *       '404':
- *         description: Game event not found.
+ *               $ref: '#/components/schemas/EventResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     _id: "ag4432fe"
+ *                     date: "2012-08-05T00:00:00.000+00:00"
+ *                     game_id: 123
+ *                     minute: 89
+ *                     type: "Goal"
+ *                     club_id: 321
+ *                     player_id: 301
+ *                     description: "Yellow card"
+ *                     player_in_id: 321
+ *                     player_assist_id: 123
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
 router.get('/:id', mid.getById);
 
 /**
  * @swagger
- * /game-events/player/{player_id}:
+ * /events/player/{player_id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get events by player ID
- *     description: Retrieves all game events related to a specific player by their player ID.
+ *     summary: Get a set of events by a player id
+ *     description: Get all the information about an event filtering by a player id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: player_id
+ *       - name: player_id
  *         required: true
- *         description: Unique player identifier.
+ *         in: path
  *         schema:
- *           type: integer
+ *           type: number
+ *         description: The player ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with player's game events.
- *       '404':
- *         description: No game events found for the player.
+ *         description: 200 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EventResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     _id: "ag4432fe"
+ *                     date: "2012-08-05T00:00:00.000+00:00"
+ *                     game_id: 123
+ *                     minute: 89
+ *                     type: "Goal"
+ *                     club_id: 321
+ *                     player_id: 301
+ *                     description: "Yellow card"
+ *                     player_in_id: 321
+ *                     player_assist_id: 123
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
 router.get('/player/:player_id', mid.getByPlayer);
 
 /**
  * @swagger
- * /game-events/player_goals_date/{player_id}:
+ * /events/player_goals_date/{player_id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get goal dates by player ID
- *     description: Retrieves dates of all goals scored by a specific player.
+ *     summary: Get a set of dates in which a player made a goal
+ *     description: Return a set of dates in which, whatever the competition, a player made a goal
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: player_id
+ *       - name: player_id
  *         required: true
- *         description: Player ID for which goal dates are retrieved.
+ *         in: path
  *         schema:
- *           type: integer
+ *           type: number
+ *         description: The player ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with dates of goals.
- *       '404':
- *         description: No goals found for the player.
+ *         description: 200 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                         format: date-time
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     - date: "2012-08-19T00:00:00.000Z"
+ *                     - date: "2013-01-27T00:00:00.000Z"
+ *                     - date: "2012-09-26T00:00:00.000Z"
+ *                     - date: "2012-12-19T00:00:00.000Z"
+ *                     - date: "2013-09-29T00:00:00.000Z"
+ *                     - date: "2013-09-25T00:00:00.000Z"
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
+
 router.get('/player_goals_date/:player_id', mid.getGoalDatesById);
 
 /**
  * @swagger
- * /game-events/player_assist_date/{player_id}:
+ * /events/player_assist_date/{player_id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get assist dates by player ID
- *     description: Retrieves dates of all assists made by a specific player.
+ *     summary: Get a set of dates in which a player made an assist
+ *     description: Return a set of dates in which, whatever the competition, a player made a competition
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: player_id
+ *       - name: player_id
  *         required: true
- *         description: Player ID for which assist dates are retrieved.
+ *         in: path
  *         schema:
- *           type: integer
+ *           type: number
+ *         description: The player ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with dates of assists.
- *       '404':
- *         description: No assists found for the player.
+ *         description: 200 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                         format: date-time
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     - date: "2012-08-19T00:00:00.000Z"
+ *                     - date: "2013-01-27T00:00:00.000Z"
+ *                     - date: "2012-09-26T00:00:00.000Z"
+ *                     - date: "2012-12-19T00:00:00.000Z"
+ *                     - date: "2013-09-29T00:00:00.000Z"
+ *                     - date: "2013-09-25T00:00:00.000Z"
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
+
 router.get('/player_assist_date/:player_id', mid.getAssistDatesByPlayerId);
 
 /**
  * @swagger
- * /game-events/club/{club_id}:
+ * /events/club/{club_id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get events by club ID
- *     description: Retrieves all game events associated with a specific club by its club ID.
+ *     summary: Get a set of events of a club
+ *     description: Get all the information about an set of events filtering by the club id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: club_id
+ *       - name: club_id
  *         required: true
- *         description: Unique club identifier.
+ *         in: path
  *         schema:
- *           type: integer
+ *           type: number
+ *         description: The event ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with club's game events.
- *       '404':
- *         description: No game events found for the club.
+ *         description: 200 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EventResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     _id: "ag4432fe"
+ *                     date: "2012-08-05T00:00:00.000+00:00"
+ *                     game_id: 123
+ *                     minute: 89
+ *                     type: "Goal"
+ *                     club_id: 321
+ *                     player_id: 301
+ *                     description: "Yellow card"
+ *                     player_in_id: 321
+ *                     player_assist_id: 123
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
 router.get('/club/:club_id', mid.getByClub);
 
 /**
  * @swagger
- * /game-events/top_scorer/{competition_id}:
+ * /events/top_scorer/{competition_id}:
  *   get:
  *     tags:
  *       - Game Events
- *     summary: Get top scorer of a competition
- *     description: Retrieves the top scorer of a specific competition by competition ID.
+ *     summary: Get a set of top scorer players of a specific competition
+ *     description: Get a set of top scorer players of a specific competition in the last season
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: competition_id
+ *       - name: competition_id
  *         required: true
- *         description: Competition ID for which top scorer information is retrieved.
+ *         in: path
  *         schema:
  *           type: string
+ *         description: The competition ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with top scorer details.
- *       '404':
- *         description: No top scorer found for the competition.
+ *         description: 200 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       totalGoals:
+ *                         type: integer
+ *                       player_id:
+ *                         type: integer
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     - totalGoals: 8
+ *                       player_id: 62094
+ *                     - totalGoals: 6
+ *                       player_id: 315110
+ *                     - totalGoals: 6
+ *                       player_id: 454121
+ *                     - totalGoals: 5
+ *                       player_id: 365172
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
+
 router.get('/top_scorer/:competition_id', mid.getTopScorer);
 
 module.exports = router;

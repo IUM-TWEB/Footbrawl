@@ -4,6 +4,11 @@ import PlayerPres from "../simple_components/PlayerPres.jsx";
 import PlayerClubs from "../simple_components/PlayerClubs.jsx";
 import {Line} from 'react-chartjs-2';
 import axios from "axios";
+import {useAuth} from '../context/AuthContext';
+
+
+// Import chart.js components
+import {
 import {// Import chart.js components
   CategoryScale,
   Chart as ChartJS,
@@ -20,14 +25,15 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 export const options = {};
 
+// Recuperiamo i dati da mostrare nei due grafici
 async function getChartData(player_id, endpoint, label_name) {
   try {
     const response = await axios.get(`http://localhost:3000/player/${endpoint}/${player_id}`);
 
-    if (response && response.data && response.data.dates.length >= 5) {
+    if (response && response.data && response.data.dates.length >= 5) { // I dati sono mostrati solamente se ci sono e sono sufficienti
       const labels = response.data.dates;
       const data = response.data.goal_counts;
-
+      // ritorniamo in un formato che possa essere letto da chartjs
       return {
         labels,
         datasets: [{
@@ -64,7 +70,7 @@ function show_graph(data) {
     return <p className="h3 d-flex justify-content-center">Non ci sono abbastanza dati sul giocatore</p>;
   }
 }
-
+// Mostriamo i dati relativi al giocatore
 function show_info(player, player_id) {
   if (player) {
     return (
@@ -94,10 +100,12 @@ export default function PaginaGiocatori() {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const {username} = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Recuperiamo tutti i dati
         const [playerClubs, playerData, goalsChartData, marketValueChartData] = await Promise.all([
           axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
           axios.get(`http://localhost:3000/player/${playerId}`),
@@ -109,19 +117,20 @@ export default function PaginaGiocatori() {
         setPlayer(playerData.data);
         setChartGoalData(goalsChartData);
         setChartMarket(marketValueChartData);
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false); // Terminiamo l'animazione di loading
+
       } catch (error) {
         console.error('Error fetching chart data:', error);
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false); // Terminiamo l'animazione di loading
       }
     };
 
-    // Check if player_id is available
+    // Controlliamo se il parametro playerId è disponibile
     if (playerId) {
       fetchData();
     }
   }, [playerId]);
-
+  // Per l'animazione di loading
   if (loading) {
     return (
       <div className="loader-container">
@@ -131,10 +140,10 @@ export default function PaginaGiocatori() {
   }
 
   const handleChatClick = (nameRoom) => {
-    if (localStorage.getItem("username")) {
+    if (username) {
       navigate(`/chat/${nameRoom}`);
     } else {
-      navigate('/login');
+      navigate('/login'); // se username non è disponibile, l'utente si deve loggare
     }
   };
 
@@ -152,7 +161,7 @@ export default function PaginaGiocatori() {
         </div>
         <div className="col-sm-3 p-3">
           <div className="mb-5">
-            <PlayerClubs playerInfo={playerClubs}></PlayerClubs>
+            <PlayerClubs playerClubs={playerClubs}></PlayerClubs>
           </div>
           <div className="d-flex justify-content-center">
             <button

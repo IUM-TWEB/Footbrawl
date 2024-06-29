@@ -19,11 +19,11 @@ mongoose.connect('mongodb://localhost:27017/footbrawl')
   .catch(err => console.error(err));
 
 const db = mongoose.connection;
-db.once('connection', () => {
-    console.log('Connected to MongoDB');
+db.once('open', () => {
+  console.log('Connected to MongoDB');
 });
 db.on('error', (e) => {
-    console.error(e);
+  console.error(e);
 });
 
 const server = express();
@@ -32,37 +32,188 @@ const server = express();
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-// Swagger configuration (replace with your API information, paths, and definitions)
+// Swagger configuration
 const swaggerOptions = {
-    swaggerDefinition: {
-        info: {
-            title: 'Foot Brawl API',
-            description: 'API for Foot Brawl application',
-            version: '1.0.0',
-            groups: [{
-              name: 'Appearance Routes',
-              description: 'Routes related to appearances',
-              paths: ['/app/appearances'] // Paths to appearance routes
-            },
-              {
-                name: 'User Routes',
-                description: 'Routes related to user management',
-                paths: ['/app/users'] // Paths to user routes
-              }]
-        },
-        servers: ['http://localhost:3001'],
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Foot Brawl API',
+      description: 'API for Foot Brawl application',
+      version: '1.0.0',
     },
-    apis: [
-        './routes/*.js', // Scan all route files for API definitions (assuming Swagger comments)
+    servers: [
+      {
+        url: 'http://localhost:3001',
+      },
     ],
+    components: {
+      schemas: {
+        AppearanceResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              description: 'Indicates if the request was successful',
+            },
+            status: {
+              type: 'integer',
+              description: 'The status code of the request',
+            },
+            message: {
+              type: 'string',
+              description: 'A message describing the result',
+            },
+            data: {
+              type: 'object',
+              properties: {
+                _id: {
+                  type: 'string',
+                  description: 'The unique identifier of the appearance',
+                },
+                game_id: {
+                  type: 'number',
+                  description: 'The ID of the game',
+                },
+                player_id: {
+                  type: 'number',
+                  description: 'The ID of the player',
+                },
+                player_club_id: {
+                  type: 'number',
+                  description: 'The ID of the player\'s club',
+                },
+                player_current_club_id: {
+                  type: 'number',
+                  description: 'The current club ID of the player',
+                },
+                date: {
+                  type: 'string',
+                  format: 'date-time',
+                  description: 'The date of the appearance',
+                },
+                player_name: {
+                  type: 'string',
+                  description: 'The name of the player',
+                },
+                competition_id: {
+                  type: 'string',
+                  description: 'The competition ID',
+                },
+                yellow_cards: {
+                  type: 'number',
+                  description: 'Number of yellow cards received',
+                },
+                red_cards: {
+                  type: 'number',
+                  description: 'Number of red cards received',
+                },
+                goals: {
+                  type: 'number',
+                  description: 'Number of goals scored',
+                },
+                assists: {
+                  type: 'number',
+                  description: 'Number of assists',
+                },
+                minutes_played: {
+                  type: 'number',
+                  description: 'Minutes played in the game',
+                },
+              }
+            }
+          }
+        },
+        ClubGameResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              description: 'Indicates if the request was successful',
+            },
+            status: {
+              type: 'integer',
+              description: 'The HTTP status code',
+            },
+            message: {
+              type: 'string',
+              description: 'A message describing the status',
+            },
+            data: {
+              type: 'object',
+              properties: {
+                ciao: { type: 'string' },
+                ciao2: { type: 'integer' },
+                game_id: { type: 'integer' },
+                club_id: { type: 'integer' },
+                own_goals: { type: 'integer' },
+                own_position: { type: 'integer' },
+                own_manager_name: { type: 'string' },
+                opponent_id: { type: 'integer' },
+                opponent_goals: { type: 'integer' },
+                opponent_position: { type: 'integer' },
+                opponent_manager_name: { type: 'string' },
+                hosting: { type: 'string' },
+                is_win: { type: 'integer' },
+              }
+            }
+          }
+        },
+        EventResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            status: { type: 'integer' },
+            message: { type: 'string' },
+            data: {
+              type: 'object',
+              properties: {
+                _id: { type: 'string' },
+                date: { type: 'string', format: 'date-time' },
+                game_id: { type: 'integer' },
+                minute: { type: 'integer' },
+                type: { type: 'string' },
+                club_id: { type: 'integer' },
+                player_id: { type: 'integer' },
+                description: { type: 'string' },
+                player_in_id: { type: 'integer' },
+                player_assist_id: { type: 'integer' },
+              },
+            },
+          },
+        },
+        Error: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'string',
+              description: 'The competition ID',
+            },
+            status: {
+              type: 'number',
+              description: 'Number of yellow cards received',
+            },
+            message: {
+              type: 'number',
+              description: 'Number of red cards received',
+            },
+            data: {
+              type: 'object',
+              description: 'Number of red cards received',
+            },
+          },
+        },
+      },
+    },
+  },
+  apis: ['./routes/*.js'], // Scan all route files for API definitions (assuming Swagger comments)
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 // Serve Swagger specification (optional)
 server.get('/api-docs.json', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(swaggerDocs);
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerDocs);
 });
 
 // Serve Swagger UI (optional)
@@ -79,9 +230,9 @@ server.use('/user', user);
 
 // Start the server
 server.listen(3001, (err) => {
-    if (err) {
-        console.error(err);
-    } else {
-        console.log('Server Listening on port 3001');
-    }
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Server Listening on port 3001');
+  }
 });

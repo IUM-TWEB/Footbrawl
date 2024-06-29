@@ -4,99 +4,223 @@ const router = express.Router();
 
 /**
  * @swagger
- * /club_games/{game}:
+ * /clubgames/{gameId}:
  *   get:
  *     tags:
  *       - Club Games
- *     summary: Get club game details by game ID
- *     description: Retrieves details for a specific club game based on the game ID.
+ *     summary: Get a club game by the game id
+ *     description: Get all the information about a single game filtering by the game id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: game
+ *       - name: gameId
  *         required: true
- *         description: Unique game identifier.
+ *         in: path
  *         schema:
- *           type: string
+ *           type: integer
+ *         description: The game ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with game details.
+ *         description: 200 response
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/GameDetailsResponse'
- *       '404':
- *         description: No game found.
+ *               $ref: '#/components/schemas/ClubGameResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     game_id: 1
+ *                     club_id: 123
+ *                     own_goals: 321
+ *                     own_position: 123
+ *                     own_manager_name: "Federico Acquadro"
+ *                     opponent_id: 312
+ *                     opponent_goals: 2
+ *                     opponent_position: 123
+ *                     opponent_manager_name: "Umberto Rastello"
+ *                     hosting: "true"
+ *                     is_win: 1
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
+
 router.get('/:game', ctrl.getByGame);
 
 /**
  * @swagger
- * /club_games/club/{club}:
+ * /clubgames/club/{clubId}:
  *   get:
  *     tags:
  *       - Club Games
- *     summary: Get games by club ID
- *     description: Retrieves all games associated with a specific club ID.
+ *     summary: Get a club game by the club id
+ *     description: Get all the information about a set of games filtering by the club id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: club
+ *       - name: clubId
  *         required: true
- *         description: Unique club identifier.
+ *         in: path
  *         schema:
- *           type: string
+ *           type: integer
+ *         description: The club ID to search in the database
  *     responses:
  *       '200':
- *         description: Successful response with list of games.
+ *         description: 200 response
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/GameDetailsResponse'
- *       '404':
- *         description: No games found for the club.
+ *               $ref: '#/components/schemas/ClubGameResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     game_id: 1
+ *                     club_id: 123
+ *                     own_goals: 321
+ *                     own_position: 123
+ *                     own_manager_name: "Federico Acquadro"
+ *                     opponent_id: 312
+ *                     opponent_goals: 2
+ *                     opponent_position: 123
+ *                     opponent_manager_name: "Umberto Rastello"
+ *                     hosting: "true"
+ *                     is_win: 1
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
 router.get('/club/:club', ctrl.getByClub);
-
 /**
  * @swagger
- * /club_games/club/{club}/{isHosted}:
+ * /clubgames/club/{clubid}/{isHosted}:
  *   get:
  *     tags:
  *       - Club Games
- *     summary: Get hosted or non-hosted games by club ID
- *     description: Retrieves all games hosted or not hosted by a specific club based on the club ID and hosted flag.
+ *     summary: Get a club game by the game id
+ *     description: Get all the information about a single game filtering by the game id
+ *     produces:
+ *       - application/json
  *     parameters:
- *       - in: path
- *         name: club
+ *       - name: clubId
  *         required: true
- *         description: Unique club identifier.
+ *         in: path
  *         schema:
- *           type: string
- *       - in: path
- *         name: isHosted
+ *           type: integer
+ *         description: The club ID to search in the database
+ *
+ *       - name: isHosted
  *         required: true
- *         description: Flag indicating whether to retrieve games hosted (true) or not hosted (false) by the club.
+ *         in: path
  *         schema:
  *           type: boolean
+ *         description: filter the games which are hosted or not
  *     responses:
  *       '200':
- *         description: Successful response with list of games.
+ *         description: 200 response
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/GameDetailsResponse'
- *       '404':
- *         description: No matching games found.
+ *               $ref: '#/components/schemas/ClubGameResponse'
+ *             examples:
+ *               successExample:
+ *                 value:
+ *                   success: true
+ *                   status: 200
+ *                   message: ""
+ *                   data:
+ *                     game_id: 1
+ *                     club_id: 123
+ *                     own_goals: 321
+ *                     own_position: 123
+ *                     own_manager_name: "Federico Acquadro"
+ *                     opponent_id: 312
+ *                     opponent_goals: 2
+ *                     opponent_position: 123
+ *                     opponent_manager_name: "Umberto Rastello"
+ *                     hosting: "true"
+ *                     is_win: 1
  *       '500':
- *         description: Internal server error.
+ *         description: 500 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               errorExample:
+ *                 value:
+ *                   success: false
+ *                   status: 500
+ *                   message: "Internal server error"
+ *                   data: []
+ *       '404':
+ *         description: 404 response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             examples:
+ *               notFoundExample:
+ *                 value:
+ *                   success: false
+ *                   status: 404
+ *                   message: "No resource found"
+ *                   data: []
  */
+
 router.get('/club/:club/:isHosted', ctrl.getByClubAndHosted);
 
 module.exports = router;

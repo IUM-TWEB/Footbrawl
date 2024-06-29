@@ -15,4 +15,4 @@ const club_games = new mongoose.Schema({
     is_win: Number,
 })
 
-module.exports = mongoose.model('clubs_games', club_games)
+module.exports = mongoose.model('club_games', club_games)

@@ -1,16 +1,25 @@
 const queries = require('../queries/game_events_queries')
 
 const getById = async (req, res) => {
+  const {id} = req.params
+  if(!id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.id))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getById(id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
         message: "No resource found",
         data: null
       })
-    } else {
+    } else {req.params.
       res.json({
         success: true,
         status: 200,
@@ -29,11 +38,18 @@ const getById = async (req, res) => {
 }
 
 const getByPlayer = async (req, res) => {
+  const {player_id} = req.params
+  if(!player_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    console.log(req.params)
-
-    const mongo_resp = (await queries.getByPlayer(req.params.player_id))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getByPlayer(player_id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -59,9 +75,18 @@ const getByPlayer = async (req, res) => {
 }
 
 const getByClub = async (req, res) => {
+  const {club_id} = req.params
+  if(!club_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByClub(req.params.club_id))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getByClub(club_id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -87,10 +112,18 @@ const getByClub = async (req, res) => {
 }
 
 const getGoalDatesById = async (req, res) => {
+  const {player_id} = req.params
+  if(!player_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getGoalDatesByPlayerIn(req.params.player_id))
-    console.log("RISaa\n\n",mongo_resp)
-    if (mongo_resp === []) {
+    const mongo_resp = (await queries.getGoalDatesByPlayerIn(player_id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -116,9 +149,18 @@ const getGoalDatesById = async (req, res) => {
 }
 
 const getAssistDatesByPlayerId = async (req, res) => {
+  const {player_id} = req.params
+  if(!player_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getAssistDatesByPlayerIn(req.params.player_id))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getAssistDatesByPlayerIn(player_id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -144,9 +186,18 @@ const getAssistDatesByPlayerId = async (req, res) => {
 }
 
 const getTopScorer = async (req, res) => {
+  const {competition_id} = req.params
+  if(!competition_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getTopScorer(req.params.competition_id))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getTopScorer(competition_id))
+    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,

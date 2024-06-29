@@ -8,200 +8,206 @@ import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
 
 const TeamFormationSelector = ({favoritePlayers}) => {
-    const {username, password} = useAuth();
-    const [alert, setAlert] = useState([false, ""])
-    const navigate = useNavigate()
-    const [popupsOpen, setPopupsOpen] = useState({});
-    const [selectedPosition, setSelectedPosition] = useState([null, null])
-    const [playerNames, setPlayerNames] = useState([]);
-    const [formation, setFormation] = useState('4-4-2');
-    const [savedFormations, setSavedFormations] = useState([])
-    const [selectedFormation, setSelectedFormation] = useState({
-      forwards: ['0', '0'],
-      midfielders: ['0', '0', '0', '0'],
-      defenders: ['0', '0', '0', '0'],
-      goalkeeper: ['0']
+  const {username, password} = useAuth();
+  const [alert, setAlert] = useState({isOpen: false, color: "", message: ""});
+  const navigate = useNavigate()
+  const [popupsOpen, setPopupsOpen] = useState({});
+  const [selectedPosition, setSelectedPosition] = useState({index: null, array: null});
+  const [savedPlayersValues, setSavedPlayersValues] = useState([]);
+  const [formation, setFormation] = useState('4-4-2');
+  const [savedFormations, setSavedFormations] = useState([])
+  const [selectedFormation, setSelectedFormation] = useState({
+    forwards: ['0', '0'],
+    midfielders: ['0', '0', '0', '0'],
+    defenders: ['0', '0', '0', '0'],
+    goalkeeper: ['0']
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await getFormations();
+      if (resp && Array.isArray(resp)) {
+        setSavedFormations(resp);
+        console.log("saved:", savedFormations)
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    // Cerchiamo la formazione salvata che corrisponde tra le salvate in base al tipo
+    const filtered_formation = savedFormations.find(i => i.type === formation)
+    console.log("trovata: ", filtered_formation)
+    if (filtered_formation)
+      setSelectedFormation(filtered_formation.formation)
+
+  }, [formation, savedFormations]);
+
+  // Quando alert viene modificato reimpostiamo a false lo stato per richiudere
+  // l'alert
+  useEffect(() => {
+    if (alert.isOpen) {
+      const timeout = setTimeout(() => {
+        setAlert({isOpen: false, color: "", message: ""});
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [alert]);
+
+
+  useEffect(() => {
+    setSavedPlayersValues(favoritePlayers);
+  }, [favoritePlayers]);
+
+  // Salviamo la formazione
+  const sendFormation = async () => {
+    axios.post('http://localhost:3000/users/postFormations', {
+        username: username,
+        pwd: password,
+        formation: {
+          type: formation,
+          formation: selectedFormation,
+          name: "" // Da implementare la scelta del nome della formazione
+        }
+      }
+    )
+      .then(() => {
+        setAlert({isOpen: true, color: "success", message: "Formazione salvata correttamente"})
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+
+  // Otteniamo le formazioni salvate
+  const getFormations = async () => {
+    const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {
+      username: username,
+      pwd: password
+    })
+    return axios_resp.data
+  }
+
+  const showError = () => {
+    if (alert.isOpen) {
+      return (
+        <Alert key={'danger'} color={alert.color} style={{position: "absolute", marginTop: '1%'}}>
+          {alert.message}
+        </Alert>
+      );
+    }
+    return null;
+  };
+
+  // Salviamo id e context (right, left) per poter aprire un singolo popup per volta
+  const togglePopup = (id, isOpen, context) => {
+    setPopupsOpen([id, isOpen, context])
+  };
+
+  // Otteniamo i giocatori in base alla posizione che ricoprono
+  const filterPlayersByPosition = (position) => {
+    return savedPlayersValues.filter((player) => player.position === position);
+  };
+
+  const handleFormationChange = (formation) => {
+    setFormation(formation)
+    // Otteniamo i numeri di giocatori nelle varie posizioni
+    const defenders_num = parseInt(formation[0], 10);
+    const midfielders_num = parseInt(formation[2], 10);
+    const forwards_num = parseInt(formation[4], 10);
+
+    // Svuota la formazione creata se la disposizione cambia
+    setSelectedFormation({
+      forwards: Array(forwards_num).fill("0"),
+      midfielders: Array(midfielders_num).fill("0"),
+      defenders: Array(defenders_num).fill("0"),
+      goalkeeper: ["0"]
     });
-    useEffect(() => {
-      const fetchData = async () => {
-        const resp = await getFormations();
-        if (resp && Array.isArray(resp)) {
-          setSavedFormations(resp);
-          console.log("saved:", savedFormations)
-        }
-      };
+  };
 
-      fetchData();
-    }, []);
-
-
-    useEffect(() => {
-
-      const ss = savedFormations.find(i => i.type === formation)
-      console.log("trovata: ", ss)
-      if (ss)
-        setSelectedFormation(ss.formation)
-
-    }, [formation, savedFormations]);
-
-
-    useEffect(() => {
-      if (alert[0]) {
-        const timeout = setTimeout(() => {
-          setAlert([false, ""]);
-          console.log(alert);
-        }, 3000);
-        return () => clearTimeout(timeout);
-      }
-    }, [alert]);
-
-
-    useEffect(() => {
-      setPlayerNames(favoritePlayers);
-    }, [favoritePlayers]);
-
-    const sendFormation = async () => {
-      axios.post('http://localhost:3000/users/postFormations', {
-          username: username,
-          pwd: password,
-          formation: {
-            type: formation,
-            formation: selectedFormation,
-            name: "ciao"
-          }
-        }
-      )
-        .then(() => {
-          setAlert([true, "Formazione salvata correttamente", "success"])
-        })
-        .catch(e => {
-          console.log(e)
-        })
+  const handlePlayerSelection = (player) => {
+    // Controlliamo se il giocatore è già stato inserito nella formazione
+    if (selectedFormation.forwards.includes(player) ||
+      selectedFormation.midfielders.includes(player) ||
+      selectedFormation.defenders.includes(player) ||
+      selectedFormation.goalkeeper.includes(player)) {
+      setAlert({isOpen: true, color: "danger", message: "Non è possibile aggiungere due volte lo stesso giocatore"});
+      return
     }
 
-    const getFormations = async () => {
-      const axios_resp = await
-        axios.post('http://localhost:3000/users/getFormations', {
-          username: username,
-          pwd: password
-        })
-      console.log("in axios", axios_resp.data)
-      return axios_resp.data
-    }
+    setPopupsOpen({}) // Resettiamo il popup
 
-    const showError = () => {
-      if (alert[0]) {
-        console.log(alert);
-        return (
-          <Alert key={'danger'} color={alert[2]} style={{position: "absolute", marginTop: '1%'}}>
-            {alert[1]}
-          </Alert>
-        );
-      }
-      return null;
-    };
-
-
-    const togglePopup = (id, isOpen, context) => {
-      setPopupsOpen([id, isOpen, context])
-    };
-
-
-    const filterPlayersByPosition = (position) => {
-      return playerNames.filter((player) => player.position === position);
-    };
-
-    const handleFormationChange = (formation) => {
-
-      setFormation(formation)
-      const defenders_num = parseInt(formation[0], 10);
-      const midfielders_num = parseInt(formation[2], 10);
-
-      const forwards_num = parseInt(formation[4], 10);
-
-      setSelectedFormation({
-        forwards: Array(forwards_num).fill("0"),
-        midfielders: Array(midfielders_num).fill("0"),
-        defenders: Array(defenders_num).fill("0"),
-        goalkeeper: ["0"]
-      });
-
-    };
-
-    const handlePlayerSelection = (player) => {
-      if (selectedFormation.forwards.includes(player) ||
-        selectedFormation.midfielders.includes(player) ||
-        selectedFormation.defenders.includes(player) ||
-        selectedFormation.goalkeeper.includes(player)) {
-        setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore", "danger"]);
-        return
-      }
-
-      setSelectedFormation(prevFormation => {
-        const newFormation = {...prevFormation};
-        if (selectedPosition[1] && !selectedPosition[1].includes(player)) {
-          selectedPosition[1][selectedPosition[0]] = player;
-          removeFromList(player)
-        } else
-          setAlert([true, "Selezionare prima una posizione, ed in seguito un giocatore", "danger"]);
-        return newFormation;
-      });
-    };
-
-
-    let addPlayer = (newPlayer) => {
-      if (!playerNames.some(player => player.playerId === newPlayer.playerId)) {
-        setPlayerNames([...playerNames, newPlayer]);
-        // handlePlayerSelection(newPlayer);
-      } else {
-        setAlert([true, "Giocatore già aggiunto ai selezionati", "danger"])
-      }
-    }
-
-    const removePlayer = (pos, index) => {
-      if (pos[index] !== '0') {
-        const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos)
-        setSelectedFormation(prevState => {
-          const tmp = {...prevState}
-          addToList(pos[index])
-          pos[index] = '0'
-          tmp[pos_key] = pos
-          return tmp
-        })
-
-      }
-    };
-
-    const removeFromList = (player) => {
-      if (playerNames.includes(player)) {
-        let tmp = playerNames
-        tmp.splice(tmp.indexOf(player), 1)
-        setPlayerNames(tmp)
-      } else {
-        console.error("Tentativo di eliminare un giocatore non esistente")
-        setAlert([true, "Errore", "danger"])
-      }
-    }
-
-    const addToList = (player) => {
-      if (!playerNames.includes(player)) {
-        setPlayerNames([...playerNames, player]);
-      } else {
-        console.error("Tentativo di aggiungere un giocatore non già esistente")
-        setAlert([true, "Errore", "danger"])
-      }
-    }
-
-    const buttonSelector = (index, pos) => {
-      if (index !== selectedPosition[0] || pos !== selectedPosition[1]) {
-        return 'image-overlay'
+    // selectedPosition.index è l'index dell'array in cui deve essere posizionato il giocatore
+    // selectedPosition.array è l'array in cui posizionarlo
+    setSelectedFormation(prevFormation => {
+      const newFormation = {...prevFormation};
+      if (selectedPosition.array && !selectedPosition.array.includes(player)) {
+        selectedPosition.array[selectedPosition.index] = player;
+        removeFromList(player)
       } else
-        return 'image-overlay-selected'
-    }
+        setAlert({isOpen: true, color: "danger", message: "Selezionare prima una posizione, ed in seguito un giocatore"});
+      return newFormation;
+    });
+  };
 
-    const selectPlayerPosition = (x, y) => {
-      setSelectedPosition([x, y])
+  let addPlayer = (newPlayer) => {
+    // Aggiungiamo il nuovo giocatore alla lista selezionabile se non già presente
+    if (!savedPlayersValues.some(player => player.playerId === newPlayer.playerId)) {
+      setSavedPlayersValues([...savedPlayersValues, newPlayer]);
+    } else {
+      setAlert({isOpen: true, color: "danger", message: "Giocatore già aggiunto ai selezionati"})
     }
+  }
+
+  // Rimuoviamo un giocatore dalla formazione
+  const removePlayer = (pos, index) => {
+    if (pos[index] !== '0') {
+      const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos) // Otteniamo quale chiave dell'oggetto
+      setSelectedFormation(prevState => {
+        const tmp = {...prevState}
+        addToList(pos[index])
+        pos[index] = '0' // Eliminiamo il giocatore
+        tmp[pos_key] = pos // Assegniamo l'array senza il giocatore
+        return tmp
+      })
+    }
+  };
+
+  // Togliamo dalla lista dei giocatori player
+  const removeFromList = (player) => {
+    if (savedPlayersValues.includes(player)) {
+      let tmp = savedPlayersValues
+      tmp.splice(tmp.indexOf(player), 1)
+      setSavedPlayersValues(tmp)
+    } else {
+      console.error("Tentativo di eliminare un giocatore non esistente")
+      setAlert({isOpen: true, color: "danger", message: "Errore"})
+    }
+  }
+
+  // Aggiungiamo alla lista dei giocatori selezionabili
+  const addToList = (player) => {
+    if (!savedPlayersValues.includes(player)) {
+      setSavedPlayersValues([...savedPlayersValues, player]);
+    } else {
+      console.error("Tentativo di aggiungere un giocatore già esistente")
+      setAlert({isOpen: true, color: "danger", message: "Errore"})
+    }
+  }
+
+  // Cambiamo lo stile della posizione selezionata
+  const buttonSelector = (index, pos) => {
+    if (index !== selectedPosition.index || pos !== selectedPosition.array) {
+      return 'image-overlay'
+    } else
+      return 'image-overlay-selected'
+  }
+
+  const selectPlayerPosition = (index, array) => {
+    setSelectedPosition({index, array})
+  }
 
     const lineFormation = (elements, h) => {
       const numElements = elements.length;

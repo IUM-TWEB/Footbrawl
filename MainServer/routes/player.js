@@ -8,30 +8,37 @@ function extract_values(raw) {
     'goal_counts': []
   };
 
+  // Sort the data based on the year
   raw.sort((a, b) => {
     return parseInt(a.date.substring(0, 4)) - parseInt(b.date.substring(0, 4));
   });
 
+  // Populate the res_data object
   let currentYear = null;
   let valuesForYear = [];
 
   for (let i of raw) {
     let int_date = parseInt(i.date.substring(0, 4));
 
+    // Check if the year has changed
     if (currentYear !== int_date) {
+      // Calculate the median for the previous year, if there are values
       if (valuesForYear.length > 0) {
         const median = calculateMedian(valuesForYear);
         res_data.goal_counts.push(median);
       }
 
+      // Update currentYear and reset valuesForYear
       currentYear = int_date;
       valuesForYear = [];
       res_data.dates.push(currentYear);
     }
 
+    // Accumulate values for the current year
     valuesForYear.push(i.marketValue);
   }
 
+  // Calculate the median for the last year
   if (valuesForYear.length > 0) {
     const median = calculateMedian(valuesForYear);
     res_data.goal_counts.push(median);
@@ -75,6 +82,33 @@ function extract(raw) {
  *   name: Players
  *   description: Operazioni relative ai giocatori
  */
+router.get('/goals_date/:player_id', async (req, res) => {
+  try {
+    const response = (await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`)).data;
+    if (Symbol.iterator in Object(response.data)) {
+      const res_data = extract(response.data);
+      res.send(res_data);
+    } else {
+      res.send('')
+    }
+
+  } catch (error) {
+    console.error('Errore nella richiesta al server Spring Boot:', error);
+    res.status(500).send('Errore nella richiesta al server Spring Boot');
+  }
+
+});
+
+router.get('/assist_date/:player_id', async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:3001/events/player_assist_date/${req.params.player_id}`);
+    const res_data = extract(response.data);
+    res.send(res_data);
+
+  } catch (error) {
+    console.error('Errore nella richiesta al server Spring Boot:', error);
+    res.status(500).send('Errore nella richiesta al server Spring Boot');
+  }
 
 /**
  * @swagger
