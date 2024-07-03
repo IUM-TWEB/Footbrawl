@@ -7,8 +7,6 @@ import News from "../simple_components/News.jsx";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun } from '@fortawesome/free-solid-svg-icons';
 import '../index.css';
 
 const Home = () => {
@@ -186,22 +184,22 @@ const Home = () => {
           <div className="col-md-12 col-lg-3 order-2 order-lg-1">
             <h1>Classifiche</h1>
             <div className="card">
-              <div className="card-body">
+              <div className="card-body pb-5">
                 <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
-              <div className="card-body">
+              <div className="card-body pb-5">
                 <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
-              <div className="card-body">
+              <div className="card-body pb-5">
                 <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
-              <div className="card-body">
+              <div className="card-body pb-5">
                 <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub} />
               </div>
             </div>
@@ -209,7 +207,7 @@ const Home = () => {
           <div className="col-md-12 col-lg-3 order-3">
             <div>
               <h1>Top Scorers</h1>
-              {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
+              {['IT1', 'GB1', 'ES1', 'CL'].map(league => (
                 <div key={league} className="card mb-custom">
                   <div className="card-body card-top-scorer">
                     <h5 className="card-title">
@@ -217,7 +215,6 @@ const Home = () => {
                         league === 'ES1' ? 'La Liga' :
                           league === 'GB1' ? 'Premier League' :
                             league === 'CL' ? 'Champions League' :
-                              league === 'EL' ? 'Europa League' :
                                 'Errore'}
                     </h5>
                     {topScorers[league].loading ? (
