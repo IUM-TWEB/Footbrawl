@@ -16,9 +16,8 @@ function LeaderBoard(props) {
         <table className="table">
           <thead className="thead-dark">
           <tr>
-            <th scope="col">#</th>
+            <th scope="col"> </th>
             <th scope="col">Squadra</th>
-            <th scope="col">Posizione</th>
           </tr>
           </thead>
           <tbody>
@@ -26,7 +25,6 @@ function LeaderBoard(props) {
             <tr key={ranking.ranking_id} onClick={() => handleRowClick(ranking.club_id)} style={{ cursor: 'pointer' }}>
               <td>{ranking.position}</td>
               <td>{ranking.club_name}</td>
-              <td>{ranking.position}</td>
             </tr>
           ))}
           </tbody>
