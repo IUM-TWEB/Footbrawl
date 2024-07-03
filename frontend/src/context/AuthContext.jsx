@@ -77,14 +77,46 @@ export const AuthProvider = ({children}) => {
     fav_players = fav_players ? JSON.parse(fav_players) : [];
 
     // Add the new player ID to the array
-    fav_players.push(player_id);
+    if (!fav_players.includes(player_id))
+      fav_players.push(player_id);
 
     // Convert the array back to a JSON string and save it to localStorage
     localStorage.setItem("favoritePlayers", JSON.stringify(fav_players));
     setFavoritePlayers(fav_players);
   };
 
-  //const logout = () => setIsAuthenticated(false);
+  const setNewClub = (club_id) => {
+    // Get the current list of favorite clubs from localStorage
+    let fav_clubs = localStorage.getItem("favoriteClubs");
+
+    // Parse the JSON string to an array, or initialize an empty array if null
+    fav_clubs = fav_clubs ? JSON.parse(fav_clubs) : [];
+
+    // Add the new club ID to the array
+    if (!fav_clubs.includes(club_id))
+      fav_clubs.push(club_id);
+
+    // Convert the array back to a JSON string and save it to localStorage
+    localStorage.setItem("favoriteClubs", JSON.stringify(fav_clubs));
+    setFavoriteClubs(fav_clubs);
+  };
+
+  const removePlayer = (player_id) => {
+    let fav_players = localStorage.getItem('favoritePlayers');
+    fav_players = fav_players ? JSON.parse(fav_players) : [];
+    fav_players = fav_players.filter((id) => id !== player_id);
+    localStorage.setItem('favoritePlayers', JSON.stringify(fav_players));
+    setFavoritePlayers(fav_players);
+  };
+
+  const removeClub = (club_id) => {
+    let fav_clubs = localStorage.getItem('favoriteClubs');
+    fav_clubs = fav_clubs ? JSON.parse(fav_clubs) : [];
+    fav_clubs = fav_clubs.filter((id) => id !== club_id);
+    localStorage.setItem('favoriteClubs', JSON.stringify(fav_clubs));
+    setFavoriteClubs(fav_clubs);
+  };
+
   const logout = () => {
     setIsAuthenticated(false);
     setUsername(null);
@@ -100,7 +132,19 @@ export const AuthProvider = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{isAuthenticated, username, password, favoritePlayers, favoriteClubs, login, logout, setNewPlayer}}>
+      value={{
+        isAuthenticated,
+        username,
+        password,
+        favoritePlayers,
+        favoriteClubs,
+        login,
+        logout,
+        setNewPlayer,
+        setNewClub,
+        removePlayer,
+        removeClub,
+      }}>
       {children}
     </AuthContext.Provider>
   );

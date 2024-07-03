@@ -62,11 +62,11 @@ async function getChartData(player_id, endpoint, label_name) {
   }
 }
 
-function show_graph(data) {
+function show_graph(data, type) {
   if (data) {
     return <Line options={options} data={data}/>;
   } else {
-    return <p className="h3 d-flex justify-content-center">Non ci sono abbastanza dati sul giocatore</p>;
+    return <p className="h3 mt-5 text-center d-flex justify-content-center">Non ci sono abbastanza dati sui {type} del giocatore</p>;
   }
 }
 // Mostriamo i dati relativi al giocatore
@@ -152,10 +152,10 @@ export default function PaginaGiocatori() {
         <div className="col-sm-3 p-3">{show_info(player, playerId)}</div>
         <div className="col-sm-6">
           <div className={"m-3"}>
-            <div>{show_graph(chartGoalData)}</div>
+            <div>{show_graph(chartGoalData, "goal")}</div>
           </div>
           <div className={"m-3"}>
-            <div>{show_graph(chartMarket)}</div>
+            <div>{show_graph(chartMarket, "valori di mercato")}</div>
           </div>
         </div>
         <div className="col-sm-3 p-3">

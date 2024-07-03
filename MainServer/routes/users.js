@@ -308,4 +308,23 @@ router.post('/getFormations', async (req, res) => {
   }
 });
 
+router.post('/removePlayer', async (req,res)=>{
+  try {
+    const response = await axios.post("http://localhost:3001/user/fav/removePlayer", req.body);
+    res.send(response.data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({error: 'Errore nel server'});
+  }
+})
+
+router.post('/removeTeam', async (req,res)=>{
+  try {
+    const response = await axios.post("http://localhost:3001/user/fav/removeTeam", req.body);
+    res.send(response.data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({error: 'Errore nel server'});
+  }
+})
 module.exports = router;

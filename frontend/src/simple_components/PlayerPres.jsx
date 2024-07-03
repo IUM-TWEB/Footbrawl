@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import React, {useState} from "react";
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
+import {useState, useEffect} from 'react';
 
 function PlayerPres({
                       name,
@@ -15,35 +15,59 @@ function PlayerPres({
                       img,
                       hight,
                       lastSeason,
-                      handleFavorite,
                       foot,
                       playerId,
                       teamId
                     }) {
-  const [x, setX] = useState("ff")
-  const {username, password, setNewPlayer} = useAuth()
+  const {username, password, setNewPlayer, favoritePlayers, removePlayer} = useAuth()
   const navigate = useNavigate();
+  
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [hover, setHover] = useState(false);
 
-  handleFavorite = () => { // salviamo il relativo giocatore tra i preferiti del utente
-    setNewPlayer(playerId)
-    axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
-      .then(res => {
-        console.log(res)
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    setX("ff-not")
+  // Controlla se il giocatore è tra i preferiti quando il componente viene montato
+  useEffect(() => {
+    setIsFavorite(favoritePlayers.includes(playerId));
+  }, [favoritePlayers, playerId]);
+
+  const handleFavorite = () => {
+    if (!favoritePlayers.includes(playerId)) {
+      console.log("non contenuto")
+      setNewPlayer(playerId)
+      axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    } else {
+      console.log(" contenuto")
+      removePlayer(playerId)
+      axios.post("http://localhost:3000/users/removePlayer", {username: username, pwd: password, playerId: playerId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
+
   }
+
   return (
     <div className="card player-card">
       <div className="card-body">
-        <button
-          className={`mt-2 center-block ${x}`}
-          onClick={() => handleFavorite(playerId)}
-        >
-          <i className="fas fa-heart"></i>
-        </button>
+        <div className="col-md-1 px-3 w-50">
+          <button
+            className={`mt-2 center-block btn w-50 ${isFavorite ? (hover ? 'btn-danger' : 'btn-success') : 'btn-outline-dark'}`}
+            onClick={handleFavorite}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            <i className={`fas ${isFavorite ? (hover ? 'fa-times' : 'fa-check text-white') : 'fa-heart'}`}></i>
+          </button>
+        </div>
         <img src={img} className="center-img" alt="Player"/>
         <h2 className="center-text card-title">{name}</h2>
 

@@ -1,5 +1,4 @@
 const queries = require('../queries/user_queries')
-const model = require("../models/user");
 
 module.exports.getUsr = async (req, res) => {
   try {
@@ -259,4 +258,89 @@ module.exports.getAllFav = async (req, res) => {
     })
   }
 }
+
+
+module.exports.removePlayer = async (req, res) => {
+  const {username, pwd, playerId} = req.body
+  console.log(username,pwd,playerId)
+
+
+  if (!(username && pwd && playerId)) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "Bad request",
+      data: null
+    })
+  }
+
+  try {
+    const mongo_resp = (await queries.removeFavoritePlayer(username,pwd,playerId))
+    console.log(mongo_resp)
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
+}
+
+module.exports.removeTeam = async (req, res) => {
+  const {username, pwd, teamId} = req.body
+  console.log("siamo effettivamente qui ",req.body)
+
+  if (!(username && pwd && teamId)) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "Bad request",
+      data: null
+    })
+  }
+
+  try {
+    const mongo_resp = (await queries.removeFavoriteTeam(username, pwd, teamId))
+    console.log("eccoci ",mongo_resp)
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
+}
+
 
