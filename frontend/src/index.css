@@ -442,6 +442,7 @@ hr.solid {
   margin-bottom: 3rem;
 }
 
+
 /*Bottone info per il componente team builder*/
 
 .bottone-info:hover{
@@ -452,3 +453,11 @@ hr.solid {
 }
 
 /*Fine bottone info per il componente team builder*/
+
+/*logo competition*/
+.logo-fixed {
+  width: 200px;
+  height: 200px;
+  object-fit: contain; /* Mantenere le proporzioni originali */
+
+}

@@ -2,20 +2,59 @@ const queries = require('../queries/news_queries');
 
 module.exports.getById = async (req, res) => {
   try {
-    const news = await queries.getById(req.params.id);
-    res.send(news);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err.message);
+    const mongo_resp = (await queries.getById(req.params.id))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
   }
 };
 
 module.exports.getAll = async (req, res) => {
   try {
-    const news = await queries.getAll();
-    res.send(news);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err.message);
+
+    const mongo_resp = (await queries.getAll())
+    console.log(mongo_resp, "mongo resp news")
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
   }
+
 };

@@ -33,7 +33,7 @@ const PaginaClub = () => {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/player/playersOfClubLastSeason/${clubId}`);
+        const response = await axios.get(`http://localhost:3000/club/playersOfClubLastSeason/${clubId}`);
         setPlayers(response.data);
       } catch (err) {
         setError(err.message);
@@ -48,7 +48,7 @@ const PaginaClub = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/last_game_by_club/${clubId}`);
+        const response = await axios.get(`http://localhost:3000/competition/last_game_by_club/${clubId}`);
         setGames(response.data);
       } catch (err) {
         setError(err.message);

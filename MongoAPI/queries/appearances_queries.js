@@ -16,3 +16,4 @@ const getByGP = (game, player) => {
     return model.find({game_id: game, player_id: player}, {}, null)
 }
 module.exports = {getByGame, getById, getByPlayer, getByGP,}
+

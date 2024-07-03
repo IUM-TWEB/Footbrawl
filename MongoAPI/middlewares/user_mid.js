@@ -1,99 +1,262 @@
 const queries = require('../queries/user_queries')
-const {mongo} = require("mongoose");
 
-module.exports.getUsr = (req, res) => {
-  queries.getUsr(req.body.username, req.body.pwd)
-    .then((resp) => {
-      res.send(resp)
+module.exports.getUsr = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getUsr(req.body.username, req.body.pwd))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.log(err)
-      res.send(err.name)
-    })
+  }
 }
 
-module.exports.getUsrByName = (req, res) => {
-  queries.getUsrByName(req.body.username, req.body.pwd)
-    .then((resp) => {
-      res.send(resp)
+module.exports.getUsrByName = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getUsrByName(req.body.username, req.body.pwd))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.log(err)
-      res.send(err.name)
-    })
+  }
+
 }
 
-module.exports.postUsr = (req, res) => {
-  queries.postUsr(req.body.username, req.body.pwd)
-    .then(() => {
-      res.sendStatus(200)
+module.exports.postUsr = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.postUsr(req.body.username, req.body.pwd))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.log(err)
-      res.send(err.name)
-    })
+  }
 }
 
-module.exports.addFavoritePlayer = (req, res) => {
-
-  const {username, pwd, playerId} = req.body;
-  queries.addFavoritePlayer(username, pwd, playerId)
-    .then((e) => {
-      console.log(e)
-      res.sendStatus(200); // Send a status code of 200 if successful
+module.exports.addFavoritePlayer = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.addFavoritePlayer(req.body.username, req.body.pwd, req.body.playerId))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.error('Error adding favorite player:', err);
-      res.status(500).send(err.message); // Send a 500 status code if there is an error
-    });
+  }
 };
 
-module.exports.getFavoritePlayer = (req, res) => {
-  const {username, pwd} = req.body
-  queries.getFavoritePlayer(username, pwd)
-    .then(resp => {
-      res.send(resp.favorite_players)
-
+module.exports.getFavoritePlayer = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getFavoritePlayer(req.body.username, req.body.pwd))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch(e => {
-      res.send(e.name)
-    })
+  }
 }
 
-module.exports.addFavoriteTeam = (req, res) => {
-  const {username, pwd, teamId} = req.body; // Assuming the request body contains these properties
-  queries.addFavoriteTeam(username, pwd, teamId)
-    .then(() => {
-      res.sendStatus(200); // Send a status code of 200 if successful
+module.exports.addFavoriteTeam = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.addFavoriteTeam(req.body.username, req.body.pwd, req.body.teamId))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.error('Error adding favorite team:', err);
-      res.status(500).send(err.message); // Send a 500 status code if there is an error
-    });
+  }
 };
 
-module.exports.addFormation = (req, res) => {
-  const {username, pwd, formation} = req.body
-  queries.addFormation(username, pwd, formation)
-    .then(() => {
-      res.sendStatus(200); // Send a status code of 200 if successful
+module.exports.addFormation = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.addFormation(req.body.username, req.body.pwd, req.body.formation))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.error('Error adding formations:', err);
-      res.status(500).send(err.message); // Send a 500 status code if there is an error
-    });
+  }
 }
 
-module.exports.getFormation = (req, res) => {
-  const {username, pwd} = req.body
-  queries.getFormation(username, pwd)
-    .then((resp) => {
-      res.send(resp.formations);
+module.exports.getFormation = async (req, res) => {
+  try {
+    const mongo_resp = (await queries.getFormation(req.body.username, req.body.pwd))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
-    .catch((err) => {
-      console.error('Error getting saved formations:', err);
-      res.status(500).send(err.message); // Send a 500 status code if there is an error
-    });
+  }
+}
+
+module.exports.getAllFav = async (req, res) => {
+  try {
+    const mongo_resp = await model.findOne(
+      {user_name: req.body.username, pwd: req.body.pwd}, {}, null
+    );
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: {
+          "favorite_players": mongo_resp.favorite_players,
+          "favorite_teams": mongo_resp.favorite_teams,
+          "formations": mongo_resp.formations
+        }
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 

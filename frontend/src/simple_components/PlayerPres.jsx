@@ -21,6 +21,7 @@ function PlayerPres({
                     }) {
   const {username, password, setNewPlayer, favoritePlayers, removePlayer} = useAuth()
   const navigate = useNavigate();
+  
   const [isFavorite, setIsFavorite] = useState(false);
   const [hover, setHover] = useState(false);
 
@@ -51,6 +52,7 @@ function PlayerPres({
           console.log(e)
         })
     }
+
   }
 
   return (
