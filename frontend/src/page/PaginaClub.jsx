@@ -49,7 +49,7 @@ const PaginaClub = () => {
     const fetchGames = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/competition/last_game_by_club/${clubId}`);
-        setGames(response.data);
+        setGames(response.data.data);
       } catch (err) {
         setError(err.message);
       }

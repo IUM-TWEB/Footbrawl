@@ -1,5 +1,4 @@
 const queries = require("../queries/club_games_queries");
-const {mongo} = require("mongoose");
 
 module.exports.getByGame = async (req, res) => {
     const {game} = req.params

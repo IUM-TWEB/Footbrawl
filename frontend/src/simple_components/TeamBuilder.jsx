@@ -57,24 +57,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       setPlayerNames(favoritePlayers);
     }, [favoritePlayers]);
 
-    const sendFormation = async () => {
-      axios.post('http://localhost:3000/users/postFormations', {
-          username: username,
-          pwd: password,
-          formation: {
-            type: formation,
-            formation: selectedFormation,
-            name: "ciao"
-          }
-        }
-      )
-        .then(() => {
-          setAlert([true, "Formazione salvata correttamente", "success"])
-        })
-        .catch(e => {
-          console.log(e)
-        })
-    }
+
 
     const getFormations = async () => {
       const axios_resp = await
