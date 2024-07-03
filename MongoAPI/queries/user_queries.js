@@ -47,7 +47,7 @@ const removeFavoritePlayer = (name, pwd, playerId) => {
 
 const getFavoritePlayer = async (username, pwd) => {
   try {
-    return result = await model.findOne({user_name: username, pwd: pwd}, {}, null)
+    return await model.findOne({user_name: username, pwd: pwd}, {}, null)
   } catch (e) {
 
   }

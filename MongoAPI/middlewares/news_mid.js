@@ -1,8 +1,17 @@
 const queries = require('../queries/news_queries');
 
 module.exports.getById = async (req, res) => {
+  const {id} = req.params
+  if(!id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.id))
+    const mongo_resp = (await queries.getById(id))
     if (mongo_resp === '') {
       res.json({
         success: false,
@@ -30,7 +39,6 @@ module.exports.getById = async (req, res) => {
 
 module.exports.getAll = async (req, res) => {
   try {
-
     const mongo_resp = (await queries.getAll())
     console.log(mongo_resp, "mongo resp news")
     if (mongo_resp === '') {

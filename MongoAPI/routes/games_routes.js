@@ -155,45 +155,4 @@ router.get('/:id', ctrl.getById);
  */
 router.get('/:comp/:season', ctrl.getBySeasonAndComp);
 
-/**
- * @swagger
- * /games/{comp}/{season}/{game_id}:
- *   get:
- *     tags:
- *       - Games
- *     summary: Get game details by competition, season, and game ID
- *     description: Retrieves detailed information about a specific game within a competition and season by its game ID.
- *     parameters:
- *       - in: path
- *         name: comp
- *         required: true
- *         description: Competition identifier.
- *         schema:
- *           type: string
- *       - in: path
- *         name: season
- *         required: true
- *         description: Season identifier.
- *         schema:
- *           type: string
- *       - in: path
- *         name: game_id
- *         required: true
- *         description: Game identifier.
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: Successful response with game details.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/GameDetailsResponse'
- *       '404':
- *         description: Game not found.
- *       '500':
- *         description: Internal server error.
- */
-router.get('/:comp/:season/:game_id', ctrl.getByClub);
-
 module.exports = router;

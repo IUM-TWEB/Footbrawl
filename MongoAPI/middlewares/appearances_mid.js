@@ -1,8 +1,17 @@
 const queries = require('../queries/appearances_queries')
 
 const getById = async (req, res) => {
+  const {id} = req.params
+  if(!id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.id))
+    const mongo_resp = (await queries.getById(id))
     if(mongo_resp === ''){
       res.json({
         success:false,
@@ -30,8 +39,17 @@ const getById = async (req, res) => {
 }
 
 const getByPlayer = async(req, res) => {
+  const {player_id} = req.params
+  if(!player_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.player_id))
+    const mongo_resp = (await queries.getById(player_id))
     if(mongo_resp === ''){
       res.json({
         success:false,
@@ -58,8 +76,17 @@ const getByPlayer = async(req, res) => {
 }
 
 const getByGame = async (req, res) => {
+  const {game_id} = req.params
+  if(!game_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.game_id))
+    const mongo_resp = (await queries.getById(game_id))
     if(mongo_resp === ''){
       res.json({
         success:false,
@@ -86,8 +113,17 @@ const getByGame = async (req, res) => {
 }
 
 const getByGP = async (req, res) => {
+  const {game_id, player_id} = req.params
+  if(!(game_id && player_id)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByGP(parseInt(req.params.game_id), parseInt(req.params.player_id)))
+    const mongo_resp = (await queries.getByGP(parseInt(game_id), parseInt(player_id)))
     if(mongo_resp === ''){
       res.json({
         success:false,

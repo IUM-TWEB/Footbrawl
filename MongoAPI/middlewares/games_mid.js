@@ -2,8 +2,17 @@ const queries = require('../queries/games_queries')
 
 
 module.exports.getById = async (req, res) => {
+  const {id} = req.params
+  if(!id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getById(req.params.id))
+    const mongo_resp = (await queries.getById(id))
     if (mongo_resp === '') {
       res.json({
         success: false,
@@ -30,8 +39,17 @@ module.exports.getById = async (req, res) => {
 }
 
 module.exports.getBySeasonAndComp = async (req, res) => {
+  const {comp, season} = req.params
+  if(!(season && comp)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByComp(req.params.comp, req.params.season))
+    const mongo_resp = (await queries.getByComp(comp, season))
     if (mongo_resp === '') {
       res.json({
         success: false,
@@ -58,8 +76,17 @@ module.exports.getBySeasonAndComp = async (req, res) => {
 }
 
 module.exports.getByCompLast = async (req, res) => {
+  const {comp} = req.params
+  if(!comp){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByCompLast(req.params.comp))
+    const mongo_resp = (await queries.getByCompLast(comp))
     if (mongo_resp === '') {
       res.json({
         success: false,
@@ -86,8 +113,17 @@ module.exports.getByCompLast = async (req, res) => {
 }
 
 module.exports.getByClubLast = async (req, res) => {
+  const {club_id} = req.params
+  if(!club_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByClubLast(req.params.club_id))
+    const mongo_resp = (await queries.getByClubLast(club_id))
 
     if (mongo_resp === '') {
       res.json({
@@ -115,9 +151,17 @@ module.exports.getByClubLast = async (req, res) => {
 }
 
 module.exports.getManagerNameByClubId = async (req, res) => {
-
+  const {club_id} = req.params
+  if(!club_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getManagerNameByClubId(req.params.club_id))
+    const mongo_resp = (await queries.getManagerNameByClubId(club_id))
     if (mongo_resp === '') {
       res.json({
         success: false,
@@ -144,8 +188,17 @@ module.exports.getManagerNameByClubId = async (req, res) => {
 }
 
 module.exports.getByClub = async (req, res) => {
+  const {comp, season, game_id} = req.params
+  if(!(comp && season && game_id)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getByClub(req.params.comp, parseInt(req.params.season), req.params.game_id))
+    const mongo_resp = (await queries.getByClub(comp, parseInt(season), game_id))
     if (mongo_resp === '') {
       res.json({
         success: false,

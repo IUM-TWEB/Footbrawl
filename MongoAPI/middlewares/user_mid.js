@@ -1,9 +1,18 @@
 const queries = require('../queries/user_queries')
 
 module.exports.getUsr = async (req, res) => {
+  const {username,pwd} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getUsr(req.body.username, req.body.pwd))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getUsr(username, pwd))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -29,9 +38,18 @@ module.exports.getUsr = async (req, res) => {
 }
 
 module.exports.getUsrByName = async (req, res) => {
+  const {username,pwd} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getUsrByName(req.body.username, req.body.pwd))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getUsrByName(username, pwd))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -58,9 +76,18 @@ module.exports.getUsrByName = async (req, res) => {
 }
 
 module.exports.postUsr = async (req, res) => {
+  const {username,pwd} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.postUsr(req.body.username, req.body.pwd))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.postUsr(username, pwd))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -86,9 +113,18 @@ module.exports.postUsr = async (req, res) => {
 }
 
 module.exports.addFavoritePlayer = async (req, res) => {
+  const {username,pwd, playerId} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.addFavoritePlayer(req.body.username, req.body.pwd, req.body.playerId))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.addFavoritePlayer(username, pwd, playerId))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -100,7 +136,7 @@ module.exports.addFavoritePlayer = async (req, res) => {
         success: true,
         status: 200,
         message: "",
-        data: mongo_resp
+        data: mongo_resp.success
       })
     }
   } catch (e) {
@@ -114,9 +150,18 @@ module.exports.addFavoritePlayer = async (req, res) => {
 };
 
 module.exports.getFavoritePlayer = async (req, res) => {
+  const {username,pwd} = req.params
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getFavoritePlayer(req.body.username, req.body.pwd))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getFavoritePlayer(username, pwd))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -142,9 +187,18 @@ module.exports.getFavoritePlayer = async (req, res) => {
 }
 
 module.exports.addFavoriteTeam = async (req, res) => {
+  const {username,pwd, teamId} = req.params
+  if(!(username && pwd && teamId)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.addFavoriteTeam(req.body.username, req.body.pwd, req.body.teamId))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.addFavoriteTeam(username, pwd, teamId))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -170,9 +224,18 @@ module.exports.addFavoriteTeam = async (req, res) => {
 };
 
 module.exports.addFormation = async (req, res) => {
+  const {username,pwd, formation} = req.body
+  if(!(username && pwd && formation)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.addFormation(req.body.username, req.body.pwd, req.body.formation))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.addFormation(username, pwd, formation))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -198,9 +261,18 @@ module.exports.addFormation = async (req, res) => {
 }
 
 module.exports.getFormation = async (req, res) => {
+  const {username,pwd} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = (await queries.getFormation(req.body.username, req.body.pwd))
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getFormation(username,pwd))
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -226,11 +298,19 @@ module.exports.getFormation = async (req, res) => {
 }
 
 module.exports.getAllFav = async (req, res) => {
+  const {username,pwd} = req.body
+  if(!(username && pwd)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
   try {
-    const mongo_resp = await model.findOne(
-      {user_name: req.body.username, pwd: req.body.pwd}, {}, null
-    );
-    if (mongo_resp === '') {
+    const mongo_resp = (await queries.getFormation(username,pwd))
+
+    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -261,8 +341,8 @@ module.exports.getAllFav = async (req, res) => {
 
 
 module.exports.removePlayer = async (req, res) => {
+
   const {username, pwd, playerId} = req.body
-  console.log(username,pwd,playerId)
 
 
   if (!(username && pwd && playerId)) {
