@@ -82,7 +82,6 @@ const PaginaClub = () => {
 
   const handleFavorite = () => {
     if (!favoriteClubs.includes(clubId)) {
-      console.log("non contenuto")
       setNewClub(clubId)
       axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
         .then(res => {
@@ -92,7 +91,6 @@ const PaginaClub = () => {
           console.log(e)
         })
     } else {
-      console.log(" contenuto")
       removeClub(clubId)
       axios.post("http://localhost:3000/users/removeTeam", {username: username, pwd: password, teamId: clubId})
         .then(res => {

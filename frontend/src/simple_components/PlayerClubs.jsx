@@ -20,7 +20,7 @@ function PlayerPres({playerClubs: playerClubs}) {
             <div key={index}>
               <div className="border  btn custom-button d-flex justify-content-center align-items-center" onClick={async () => {
                 try {
-                  const response = await axios.get(`http://localhost:3000/clubByName/${club}`); // recuperiamo le informazioni relative ad un singolo club
+                  const response = await axios.get(`http://localhost:3000/club/clubByName/${club}`); // recuperiamo le informazioni relative ad un singolo club
                   const clubData = response.data[0];
                   const id = clubData.clubId;
                   navigate(`/club/${id}`)

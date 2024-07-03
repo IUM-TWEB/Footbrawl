@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import altImg from '../img/alt.png'
 import SearchBarUserTemp from "./SearchBarUserTemp.jsx";
 import PopupPlayer from "./PopupPlayer.jsx";
-import { Alert } from 'reactstrap';
-import { useNavigate } from "react-router-dom";
+import {Alert} from 'reactstrap';
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
-const TeamFormationSelector = ({ favoritePlayers }) => {
-  const { username, password } = useAuth();
+const TeamFormationSelector = ({favoritePlayers}) => {
+  const {username, password} = useAuth();
   const [alert, setAlert] = useState([false, ""]);
   const navigate = useNavigate();
   const [popupsOpen, setPopupsOpen] = useState({});
@@ -55,7 +55,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
   const showError = () => {
     if (alert[0]) {
       return (
-        <Alert key={'danger'} color={alert[2]} style={{ position: "absolute", marginTop: '1%' }}>
+        <Alert key={'danger'} color={alert[2]} style={{position: "absolute", marginTop: '1%'}}>
           {alert[1]}
         </Alert>
       );
@@ -115,7 +115,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
     setPopupsOpen({});
 
     setSelectedFormation(prevFormation => {
-      const newFormation = { ...prevFormation };
+      const newFormation = {...prevFormation};
       if (selectedPosition[1] && !selectedPosition[1].includes(player)) {
         selectedPosition[1][selectedPosition[0]] = player;
         removeFromList(player);
@@ -148,7 +148,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
     if (pos[index] !== '0') {
       const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos);
       setSelectedFormation(prevState => {
-        const tmp = { ...prevState };
+        const tmp = {...prevState};
         addToList(pos[index]);
         pos[index] = '0';
         tmp[pos_key] = pos;
@@ -197,7 +197,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
       <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
         {elements.map((element, index) => (
           <div key={index}
-               style={{ maxWidth: "80px" }}
+               style={{maxWidth: "80px"}}
                className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3 position-relative`}>
             {elements[index] !== '0' && (
               <div className="btn btn-sm btn-danger ml-2" onClick={() => removePlayer(elements, index)}
@@ -219,7 +219,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
             )}
             <button className={`tb-player ${buttonSelector(index, elements)}`}
                     onClick={() => selectPlayerPosition(index, elements)}>
-              <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name} />
+              <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
             </button>
           </div>
         ))}
@@ -236,33 +236,41 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
     switch (position) {
       case 'Attack':
         return (
-          <div className={'col-1'} style={{ marginTop: '1%' }} title="Attaccante">
-            <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
-              <path d="m23.414.587a2.022 2.022 0 0 0 -1.941-.513 16.461 16.461 0 0 0 -6.479 3.983l-9.476 9.475a14.58 14.58 0 0 0 -4.376-1.522 1 1 0 0 0 -.286 1.979 12.632 12.632 0 0 1 5.353 2.387l-3.709 3.71-.793-.793a1 1 0 1 0 -1.414 1.414l3 3a1 1 0 1 0 1.414-1.414l-.793-.793 3.709-3.71a12.609 12.609 0 0 1 2.387 5.354 1 1 0 0 0 .99.856.881.881 0 0 0 .144-.011 1 1 0 0 0 .847-1.13 14.515 14.515 0 0 0 -1.522-4.376l9.475-9.476a16.52 16.52 0 0 0 4.01-6.574 1.994 1.994 0 0 0 -.54-1.846zm-4.885 7.005-9.167 9.168a11.15 11.15 0 0 0 -.988-1.134 11.36 11.36 0 0 0 -1.133-.988l9.167-9.167a14.384 14.384 0 0 1 5.584-3.464 14.453 14.453 0 0 1 -3.463 5.585z" />
+          <div className={'col-1'} style={{marginTop: '1%'}} title="Attaccante">
+            <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
+                 data-name="Layer 1">
+              <path
+                d="m23.414.587a2.022 2.022 0 0 0 -1.941-.513 16.461 16.461 0 0 0 -6.479 3.983l-9.476 9.475a14.58 14.58 0 0 0 -4.376-1.522 1 1 0 0 0 -.286 1.979 12.632 12.632 0 0 1 5.353 2.387l-3.709 3.71-.793-.793a1 1 0 1 0 -1.414 1.414l3 3a1 1 0 1 0 1.414-1.414l-.793-.793 3.709-3.71a12.609 12.609 0 0 1 2.387 5.354 1 1 0 0 0 .99.856.881.881 0 0 0 .144-.011 1 1 0 0 0 .847-1.13 14.515 14.515 0 0 0 -1.522-4.376l9.475-9.476a16.52 16.52 0 0 0 4.01-6.574 1.994 1.994 0 0 0 -.54-1.846zm-4.885 7.005-9.167 9.168a11.15 11.15 0 0 0 -.988-1.134 11.36 11.36 0 0 0 -1.133-.988l9.167-9.167a14.384 14.384 0 0 1 5.584-3.464 14.453 14.453 0 0 1 -3.463 5.585z"/>
             </svg>
           </div>
         );
       case 'Defender':
         return (
-          <div className={'col-1'} style={{ marginTop: '1%' }} title="Difensore">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24" width="20">
-              <path d="m11,0v23.94c-2.1-1.062-9-5.046-9-11.565v-7.225c0-1.293.828-2.441,2.056-2.848L11,0Zm8.944,2.302L13,0v24c2.207-.905,9-4.282,9-11.625v-7.225c0-1.293-.828-2.441-2.056-2.848Z" />
+          <div className={'col-1'} style={{marginTop: '1%'}} title="Difensore">
+            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                 width="20">
+              <path
+                d="m11,0v23.94c-2.1-1.062-9-5.046-9-11.565v-7.225c0-1.293.828-2.441,2.056-2.848L11,0Zm8.944,2.302L13,0v24c2.207-.905,9-4.282,9-11.625v-7.225c0-1.293-.828-2.441-2.056-2.848Z"/>
             </svg>
           </div>
         );
       case 'Goalkeeper':
         return (
-          <div className={'col-1'} style={{ marginTop: '1%' }} title="portiere">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24" width="20">
-              <path d="M19,0H5C2.243,0,0,2.243,0,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5V5c0-2.757-2.243-5-5-5ZM8,17v-4h8v4H8Zm5-6V7h9v4H13Zm-5-6V2h8v3H8Zm3,2v4H2V7H11ZM2,13H6v4H2v-4Zm16,0h4v4h-4v-4Zm4-8h-4V2h1c1.654,0,3,1.346,3,3ZM5,2h1v3H2c0-1.654,1.346-3,3-3ZM2,19H11v3H5c-1.654,0-3-1.346-3-3Zm17,3h-6v-3h9c0,1.654-1.346,3-3,3Z" />
+          <div className={'col-1'} style={{marginTop: '1%'}} title="portiere">
+            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                 width="20">
+              <path
+                d="M19,0H5C2.243,0,0,2.243,0,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5V5c0-2.757-2.243-5-5-5ZM8,17v-4h8v4H8Zm5-6V7h9v4H13Zm-5-6V2h8v3H8Zm3,2v4H2V7H11ZM2,13H6v4H2v-4Zm16,0h4v4h-4v-4Zm4-8h-4V2h1c1.654,0,3,1.346,3,3ZM5,2h1v3H2c0-1.654,1.346-3,3-3ZM2,19H11v3H5c-1.654,0-3-1.346-3-3Zm17,3h-6v-3h9c0,1.654-1.346,3-3,3Z"/>
             </svg>
           </div>
         );
       case 'Midfield':
         return (
-          <div className={'col-1'} style={{ marginTop: '1%' }} title="Centrocampista">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24" width="20">
-              <path d="M23.7,1.715l.008-.008-.026-.026A2.994,2.994,0,0,0,22.319.319L22.293.293,22.285.3A2.951,2.951,0,0,0,21,0H18V2h2.586L17.6,4.989A12.507,12.507,0,0,0,.667,5.66l-.708.707,8.13,8.13L4.586,18H0v2H2.586L.293,22.293l1.414,1.414L4,21.414V24H6V19.414l3.5-3.5,8.13,8.13.707-.708A12.505,12.505,0,0,0,19.011,6.4L22,3.414V6h2V3A2.951,2.951,0,0,0,23.7,1.715ZM2.821,6.4a10.518,10.518,0,0,1,13.364,0L9.5,13.083ZM17.6,21.179,10.917,14.5,17.6,7.815A10.518,10.518,0,0,1,17.6,21.179Z" />
+          <div className={'col-1'} style={{marginTop: '1%'}} title="Centrocampista">
+            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                 width="20">
+              <path
+                d="M23.7,1.715l.008-.008-.026-.026A2.994,2.994,0,0,0,22.319.319L22.293.293,22.285.3A2.951,2.951,0,0,0,21,0H18V2h2.586L17.6,4.989A12.507,12.507,0,0,0,.667,5.66l-.708.707,8.13,8.13L4.586,18H0v2H2.586L.293,22.293l1.414,1.414L4,21.414V24H6V19.414l3.5-3.5,8.13,8.13.707-.708A12.505,12.505,0,0,0,19.011,6.4L22,3.414V6h2V3A2.951,2.951,0,0,0,23.7,1.715ZM2.821,6.4a10.518,10.518,0,0,1,13.364,0L9.5,13.083ZM17.6,21.179,10.917,14.5,17.6,7.815A10.518,10.518,0,0,1,17.6,21.179Z"/>
             </svg>
           </div>
         );
@@ -289,7 +297,8 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
                   {player.name}
                 </button>
                 {svgSelector(player.position)}
-                <button className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 col-1 bottone-info" style={{ marginTop: '3%' }}
+                <button className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 col-1 bottone-info"
+                        style={{marginTop: '3%'}}
                         onClick={() => {
                           navigate(`/giocatori/${player.playerId}`)
                         }}
@@ -297,7 +306,7 @@ const TeamFormationSelector = ({ favoritePlayers }) => {
                 </button>
               </div>
               {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId &&
-                <PopupPlayer isOpen={true} player={player} />}
+                <PopupPlayer isOpen={true} player={player}/>}
             </li>
           );
         })}
