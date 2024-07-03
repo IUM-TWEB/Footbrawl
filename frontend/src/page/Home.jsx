@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../simple_components/SearchBar.jsx";
 import LeaderBoard from "../simple_components/LeaderBoard.jsx";
+import Footer from "../simple_components/Footer.jsx";
 import News from "../simple_components/News.jsx";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSun } from '@fortawesome/free-solid-svg-icons';
 import '../index.css';
 
 const Home = () => {
@@ -17,7 +20,13 @@ const Home = () => {
   const [laLiga, setLaLiga] = useState([]);
   const [ligue1, setLigue1] = useState([]);
   const [lastGames, setLastGames] = useState({});
-  const [topScorers, setTopScorers] = useState({ IT1: null, GB1: null, ES1: null, CL: null, EL: null });
+  const [topScorers, setTopScorers] = useState({
+    IT1: { loading: true, data: null },
+    GB1: { loading: true, data: null },
+    ES1: { loading: true, data: null },
+    CL: { loading: true, data: null },
+    EL: { loading: true, data: null }
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,11 +86,11 @@ const Home = () => {
         // Use Promise.allSettled to avoid blocking other requests
         const topScorerResults = await Promise.allSettled(topScorerPromises);
         const topScorersData = {
-          IT1: topScorerResults[0].status === 'fulfilled' ? topScorerResults[0].value : null,
-          GB1: topScorerResults[1].status === 'fulfilled' ? topScorerResults[1].value : null,
-          ES1: topScorerResults[2].status === 'fulfilled' ? topScorerResults[2].value : null,
-          CL: topScorerResults[3].status === 'fulfilled' ? topScorerResults[3].value : null,
-          EL: topScorerResults[4].status === 'fulfilled' ? topScorerResults[4].value : null
+          IT1: { loading: false, data: topScorerResults[0].status === 'fulfilled' ? topScorerResults[0].value : null },
+          GB1: { loading: false, data: topScorerResults[1].status === 'fulfilled' ? topScorerResults[1].value : null },
+          ES1: { loading: false, data: topScorerResults[2].status === 'fulfilled' ? topScorerResults[2].value : null },
+          CL: { loading: false, data: topScorerResults[3].status === 'fulfilled' ? topScorerResults[3].value : null },
+          EL: { loading: false, data: topScorerResults[4].status === 'fulfilled' ? topScorerResults[4].value : null }
         };
 
         setTopScorers(topScorersData);
@@ -134,8 +143,8 @@ const Home = () => {
               stopOnHover={false}
             >
               {newsList.map((item) => (
-                <div key={item.id} onClick={() => handleClickNews(item)} style={{cursor: 'pointer'}}>
-                  <News singleNews={item}/>
+                <div key={item.id} onClick={() => handleClickNews(item)} style={{ cursor: 'pointer' }}>
+                  <News singleNews={item} />
                 </div>
               ))}
             </Carousel>
@@ -158,7 +167,7 @@ const Home = () => {
                           league === 'GB1' ? 'Premier League' :
                             league === 'CL' ? 'Champions League' :
                               league === 'EL' ? 'Europa League' :
-                                'Errore'} {/* Fallback in caso nessuna delle condizioni precedenti è soddisfatta */}
+                                'Errore'}
                     </h5>
                     {lastGames[league] ? (
                       lastGames[league].map(game => (
@@ -178,35 +187,46 @@ const Home = () => {
             <h1>Classifiche</h1>
             <div className="card">
               <div className="card-body">
-                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
+                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body">
-                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
+                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body">
-                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
+                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub} />
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body">
-                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
+                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub} />
               </div>
             </div>
           </div>
           <div className="col-md-12 col-lg-3 order-3">
             <div>
               <h1>Top Scorers</h1>
-              {['IT1', 'GB1', 'ES1', 'CL'].map(league => (
-                topScorers[league] && (
-                  <div key={league} className="card mb-custom">
-                    <div className="card-body card-top-scorer">
-                      <h5
-                        className="card-title">{league === 'IT1' ? 'Serie A' : league === 'ES1' ? 'La Liga' : league === 'GB1' ? 'Premier League' : league === 'CL' ? 'Champions League' : 'Europa League'}</h5>
-                      {topScorers[league].slice(0, 3).map((scorer) => (
+              {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
+                <div key={league} className="card mb-custom">
+                  <div className="card-body card-top-scorer">
+                    <h5 className="card-title">
+                      {league === 'IT1' ? 'Serie A' :
+                        league === 'ES1' ? 'La Liga' :
+                          league === 'GB1' ? 'Premier League' :
+                            league === 'CL' ? 'Champions League' :
+                              league === 'EL' ? 'Europa League' :
+                                'Errore'}
+                    </h5>
+                    {topScorers[league].loading ? (
+                      <div className="text-center">
+                        <div className="loader"/>
+
+                      </div>
+                    ) : (
+                      topScorers[league].data.slice(0, 3).map((scorer) => (
                         <div
                           key={scorer.player_id}
                           className="mb-3"
@@ -223,15 +243,16 @@ const Home = () => {
                             <small>{scorer.position} - {scorer.currentClubName}</small>
                           </p>
                         </div>
-                      ))}
-                    </div>
+                      ))
+                    )}
                   </div>
-                )
+                </div>
               ))}
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
