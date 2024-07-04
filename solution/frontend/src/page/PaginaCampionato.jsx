@@ -14,6 +14,11 @@ const PaginaCampionato = () => {
   const [lastGameData, setLastGameData] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingTopScorer, setLoadingTopScorer] = useState(true);
+  const [loadingRanking, setLoadingRanking] = useState(true);
+  const [loadingTopMarketValue, setLoadingTopMarketValue] = useState(true);
+  const [loadingLastGame, setLoadingLastGame] = useState(true);
+
   const [error, setError] = useState(null);
 
   const convertToLowerCase = (str) => str.toLowerCase();
@@ -38,6 +43,8 @@ const PaginaCampionato = () => {
     } catch (error) {
       console.error('Errore nella richiesta al server:', error);
       setError(error);
+    } finally {
+      setLoadingTopScorer(false);
     }
   };
 
@@ -51,6 +58,8 @@ const PaginaCampionato = () => {
       setTopMarketValueData(topMarketValueData);
     } catch (error) {
       console.log("competizione Europea, Top Market Value non disponibili");
+    } finally {
+      setLoadingTopMarketValue(false);
     }
   };
 
@@ -64,6 +73,8 @@ const PaginaCampionato = () => {
       setRankingData(ranking);
     } catch (error) {
       console.log("competizione Europea, classifica non disponibile")
+    } finally {
+      setLoadingRanking(false);
     }
   };
 
@@ -78,6 +89,8 @@ const PaginaCampionato = () => {
     } catch (error) {
       console.error('Errore nella richiesta al server:', error);
       setError(error);
+    } finally {
+      setLoadingLastGame(false);
     }
   };
 
@@ -103,7 +116,7 @@ const PaginaCampionato = () => {
   }, [id_campionato, lower_id_campionato]);
 
   if (loading) {
-    return <div className="text-center mt-5">Loading...</div>;
+    return <div className="loader"/>;
   }
 
   if (error) {
@@ -144,27 +157,31 @@ const PaginaCampionato = () => {
             </div>
           </div>
           <div className="col-md-6">
-            {topScorerData.length > 0 && (
-              <>
-                <h3 className="text-center">Top Scorers</h3>
-                <ul className="list-group top-scorer-list">
-                  <li className="list-group-item d-flex justify-content-between align-items-center">
-                    <strong>Nome Giocatore</strong>
-                    <strong>Goals</strong>
-                  </li>
-                  {topScorerData.map((scorer, index) => (
-                    <li
-                      key={index}
-                      className="list-group-item d-flex justify-content-between align-items-center top-scorer-item"
-                      onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <span>{scorer.name}</span>
-                      <span className="badge badge-primary badge-pill">{scorer.totalGoals}</span>
+            {loadingTopScorer ? (
+              <div className="loader"/>
+            ) : (
+              topScorerData.length > 0 && (
+                <>
+                  <h3 className="text-center">Top Scorers</h3>
+                  <ul className="list-group top-scorer-list">
+                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                      <strong>Nome Giocatore</strong>
+                      <strong>Goals</strong>
                     </li>
-                  ))}
-                </ul>
-              </>
+                    {topScorerData.map((scorer, index) => (
+                      <li
+                        key={index}
+                        className="list-group-item d-flex justify-content-between align-items-center top-scorer-item"
+                        onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span>{scorer.name}</span>
+                        <span className="badge badge-primary badge-pill">{scorer.totalGoals}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )
             )}
           </div>
         </div>
@@ -174,87 +191,99 @@ const PaginaCampionato = () => {
 
       <div className="row mt-5">
         <div className="col-lg-6 mb-5">
-          {rankingData.length > 0 && (
-            <>
-              <h3 className="text-center">Classifica</h3>
-              <table className="table table-striped">
-                <thead>
-                <tr>
-                  <th>Posizione</th>
-                  <th>Squadra</th>
-                  <th>Punti</th>
-                </tr>
-                </thead>
-                <tbody>
-                {rankingData.map((team, index) => (
-                  <tr key={index} onClick={() => navigate(`/club/${team.club_id}`)} style={{ cursor: 'pointer' }}>
-                    <td>{team.position}</td>
-                    <td>{team.club_name}</td>
-                    <td>{team.points}</td>
+          {loadingRanking ? (
+            <div className="text-center">Loading Ranking...</div>
+          ) : (
+            rankingData.length > 0 && (
+              <>
+                <h3 className="text-center">Classifica</h3>
+                <table className="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Posizione</th>
+                    <th>Squadra</th>
+                    <th>Punti</th>
                   </tr>
-                ))}
-                </tbody>
-              </table>
-            </>
+                  </thead>
+                  <tbody>
+                  {rankingData.map((team, index) => (
+                    <tr key={index} onClick={() => navigate(`/club/${team.club_id}`)} style={{ cursor: 'pointer' }}>
+                      <td>{team.position}</td>
+                      <td>{team.club_name}</td>
+                      <td>{team.points}</td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </>
+            )
           )}
         </div>
 
         <div className="col-lg-6 mb-5">
-          {topMarketValueData.length > 0 && (
-            <>
-              <h3 className="text-center">Top Market Value Players</h3>
-              <ul className="list-group top-market-value-list">
-                <li className="list-group-item d-flex justify-content-between align-items-center">
-                  <strong>Nome Giocatore</strong>
-                  <strong>Valore di Mercato</strong>
-                </li>
-                {topMarketValueData.map((player, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
-                    onClick={() => navigate(`/giocatori/${player.playerId}`)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span>{player.firstName} {player.lastName}</span>
-                    <span className="badge badge-primary badge-pill">{player.highestMarketValue} euro</span>
+          {loadingTopMarketValue ? (
+            <div className="text-center">Loading Top Market Value Players...</div>
+          ) : (
+            topMarketValueData.length > 0 && (
+              <>
+                <h3 className="text-center">Top Market Value Players</h3>
+                <ul className="list-group top-market-value-list">
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>Nome Giocatore</strong>
+                    <strong>Valore di Mercato</strong>
                   </li>
-                ))}
-              </ul>
-            </>
+                  {topMarketValueData.map((player, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
+                      onClick={() => navigate(`/giocatori/${player.playerId}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <span>{player.firstName} {player.lastName}</span>
+                      <span className="badge badge-primary badge-pill">{player.highestMarketValue} euro</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
           )}
         </div>
       </div>
 
       <div className="row mt-5">
         <div className="col-lg-12 mb-5">
-          {lastGameData.length > 0 && (
-            <>
-              <h3 className="text-center">Last Games</h3>
-              <table className="table table-striped">
-                <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Home Club</th>
-                  <th>Away Club</th>
-                  <th>Score</th>
-                  <th>Stadium</th>
-                  <th>Referee</th>
-                </tr>
-                </thead>
-                <tbody>
-                {lastGameData.map((game) => (
-                  <tr key={game._id}>
-                    <td>{new Date(game.date).toLocaleDateString()}</td>
-                    <td>{game.home_club_name}</td>
-                    <td>{game.away_club_name}</td>
-                    <td>{game.home_club_goals} - {game.away_club_goals}</td>
-                    <td>{game.stadium}</td>
-                    <td>{game.referee}</td>
+          {loadingLastGame ? (
+            <div className="text-center">Loading Last Games...</div>
+          ) : (
+            lastGameData.length > 0 && (
+              <>
+                <h3 className="text-center">Last Games</h3>
+                <table className="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Home Club</th>
+                    <th>Away Club</th>
+                    <th>Score</th>
+                    <th>Stadium</th>
+                    <th>Referee</th>
                   </tr>
-                ))}
-                </tbody>
-              </table>
-            </>
+                  </thead>
+                  <tbody>
+                  {lastGameData.map((game) => (
+                    <tr key={game._id}>
+                      <td>{new Date(game.date).toLocaleDateString()}</td>
+                      <td>{game.home_club_name}</td>
+                      <td>{game.away_club_name}</td>
+                      <td>{game.home_club_goals} - {game.away_club_goals}</td>
+                      <td>{game.stadium}</td>
+                      <td>{game.referee}</td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </>
+            )
           )}
         </div>
       </div>

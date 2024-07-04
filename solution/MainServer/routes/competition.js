@@ -11,7 +11,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /ranking/{competition_name}:
+ * /competition/ranking/{competition_name}:
  *   get:
  *     summary: Get the latest competition ranking by name
  *     description: Returns the ranking of the latest competition based on the specified competition name. This endpoint makes a request to the Postgres server to get the ranking for the competition with the name `competition_name` for the most recent year for which data is available.
@@ -69,7 +69,7 @@ router.get('/ranking/:competition_name', async (req, res) => {
 
 /**
  * @swagger
- * /rankingId/{id_campionato}:
+ * /competition/rankingId/{id_campionato}:
  *   get:
  *     summary: Get the latest competition ranking by ID
  *     description: Returns the ranking of the latest competition based on the specified competition ID. This endpoint makes a request to the Postgres server to retrieve the ranking data.
@@ -130,7 +130,7 @@ router.get('/rankingId/:id_campionato', async (req, res) => {
 
 /**
  * @swagger
- * /details/{id_competition}:
+ * /competition/details/{id_competition}:
  *   get:
  *     summary: Get competition details by ID
  *     description: Returns the competition details based on the specified competition ID. This endpoint makes a request to the Postgres server to retrieve the competition data.
@@ -188,7 +188,7 @@ router.get('/details/:id_competition', async (req, res) => {
 
 /**
  * @swagger
- * /top_scorer/{competition_id}:
+ * /competition/top_scorer/{competition_id}:
  *   get:
  *     summary: Get the top scorers of a competition
  *     description: Retrieves the top scorers of a competition based on the specified competition ID. This endpoint makes a request to the MongoDB server to get the top scorers and then requests additional player details from the Postgres server.
@@ -319,7 +319,7 @@ router.get('/top_scorer/:competition_id', async (req, res) => {
 
 /**
  * @swagger
- * /last_game/{competition_id}:
+ * /competition/last_game/{competition_id}:
  *   get:
  *     summary: Get the last game of a competition
  *     description: Returns the details of the last game based on the specified competition ID. This endpoint makes a request to the MongoDB server to retrieve the game data.
@@ -416,7 +416,7 @@ router.get('/last_game/:competition_id', async (req, res) => {
 
 /**
  * @swagger
- * /last_game_by_club/{club_id}:
+ * /competition/last_game_by_club/{club_id}:
  *   get:
  *     summary: Get the last game of a club
  *     description: Returns the details of the last game of a club based on the specified club ID. This endpoint makes a request to the MongoDB server to retrieve the game data.
@@ -515,7 +515,7 @@ router.get('/last_game_by_club/:club_id', async (req, res) => {
 
 /**
  * @swagger
- * /top_market_value/{competition_id}:
+ * /competition/top_market_value/{competition_id}:
  *   get:
  *     summary: Get players with the highest market value of a competition
  *     description: Returns players with the highest market value based on the specified competition ID. This endpoint makes a request to the Postgres server to retrieve the player data.

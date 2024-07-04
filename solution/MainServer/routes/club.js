@@ -11,7 +11,7 @@ const axios = require('axios');
 
 /**
  * @swagger
- * /clubs/{id}:
+ * /club/{id}:
  *   get:
  *     summary: Get club details by ID
  *     description: Returns the details of a club based on the specified club ID. This endpoint makes a request to the main server.
@@ -98,7 +98,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /clubByName/{club_name}:
+ * /club/clubByName/{club_name}:
  *   get:
  *     summary: Get club details by name
  *     description: Returns the details of the club based on the specified club name.
@@ -194,7 +194,7 @@ router.get('/clubByName/:club_name', async (req, res) => {
 
 /**
  * @swagger
- * /playersOfClubLastSeason/{current_club_id}:
+ * /club/playersOfClubLastSeason/{current_club_id}:
  *   get:
  *     summary: Get players of a club from last season
  *     description: Returns the list of players who were part of the specified club in the last season. This endpoint makes a request to the Spring Boot server.

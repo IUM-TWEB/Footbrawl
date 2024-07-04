@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /log:
+ * /user/log:
  *   post:
  *     summary: Log in a user
  *     description: Logs in a user by sending their credentials to the server.
@@ -55,7 +55,7 @@ router.post('/log', async (req, res) => {
 
 /**
  * @swagger
- * /:
+ * /user/:
  *   post:
  *     summary: Create a new user
  *     description: Creates a new user if they do not already exist.
@@ -100,7 +100,7 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /favplayer:
+ * /user/favplayer:
  *   post:
  *     summary: Add a favorite player
  *     description: Adds a favorite player for the user.
@@ -141,7 +141,7 @@ router.post('/favplayer', async (req, res) => {
 
 /**
  * @swagger
- * /favteam:
+ * /user/favteam:
  *   post:
  *     summary: Add a favorite team
  *     description: Adds a favorite team for the user.
@@ -181,7 +181,7 @@ router.post('/favteam', async (req, res) => {
 
 /**
  * @swagger
- * /getfav:
+ * /user/getfav:
  *   post:
  *     summary: Get favorite players and teams
  *     description: Retrieves the favorite players and teams for the user.
@@ -224,7 +224,7 @@ router.post('/getfav', async (req, res) => {
 
 /**
  * @swagger
- * /postFormations:
+ * /user/postFormations:
  *   post:
  *     summary: Add a favorite formation
  *     description: Adds a favorite formation for the user.
@@ -268,7 +268,7 @@ router.post('/postFormations', async (req, res) => {
 
 /**
  * @swagger
- * /getFormations:
+ * /user/getFormations:
  *   post:
  *     summary: Get favorite formations
  *     description: Retrieves the favorite formations for the user.
@@ -308,6 +308,95 @@ router.post('/getFormations', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /removePlayer:
+ *   post:
+ *     summary: Remove a player from the user's favorites
+ *     description: This endpoint removes a player from the user's favorite players list.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The ID of the user
+ *                 example: 12345
+ *               playerId:
+ *                 type: string
+ *                 description: The ID of the player to be removed
+ *                 example: 67890
+ *     responses:
+ *       200:
+ *         description: Successfully removed the player from favorites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Player removed from favorites successfully
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   properties:
+ *                     acknowledged:
+ *                       type: boolean
+ *                       example: true
+ *                     modifiedCount:
+ *                       type: integer
+ *                       example: 1
+ *                     upsertedId:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                     upsertedCount:
+ *                       type: integer
+ *                       example: 0
+ *                     matchedCount:
+ *                       type: integer
+ *                       example: 1
+ *               example:
+ *                 success: true
+ *                 message: Player removed from favorites successfully
+ *                 status: OK
+ *                 data:
+ *                   acknowledged: true
+ *                   modifiedCount: 1
+ *                   upsertedId: null
+ *                   upsertedCount: 0
+ *                   matchedCount: 1
+ *       500:
+ *         description: Error in the server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Error in the server
+ *                 status:
+ *                   type: string
+ *                   example: Internal Server Error
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   example: null
+ */
 router.post('/removePlayer', async (req,res)=>{
   try {
     const response = await axios.post("http://localhost:3001/user/fav/removePlayer", req.body);
@@ -318,6 +407,95 @@ router.post('/removePlayer', async (req,res)=>{
   }
 })
 
+/**
+ * @swagger
+ * /removeTeam:
+ *   post:
+ *     summary: Remove a Team from the user's favorites
+ *     description: This endpoint removes a team from the user's favorite team list.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The ID of the user
+ *                 example: 12345
+ *               club_Id:
+ *                 type: string
+ *                 description: The ID of the team to be removed
+ *                 example: 67890
+ *     responses:
+ *       200:
+ *         description: Successfully removed the team from favorites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: team removed from favorites successfully
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   properties:
+ *                     acknowledged:
+ *                       type: boolean
+ *                       example: true
+ *                     modifiedCount:
+ *                       type: integer
+ *                       example: 1
+ *                     upsertedId:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                     upsertedCount:
+ *                       type: integer
+ *                       example: 0
+ *                     matchedCount:
+ *                       type: integer
+ *                       example: 1
+ *               example:
+ *                 success: true
+ *                 message: team removed from favorites successfully
+ *                 status: OK
+ *                 data:
+ *                   acknowledged: true
+ *                   modifiedCount: 1
+ *                   upsertedId: null
+ *                   upsertedCount: 0
+ *                   matchedCount: 1
+ *       500:
+ *         description: Error in the server
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Error in the server
+ *                 status:
+ *                   type: string
+ *                   example: Internal Server Error
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   example: null
+ */
 router.post('/removeTeam', async (req,res)=>{
   try {
     const response = await axios.post("http://localhost:3001/user/fav/removeTeam", req.body);
