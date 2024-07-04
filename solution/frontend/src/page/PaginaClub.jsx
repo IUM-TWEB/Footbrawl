@@ -60,21 +60,6 @@ const PaginaClub = () => {
     }
   }, [clubId]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      document.querySelector('.parallax-slow').style.transform = `translateY(${scrollTop * 0.3}px)`;
-      document.querySelector('.parallax-medium').style.transform = `translateY(${scrollTop * 0.5}px)`;
-      document.querySelector('.parallax-fast').style.transform = `translateY(${scrollTop * 0.7}px)`;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   // Controlla se il club è tra i preferiti quando il componente viene montato
   useEffect(() => {
     setIsFavorite(favoriteClubs.includes(clubId));
@@ -221,7 +206,7 @@ const PaginaClub = () => {
           </div>
           <div className="row">
 
-            <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+            <div className="col-md-3 d-flex flex-column align-items-center">
 
               <div className="mb-3">
                 <img src={`https://tmssl.akamaized.net/images/wappen/head/${clubData.clubId}.png`} alt={'club logo'}/>
@@ -265,7 +250,7 @@ const PaginaClub = () => {
               </div>
             </div>
 
-            <div className="col-md-6 d-flex flex-column align-items-center parallax parallax-fast">
+            <div className="col-md-6 d-flex flex-column align-items-center">
               <h2 className="d-flex flex-column align-items-center">Giocatori</h2>
               {players.length > 0 ? (
                 <div className="container">
@@ -278,7 +263,7 @@ const PaginaClub = () => {
               )}
             </div>
 
-            <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+            <div className="col-md-3 d-flex flex-column align-items-center">
               <h2 className="mb-4 d-flex flex-column align-items-center">Ultime Partite</h2>
               {games.length > 0 ? (
                 <div>

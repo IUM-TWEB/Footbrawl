@@ -45,7 +45,7 @@ const getByClubLast = (club, season) => {
         ]
     })
       .sort({ date: -1 })
-      .limit(10);
+      .limit(9);
 }
 const getByClub = (comp, season, club_id) => {
     return games.find({competition_id:comp, season:season, home_club_id :club_id }, {}, null)

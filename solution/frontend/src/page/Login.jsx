@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import axios from "axios";
 import {useNavigate, Link} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
@@ -65,53 +65,59 @@ function Login() {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <h5 className="card-header">Login</h5>
-            <div className="card-body">
-              {error && <div className="alert alert-danger" role="alert">{error}</div>}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="username" className="form-label">Username</label>
-                  <input
-                    type="text"
-                    className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
-                    id="username"
-                    value={username}
-                    onChange={handleUsernameChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
-                  <input
-                    type="password"
-                    className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
-                    id="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                  />
-                </div>
-                <div className="text-end">
-                  <button type="submit" className="btn btn-chocolate">Invia</button>
-                </div>
-              </form>
+    <>
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card">
+              <h5 className="card-header">Login</h5>
+              <div className="card-body">
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="username" className="form-label">Username</label>
+                    <input
+                      type="text"
+                      className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
+                      id="username"
+                      value={username}
+                      onChange={handleUsernameChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className={`form-control ${loginValid === false ? 'is-invalid' : ''} ${loginValid === true ? 'is-valid' : ''}`}
+                      id="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      required
+                    />
+                  </div>
+                  <div className="text-end">
+                    <button type="submit" className="btn btn-chocolate">Invia</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ToastContainer/>
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="text-center mt-4">
+              <Link to="/reg" className="link-primary">Non ti sei ancora registrato?</Link>
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer/>
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="text-center mt-4">
-            <Link to="/reg" className="link-primary">Non ti sei ancora registrato?</Link>
-          </div>
-        </div>
-      </div>
-    </div>
+      <div className="m-5 d-flex"></div>
+      <div className="m-5 d-flex"></div>
+      <div className="m-5 d-flex"></div>
+      <div className="m-5 d-flex"></div>
+    </>
   );
 }
 

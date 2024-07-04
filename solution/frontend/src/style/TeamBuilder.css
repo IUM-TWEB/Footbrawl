@@ -1,0 +1,36 @@
+.background-image {
+  height: 700px;
+  width: 476px;
+  min-width: 464px;
+  background-image: url("../img/soccer-green-field.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.tb-player {
+  border-radius: 10%; /* Rende i bordi arrotondati */
+  padding: 0;
+  overflow: hidden;
+  border: none;
+}
+
+.tb-player img {
+  width: 100%;
+  height: auto;
+  display: block; /* rimuove eventuali spazi extra sotto l'immagine */
+  max-width: 50px;
+  max-height: 50px;
+}
+
+/*Bottone info*/
+
+.bottone-info:hover {
+  background-color: lightgray;
+}
+
+.bottone-info {
+  background-color: #ffffff;
+}
+
+/*Fine bottone info*/

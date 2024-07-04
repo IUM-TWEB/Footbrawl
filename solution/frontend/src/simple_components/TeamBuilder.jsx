@@ -6,6 +6,7 @@ import {Alert} from 'reactstrap';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
+import '../style/TeamBuilder.css';
 
 const TeamFormationSelector = ({favoritePlayers}) => {
   const {username, password} = useAuth();
