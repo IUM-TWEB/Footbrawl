@@ -9,408 +9,432 @@ import {useAuth} from "../context/AuthContext.jsx";
 import '../style/TeamBuilder.css';
 
 const TeamFormationSelector = ({favoritePlayers}) => {
-  const {username, password} = useAuth();
-  const [alert, setAlert] = useState([false, ""]);
-  const navigate = useNavigate();
-  const [popupsOpen, setPopupsOpen] = useState({});
-  const [selectedPosition, setSelectedPosition] = useState([null, null]);
-  const [playerNames, setPlayerNames] = useState([]);
-  const [formation, setFormation] = useState('4-4-2');
-  const [savedFormations, setSavedFormations] = useState([]);
-  const [selectedFormation, setSelectedFormation] = useState({
-    forwards: ['0', '0'],
-    midfielders: ['0', '0', '0', '0'],
-    defenders: ['0', '0', '0', '0'],
-    goalkeeper: ['0']
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const resp = await getFormations();
-      console.log(resp)
-      setSavedFormations(resp);
-      console.log(savedFormations)
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const ss = savedFormations.find(i => i.type === formation);
-    if (ss) {
-      setSelectedFormation(ss.formation);
-    }
-  }, [formation, savedFormations]);
-
-  useEffect(() => {
-    const isPlayerInFormation = (player) => {
-      for (const key in selectedFormation) {
-        if (selectedFormation[key].some(p => p.playerId === player.playerId)) {
-          return true;
-        }
-      }
-      return false;
-    };
-
-    // Filtra i giocatori preferiti per escludere quelli già nella formazione
-    const filteredPlayers = favoritePlayers.filter(pl => !isPlayerInFormation(pl));
-
-    // Aggiorna playerNames con i giocatori filtrati
-    setPlayerNames(filteredPlayers);
-  }, [favoritePlayers, selectedFormation]);
-
-  const getFormations = async () => {
-    const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {
-      username: username,
-      pwd: password
+    const {username, password} = useAuth();
+    const [alert, setAlert] = useState({isOpen: false, color: "", message: ""});
+    const navigate = useNavigate()
+    const [popupsOpen, setPopupsOpen] = useState({});
+    const [selectedPosition, setSelectedPosition] = useState({index: null, array: null});
+    const [savedPlayersValues, setSavedPlayersValues] = useState([]);
+    const [formation, setFormation] = useState('4-4-2');
+    const [savedFormations, setSavedFormations] = useState([])
+    const [selectedFormation, setSelectedFormation] = useState({
+      forwards: ['0', '0'],
+      midfielders: ['0', '0', '0', '0'],
+      defenders: ['0', '0', '0', '0'],
+      goalkeeper: ['0']
     });
-    return axios_resp.data;
-  }
 
-  const showError = () => {
-    if (alert[0]) {
-      return (
-        <Alert key={'danger'} color={alert[2]} style={{position: "absolute", marginTop: '1%'}}>
-          {alert[1]}
-        </Alert>
-      );
-    }
-    return null;
-  };
-
-  const togglePopup = (id, isOpen, context) => {
-    setPopupsOpen([id, isOpen, context])
-  };
-
-  const filterPlayersByPosition = (position) => {
-    return playerNames.filter((player) => player.position === position);
-  };
-
-  useEffect(() => {
-    if (alert[0]) {
-      const timeout = setTimeout(() => {
-        setAlert([false, ""]);
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [alert]);
-
-  const sendFormation = async () => {
-    axios.post('http://localhost:3000/users/postFormations', {
-      username: username,
-      pwd: password,
-      formation: {
-        type: formation,
-        formation: selectedFormation,
-        name: "" // Da implementare la scelta del nome della formazione
-      }
-    })
-      .then(() => {
-        setAlert([true, "Formazione salvata correttamente", "success"]);
-      })
-      .catch(e => {
-        console.log(e);
-        setAlert([true, "Errore nel salvataggio della formazione", "danger"]);
-      })
-  }
-
-  const handleFormationChange = (formation) => {
-    setFormation(formation)
-  };
-
-  const handlePlayerSelection = (player) => {
-    if (selectedFormation.forwards.includes(player) ||
-      selectedFormation.midfielders.includes(player) ||
-      selectedFormation.defenders.includes(player) ||
-      selectedFormation.goalkeeper.includes(player)) {
-      setAlert([true, "Non è possibile aggiungere due volte lo stesso giocatore", "danger"]);
-      return;
-    }
-
-    setPopupsOpen({});
-
-    setSelectedFormation(prevFormation => {
-      const newFormation = {...prevFormation};
-      if (selectedPosition[1] && !selectedPosition[1].includes(player)) {
-        selectedPosition[1][selectedPosition[0]] = player;
-        removeFromList(player);
-      } else {
-        setAlert([true, "Selezionare prima una posizione, ed in seguito un giocatore", "danger"]);
-      }
-      return newFormation;
-    });
-  };
-
-  const addPlayer = (newPlayer) => {
-
-    const checkInFormation = (pl) => {
-      for (const key in selectedFormation) {
-        if (selectedFormation[key].some(player => player.playerId === pl.playerId)) {
-          return true;
+    useEffect(() => {
+      const fetchData = async () => {
+        const resp = await getFormations();
+        if (resp && Array.isArray(resp)) {
+          setSavedFormations(resp);
+          console.log("saved:", savedFormations)
         }
-      }
-      return false;
-    }
-    console.log(checkInFormation(newPlayer))
-    if (!playerNames.some(player => player.playerId === newPlayer.playerId) && !checkInFormation(newPlayer)) {
-      setPlayerNames([...playerNames, newPlayer]);
-    } else {
-      setAlert([true, "Giocatore già aggiunto ai selezionati", "danger"]);
-    }
-  }
+      };
 
-  const removePlayer = (pos, index) => {
-    if (pos[index] !== '0') {
-      const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos);
-      setSelectedFormation(prevState => {
-        const tmp = {...prevState};
-        addToList(pos[index]);
-        pos[index] = '0';
-        tmp[pos_key] = pos;
-        return tmp;
+      fetchData();
+    }, []);
+
+
+    useEffect(() => {
+      // Cerchiamo la formazione salvata che corrisponde tra le salvate in base al tipo
+      const filtered_formation = savedFormations.find(i => i.type === formation)
+      console.log("trovata: ", filtered_formation)
+      if (filtered_formation)
+        setSelectedFormation(filtered_formation.formation)
+
+    }, [formation, savedFormations]);
+
+    // Quando alert viene modificato reimpostiamo a false lo stato per richiudere
+    // l'alert
+    useEffect(() => {
+      if (alert.isOpen) {
+        const timeout = setTimeout(() => {
+          setAlert({isOpen: false, color: "", message: ""});
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
+    }, [alert]);
+
+
+    useEffect(() => {
+      setSavedPlayersValues(favoritePlayers);
+    }, [favoritePlayers]);
+
+    // Salviamo la formazione
+    const sendFormation = async () => {
+      axios.post('http://localhost:3000/users/postFormations', {
+          username: username,
+          pwd: password,
+          formation: {
+            type: formation,
+            formation: selectedFormation,
+            name: "" // Da implementare la scelta del nome della formazione
+          }
+        }
+      )
+        .then(() => {
+          setAlert({isOpen: true, color: "success", message: "Formazione salvata correttamente"})
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
+
+    // Otteniamo le formazioni salvate
+    const getFormations = async () => {
+      const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {
+        username: username,
+        pwd: password
+      })
+      return axios_resp.data
+    }
+
+    const showError = () => {
+      if (alert.isOpen) {
+        return (
+          <Alert key={'danger'} color={alert.color} style={{position: "absolute", marginTop: '1%'}}>
+            {alert.message}
+          </Alert>
+        );
+      }
+      return null;
+    };
+
+    // Salviamo id e context (right, left) per poter aprire un singolo popup per volta
+    const togglePopup = (id, isOpen, context) => {
+      setPopupsOpen([id, isOpen, context])
+    };
+
+    // Otteniamo i giocatori in base alla posizione che ricoprono
+    const filterPlayersByPosition = (position) => {
+      return savedPlayersValues.filter((player) => player.position === position);
+    };
+
+    const handleFormationChange = (formation) => {
+      setFormation(formation)
+      // Otteniamo i numeri di giocatori nelle varie posizioni
+      const defenders_num = parseInt(formation[0], 10);
+      const midfielders_num = parseInt(formation[2], 10);
+      const forwards_num = parseInt(formation[4], 10);
+
+      // Svuota la formazione creata se la disposizione cambia
+      setSelectedFormation({
+        forwards: Array(forwards_num).fill("0"),
+        midfielders: Array(midfielders_num).fill("0"),
+        defenders: Array(defenders_num).fill("0"),
+        goalkeeper: ["0"]
       });
+    };
+
+    const handlePlayerSelection = (player) => {
+      // Controlliamo se il giocatore è già stato inserito nella formazione
+      if (selectedFormation.forwards.includes(player) ||
+        selectedFormation.midfielders.includes(player) ||
+        selectedFormation.defenders.includes(player) ||
+        selectedFormation.goalkeeper.includes(player)) {
+        setAlert({isOpen: true, color: "danger", message: "Non è possibile aggiungere due volte lo stesso giocatore"});
+        return
+      }
+
+      setPopupsOpen({}) // Resettiamo il popup
+
+      // selectedPosition.index è l'index dell'array in cui deve essere posizionato il giocatore
+      // selectedPosition.array è l'array in cui posizionarlo
+      setSelectedFormation(prevFormation => {
+        const newFormation = {...prevFormation};
+        if (selectedPosition.array && !selectedPosition.array.includes(player)) {
+          selectedPosition.array[selectedPosition.index] = player;
+          removeFromList(player)
+        } else
+          setAlert({
+            isOpen: true,
+            color: "danger",
+            message: "Selezionare prima una posizione, ed in seguito un giocatore"
+          });
+        return newFormation;
+      });
+    };
+
+    let addPlayer = (newPlayer) => {
+      // Aggiungiamo il nuovo giocatore alla lista selezionabile se non già presente
+      if (!savedPlayersValues.some(player => player.playerId === newPlayer.playerId)) {
+        setSavedPlayersValues([...savedPlayersValues, newPlayer]);
+      } else {
+        setAlert({isOpen: true, color: "danger", message: "Giocatore già aggiunto ai selezionati"})
+      }
     }
-  };
 
-  const removeFromList = (player) => {
-    if (playerNames.includes(player)) {
-      let tmp = [...playerNames];
-      tmp.splice(tmp.indexOf(player), 1);
-      setPlayerNames(tmp);
-    } else {
-      console.error("Tentativo di eliminare un giocatore non esistente");
-      setAlert([true, "Errore", "danger"]);
+    // Rimuoviamo un giocatore dalla formazione
+    const removePlayer = (pos, index) => {
+      if (pos[index] !== '0') {
+        const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos) // Otteniamo quale chiave dell'oggetto
+        setSelectedFormation(prevState => {
+          const tmp = {...prevState}
+          addToList(pos[index])
+          pos[index] = '0' // Eliminiamo il giocatore
+          tmp[pos_key] = pos // Assegniamo l'array senza il giocatore
+          return tmp
+        })
+      }
+    };
+
+    // Togliamo dalla lista dei giocatori player
+    const removeFromList = (player) => {
+      if (savedPlayersValues.includes(player)) {
+        let tmp = savedPlayersValues
+        tmp.splice(tmp.indexOf(player), 1)
+        setSavedPlayersValues(tmp)
+      } else {
+        console.error("Tentativo di eliminare un giocatore non esistente")
+        setAlert({isOpen: true, color: "danger", message: "Errore"})
+      }
     }
-  }
 
-  const addToList = (player) => {
-    if (!playerNames.includes(player)) {
-      setPlayerNames([...playerNames, player]);
-    } else {
-      console.error("Tentativo di aggiungere un giocatore già esistente");
-      setAlert([true, "Errore", "danger"]);
+    // Aggiungiamo alla lista dei giocatori selezionabili
+    const addToList = (player) => {
+      if (!savedPlayersValues.includes(player)) {
+        setSavedPlayersValues([...savedPlayersValues, player]);
+      } else {
+        console.error("Tentativo di aggiungere un giocatore già esistente")
+        setAlert({isOpen: true, color: "danger", message: "Errore"})
+      }
     }
-  }
 
-  const buttonSelector = (index, pos) => {
-    if (index !== selectedPosition[0] || pos !== selectedPosition[1]) {
-      return 'image-overlay';
-    } else {
-      return 'image-overlay-selected';
+    // Cambiamo lo stile della posizione selezionata
+    const buttonSelector = (index, pos) => {
+      if (index !== selectedPosition.index || pos !== selectedPosition.array) {
+        return 'image-overlay'
+      } else
+        return 'image-overlay-selected'
     }
-  }
 
-  const selectPlayerPosition = (index, array) => {
-    setSelectedPosition([index, array]);
-  }
+    const selectPlayerPosition = (index, array) => {
+      setSelectedPosition({index, array})
+    }
 
-  const lineFormation = (elements, h) => {
-    const numElements = elements.length;
-    const colSize = Math.min(1, 12 / Math.max(1, numElements));
+    const lineFormation = (elements, h) => {
+      const numElements = elements.length;
+      const colSize = Math.min(1, 12 / Math.max(1, numElements));
 
-    return (
-      <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h}`}>
-        {elements.map((element, index) => (
-          <div key={index}
-               style={{maxWidth: "80px"}}
-               className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3 position-relative`}>
-            {elements[index] !== '0' && (
-              <div className="btn btn-sm btn-danger ml-2" onClick={() => removePlayer(elements, index)}
-                   style={{
-                     position: 'absolute',
-                     width: "10px",
-                     height: "10px",
-                     borderRadius: "55px",
-                     zIndex: 100,
-                     backgroundColor: "rgb(0,0,0,0)",
-                     border: "10px",
-                     borderColor: "black",
-                     bottom: "110%",
-                     left: "80%"
-                   }}
-              >
-                x
+      return (
+        <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h} `}>
+          {
+            elements.map((element, index) => (
+              <div key={index}
+                   style={{maxWidth: "80px"}}
+                   className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3 position-relative`}>
+                {elements[index] !== '0' && (
+                  <div className="btn btn-sm btn-danger ml-2" onClick={() => removePlayer(elements, index)}
+                       style={{
+                         position: 'absolute',
+                         width: "10px",
+                         height: "10px",
+                         borderRadius: "55px",
+                         zIndex: 100,
+                         backgroundColor: "rgb(0,0,0,0)",
+                         border: "10px",
+                         borderColor: "black",
+                         bottom: "110%",
+                         left: "80%"
+                       }}
+                  >
+                    x
+                  </div>
+                )}
+                <button className={`tb-player ${buttonSelector(index, elements)}`}
+                        onClick={() => selectPlayerPosition(index, elements)}>
+                  <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
+
+                </button>
+
               </div>
-            )}
-            <button className={`tb-player ${buttonSelector(index, elements)}`}
-                    onClick={() => selectPlayerPosition(index, elements)}>
-              <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
-            </button>
-          </div>
-        ))}
-      </div>
-    );
-  };
+            ))
+          }
+        </div>
+      );
+    };
 
-  const listItemStyle = {
-    position: 'relative',
-    margin: '3%'
-  };
+    const listItemStyle = {
+      position: 'relative',  // This makes it a reference for absolute positioning
+      margin: '3%'
+    };
 
-  const svgSelector = (position) => {
-    switch (position) {
-      case 'Attack':
-        return (
-          <div className={'col-1'} style={{marginTop: '1%'}} title="Attaccante">
-            <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
-                 data-name="Layer 1">
-              <path
-                d="m23.414.587a2.022 2.022 0 0 0 -1.941-.513 16.461 16.461 0 0 0 -6.479 3.983l-9.476 9.475a14.58 14.58 0 0 0 -4.376-1.522 1 1 0 0 0 -.286 1.979 12.632 12.632 0 0 1 5.353 2.387l-3.709 3.71-.793-.793a1 1 0 1 0 -1.414 1.414l3 3a1 1 0 1 0 1.414-1.414l-.793-.793 3.709-3.71a12.609 12.609 0 0 1 2.387 5.354 1 1 0 0 0 .99.856.881.881 0 0 0 .144-.011 1 1 0 0 0 .847-1.13 14.515 14.515 0 0 0 -1.522-4.376l9.475-9.476a16.52 16.52 0 0 0 4.01-6.574 1.994 1.994 0 0 0 -.54-1.846zm-4.885 7.005-9.167 9.168a11.15 11.15 0 0 0 -.988-1.134 11.36 11.36 0 0 0 -1.133-.988l9.167-9.167a14.384 14.384 0 0 1 5.584-3.464 14.453 14.453 0 0 1 -3.463 5.585z"/>
-            </svg>
-          </div>
-        );
-      case 'Defender':
-        return (
-          <div className={'col-1'} style={{marginTop: '1%'}} title="Difensore">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
-                 width="20">
-              <path
-                d="m11,0v23.94c-2.1-1.062-9-5.046-9-11.565v-7.225c0-1.293.828-2.441,2.056-2.848L11,0Zm8.944,2.302L13,0v24c2.207-.905,9-4.282,9-11.625v-7.225c0-1.293-.828-2.441-2.056-2.848Z"/>
-            </svg>
-          </div>
-        );
-      case 'Goalkeeper':
-        return (
-          <div className={'col-1'} style={{marginTop: '1%'}} title="portiere">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
-                 width="20">
-              <path
-                d="M19,0H5C2.243,0,0,2.243,0,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5V5c0-2.757-2.243-5-5-5ZM8,17v-4h8v4H8Zm5-6V7h9v4H13Zm-5-6V2h8v3H8Zm3,2v4H2V7H11ZM2,13H6v4H2v-4Zm16,0h4v4h-4v-4Zm4-8h-4V2h1c1.654,0,3,1.346,3,3ZM5,2h1v3H2c0-1.654,1.346-3,3-3ZM2,19H11v3H5c-1.654,0-3-1.346-3-3Zm17,3h-6v-3h9c0,1.654-1.346,3-3,3Z"/>
-            </svg>
-          </div>
-        );
-      case 'Midfield':
-        return (
-          <div className={'col-1'} style={{marginTop: '1%'}} title="Centrocampista">
-            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
-                 width="20">
-              <path
-                d="M23.7,1.715l.008-.008-.026-.026A2.994,2.994,0,0,0,22.319.319L22.293.293,22.285.3A2.951,2.951,0,0,0,21,0H18V2h2.586L17.6,4.989A12.507,12.507,0,0,0,.667,5.66l-.708.707,8.13,8.13L4.586,18H0v2H2.586L.293,22.293l1.414,1.414L4,21.414V24H6V19.414l3.5-3.5,8.13,8.13.707-.708A12.505,12.505,0,0,0,19.011,6.4L22,3.414V6h2V3A2.951,2.951,0,0,0,23.7,1.715ZM2.821,6.4a10.518,10.518,0,0,1,13.364,0L9.5,13.083ZM17.6,21.179,10.917,14.5,17.6,7.815A10.518,10.518,0,0,1,17.6,21.179Z"/>
-            </svg>
-          </div>
-        );
-      default:
-        return null;
-    }
-  }
-
-  const listPlayers = (position, arr, context) => {
-    return (
-      <ul className="list-unstyled">
-        {arr.map((player) => {
-          if (!player.playerId) return null;
-
+    const svgSelector = (position) => {
+      switch (position) {
+        case 'Attack':
           return (
-            <li key={player.playerId} onClick={context === 'left' ? () => handlePlayerSelection(player) : null}
-                style={listItemStyle}>
-              <div className={'row'}>
-                <div className={'col-3'}></div>
-
-                <button className={'col-6 btn'}
-                        onMouseOver={() => togglePopup(player.playerId, true, context)}
-                        onMouseLeave={() => togglePopup(player.playerId, false, context)}>
-                  {player.name}
-                </button>
-                {svgSelector(player.position)}
-                <button className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 col-1 bottone-info"
-                        style={{marginTop: '3%'}}
-                        onClick={() => {
-                          navigate(`/giocatori/${player.playerId}`)
-                        }}
-                        title="Dettagli giocatore">
-                </button>
-              </div>
-              {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId &&
-                <PopupPlayer isOpen={true} player={player}/>}
-            </li>
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Attaccante">
+              <svg id="Layer_1" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
+                   data-name="Layer 1">
+                <path
+                  d="m23.414.587a2.022 2.022 0 0 0 -1.941-.513 16.461 16.461 0 0 0 -6.479 3.983l-9.476 9.475a14.58 14.58 0 0 0 -4.376-1.522 1 1 0 0 0 -.286 1.979 12.632 12.632 0 0 1 5.353 2.387l-3.709 3.71-.793-.793a1 1 0 1 0 -1.414 1.414l3 3a1 1 0 1 0 1.414-1.414l-.793-.793 3.709-3.71a12.609 12.609 0 0 1 2.387 5.354 1 1 0 0 0 .99.856.881.881 0 0 0 .144-.011 1 1 0 0 0 .847-1.13 14.515 14.515 0 0 0 -1.522-4.376l9.475-9.476a16.52 16.52 0 0 0 4.01-6.574 1.994 1.994 0 0 0 -.54-1.846zm-4.885 7.005-9.167 9.168a11.15 11.15 0 0 0 -.988-1.134 11.36 11.36 0 0 0 -1.133-.988l9.167-9.167a14.384 14.384 0 0 1 5.584-3.464 14.453 14.453 0 0 1 -3.463 5.585z"/>
+              </svg>
+            </div>
           );
-        })}
-      </ul>
-    );
-  };
+        case 'Defender':
+          return (
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Difensore">
 
-  return (
-    <>
-      <h2>Crea la tua squadra</h2>
-      <div>
-        <p>
-          Scegli una posizione nel campo e seleziona o cerca il tuo giocatore
-        </p>
-      </div>
-      <div className={"row"}>
-        <div className={"col-md-2"}>
-          <select value={formation} onChange={e => handleFormationChange(e.target.value)}
-                  className="form-select mb-3">
-            <option value="4-4-2">4-4-2</option>
-            <option value="4-3-3">4-3-3</option>
-            <option value="3-5-2">3-5-2</option>
-            <option value="3-4-3">3-4-3</option>
-            <option value="5-3-2">5-3-2</option>
-          </select>
+              <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                   width="20">
+                <path
+                  d="m11,0v23.94c-2.1-1.062-9-5.046-9-11.565v-7.225c0-1.293.828-2.441,2.056-2.848L11,0Zm8.944,2.302L13,0v24c2.207-.905,9-4.282,9-11.625v-7.225c0-1.293-.828-2.441-2.056-2.848Z"/>
+              </svg>
+            </div>
+
+          );
+        case 'Goalkeeper':
+          return (
+            <div className={'col-1'} style={{marginTop: '1%'}} title="portiere">
+              <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                   width="20">
+                <path
+                  d="M19,0H5C2.243,0,0,2.243,0,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5V5c0-2.757-2.243-5-5-5ZM8,17v-4h8v4H8Zm5-6V7h9v4H13Zm-5-6V2h8v3H8Zm3,2v4H2V7H11ZM2,13H6v4H2v-4Zm16,0h4v4h-4v-4Zm4-8h-4V2h1c1.654,0,3,1.346,3,3ZM5,2h1v3H2c0-1.654,1.346-3,3-3ZM2,19H11v3H5c-1.654,0-3-1.346-3-3Zm17,3h-6v-3h9c0,1.654-1.346,3-3,3Z"/>
+              </svg>
+            </div>
+          )
+
+        case 'Midfield':
+          return (
+            <div className={'col-1'} style={{marginTop: '1%'}} title="Centrocampista">
+
+              <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" height="20" viewBox="0 0 24 24"
+                   width="20">
+                <path
+                  d="M23.7,1.715l.008-.008-.026-.026A2.994,2.994,0,0,0,22.319.319L22.293.293,22.285.3A2.951,2.951,0,0,0,21,0H18V2h2.586L17.6,4.989A12.507,12.507,0,0,0,.667,5.66l-.708.707,8.13,8.13L4.586,18H0v2H2.586L.293,22.293l1.414,1.414L4,21.414V24H6V19.414l3.5-3.5,8.13,8.13.707-.708A12.505,12.505,0,0,0,19.011,6.4L22,3.414V6h2V3A2.951,2.951,0,0,0,23.7,1.715ZM2.821,6.4a10.518,10.518,0,0,1,13.364,0L9.5,13.083ZM17.6,21.179,10.917,14.5,17.6,7.815A10.518,10.518,0,0,1,17.6,21.179Z"/>
+              </svg>
+
+            </div>
+          )
+
+      }
+    }
+
+    const listPlayers = (position, arr, context) => {
+      return (
+        <ul className="list-unstyled">
+          {arr.map((player) => {
+            if (!player.playerId) return null;
+
+            return (
+              <li key={player.playerId} onClick={context === 'left' ? () => handlePlayerSelection(player) : null}
+                  style={listItemStyle}>
+                <div className={'row'}>
+                  <div className={'col-3'}></div>
+
+                  <button className={'col-6 btn'}
+                          onMouseOver={() => togglePopup(player.playerId, true, context)}
+                          onMouseLeave={() => togglePopup(player.playerId, false, context)}>
+                    {player.name}
+                  </button>
+                  {svgSelector(player.position)}
+
+                  <button className="fa-solid fa-up-right-from-square border-0 rounded-5 mt-0 mx-2 col-1 bottone-info"
+                          style={{marginTop: '3%'}}
+                          onClick={() => {
+                            navigate(`/giocatori/${player.playerId}`)
+                          }}
+                          title="Dettagli giocatore">
+                  </button>
+                </div>
+                {popupsOpen[1] && popupsOpen[2] === context && popupsOpen[0] === player.playerId &&
+                  <PopupPlayer isOpen={true} player={player}/>}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    };
+
+
+    return (
+      <>
+        <h2>Crea la tua squadra</h2>
+        <div>
+          <p>
+            Scegli una posizione nel campo e seleziona o cerca il tuo giocatore
+          </p>
         </div>
-        <div className={"col-md"}></div>
+        <div className={"row"}>
+          <div className={"col-md-2"}>
+            <select value={formation} onChange={e => handleFormationChange(e.target.value)}
+                    className="form-select mb-3">
+              <option value="4-4-2">4-4-2</option>
+              <option value="4-3-3">4-3-3</option>
+              <option value="3-5-2">3-5-2</option>
+              <option value="3-4-3">3-4-3</option>
+              <option value="5-3-2">5-3-2</option>
+            </select>
+          </div>
+          <div className={"col-md"}></div>
 
-        <div className={"col-md-4"}>
-          <SearchBarUserTemp callback={addPlayer}></SearchBarUserTemp>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-4 min-width-tb">
-          <div className={"text-center"}>
-            <h3>Seleziona i giocatori:</h3>
-
-            {listPlayers('Attack', filterPlayersByPosition('Attack'), 'left')}
-
-            {listPlayers('Midfield', filterPlayersByPosition('Midfield'), 'left')}
-
-            {listPlayers('Defender', filterPlayersByPosition('Defender'), 'left')}
-
-            {listPlayers('Goalkeeper', filterPlayersByPosition('Goalkeeper'), 'left')}
+          <div className={"col-md-4"}>
+            <SearchBarUserTemp callback={addPlayer}></SearchBarUserTemp>
           </div>
         </div>
 
-        <div className=" col-md-4 d-flex align-items-stretch justify-content-center min-width-tb">
-          {showError()}
 
-          <div className="background-image">
-            <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
-              {lineFormation(selectedFormation.forwards, 'h-100')}
-              {lineFormation(selectedFormation.midfielders, 'h-75')}
-              {lineFormation(selectedFormation.defenders, 'h-50')}
-              {lineFormation(selectedFormation.goalkeeper, 'h-75')}
+        <div className="row">
+          <div className="col-md-4 min-width-tb">
+            <div className={"text-center"}>
+              <h3>Seleziona i giocatori:</h3>
+
+              {listPlayers('Attack', filterPlayersByPosition('Attack'), 'left')}
+
+              {listPlayers('Midfield', filterPlayersByPosition('Midfield'), 'left')}
+
+              {listPlayers('Defender', filterPlayersByPosition('Defender'), 'left')}
+
+              {listPlayers('Goalkeeper', filterPlayersByPosition('Goalkeeper'), 'left')}
+            </div>
+          </div>
+
+          <div className=" col-md-4 d-flex align-items-stretch justify-content-center min-width-tb">
+            {showError()}
+
+            <div
+              className=" background-image">
+              <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
+                {lineFormation(selectedFormation.forwards, 'h-100')}
+                {lineFormation(selectedFormation.midfielders, 'h-75')}
+                {lineFormation(selectedFormation.defenders, 'h-50')}
+                {lineFormation(selectedFormation.goalkeeper, 'h-75')}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4 min-width-tb">
+            <h3 className="text-center">Giocatori selezionati:</h3>
+            <div className="text-center">
+              <ul className="list-unstyled">
+                {listPlayers('Attack', selectedFormation.forwards, 'right')}
+              </ul>
+              <ul className="list-unstyled">
+                {listPlayers('Midfield', selectedFormation.midfielders, 'right')}
+              </ul>
+              <ul className="list-unstyled">
+                {listPlayers('Defender', selectedFormation.defenders, 'right')}
+              </ul>
+              <ul className="list-unstyled">
+                {listPlayers('Goalkeeper', selectedFormation.goalkeeper, 'right')}
+              </ul>
             </div>
           </div>
         </div>
-
-        <div className="col-md-4 min-width-tb">
-          <h3 className="text-center">Giocatori selezionati:</h3>
-          <div className="text-center">
-            <ul className="list-unstyled">
-              {listPlayers('Attack', selectedFormation.forwards, 'right')}
-            </ul>
-            <ul className="list-unstyled">
-              {listPlayers('Midfield', selectedFormation.midfielders, 'right')}
-            </ul>
-            <ul className="list-unstyled">
-              {listPlayers('Defender', selectedFormation.defenders, 'right')}
-            </ul>
-            <ul className="list-unstyled">
-              {listPlayers('Goalkeeper', selectedFormation.goalkeeper, 'right')}
-            </ul>
-          </div>
+        <div className="row">
+          <div className="col-md-10"></div>
+          <button
+            className="col-sm-2 btn btn-primary"
+            onClick={() => {
+              sendFormation()
+            }}>Salva
+          </button>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-md-10"></div>
-        <button
-          className="col-sm-2 btn btn-primary"
-          onClick={() => {
-            sendFormation()
-          }}>Salva
-        </button>
-      </div>
-    </>
-  );
-};
+      </>
+    );
+  }
+;
 
 export default TeamFormationSelector;

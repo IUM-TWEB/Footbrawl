@@ -34,3 +34,22 @@
 }
 
 /*Fine bottone info*/
+
+.image-overlay-container {
+  position: relative;
+  display: inline-block; /* O 'block' a seconda delle tue necessità */
+}
+
+.image-overlay-container img {
+  display: block; /* Rimuove eventuali spazi extra sotto l'immagine */
+  width: 100%; /* Assicura che l'immagine copra tutto il contenitore */
+  height: auto; /* Mantiene le proporzioni dell'immagine */
+}
+
+.image-overlay {
+  border: 3px solid #595959;
+}
+
+.image-overlay-selected {
+  border: 3px solid #fd9902;
+}

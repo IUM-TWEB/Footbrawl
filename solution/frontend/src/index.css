@@ -327,27 +327,6 @@ hr.solid {
   border: 3px solid #fd9902;
 }
 
-.player-Usr {
-  width: 100%;
-  border: 2px green;
-  background-color: rgba(0, 0, 0, 0); /* Correct transparency syntax */
-  padding: 3px 3px; /* Add padding for better text visibility and click area */
-  border-radius: 5px; /* Optionally round the corners */
-  font-size: 16px; /* Adjust font size as needed */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions on hover */
-}
-
-
-.player-Usr:hover {
-  background-color: rgba(232, 232, 232, 0.3); /* Slight background on hover for feedback */
-  cursor: pointer; /* Indicates the button is clickable */
-}
-
-.player-Usr:active {
-  transform: translateY(2px); /* Simulates the button being pressed down */
-  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5); /* Adjust shadow to look closer to the surface */
-}
-
 .container-fluid {
   display: flex;
   flex-direction: column;

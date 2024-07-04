@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import PopupPlayer from "./PopupPlayer.jsx";
+import '../style/SearchBarUserTemp.css';
 
 function SearchBar({ callback }) {
   const [popupsOpen, setPopupsOpen] = useState({});
