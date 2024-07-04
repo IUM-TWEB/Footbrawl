@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
+import {useAuth} from "../context/AuthContext.jsx";
 import axios from 'axios';
 
 const PaginaClub = () => {
@@ -9,7 +10,10 @@ const PaginaClub = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {username, password, setNewClub, favoriteClubs, removeClub} = useAuth();
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -29,7 +33,7 @@ const PaginaClub = () => {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/player/playersOfClubLastSeason/${clubId}`);
+        const response = await axios.get(`http://localhost:3000/club/playersOfClubLastSeason/${clubId}`);
         setPlayers(response.data);
       } catch (err) {
         setError(err.message);
@@ -44,8 +48,8 @@ const PaginaClub = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/last_game_by_club/${clubId}`);
-        setGames(response.data);
+        const response = await axios.get(`http://localhost:3000/competition/last_game_by_club/${clubId}`);
+        setGames(response.data.data);
       } catch (err) {
         setError(err.message);
       }
@@ -70,6 +74,33 @@ const PaginaClub = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Controlla se il club è tra i preferiti quando il componente viene montato
+  useEffect(() => {
+    setIsFavorite(favoriteClubs.includes(clubId));
+  }, [favoriteClubs, clubId]);
+
+  const handleFavorite = () => {
+    if (!favoriteClubs.includes(clubId)) {
+      setNewClub(clubId)
+      axios.post("http://localhost:3000/users/favteam", {username: username, pwd: password, teamId: clubId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    } else {
+      removeClub(clubId)
+      axios.post("http://localhost:3000/users/removeTeam", {username: username, pwd: password, teamId: clubId})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    }
+  }
 
   const svgSelector = (position) => {
     switch (position) {
@@ -164,7 +195,7 @@ const PaginaClub = () => {
       {clubData && (
         <div className="mt-4 mx-4 mb-4 flex-grow-1">
           <div className="row">
-            <h2 className="col-md-7 mb-5">{clubData.name}</h2>
+            <h2 className="col-md-7 mb-4">{clubData.name}</h2>
             <div className="col-md-5 h-50 d-flex justify-content-end">
               <button
                 key={clubData.name}
@@ -177,9 +208,21 @@ const PaginaClub = () => {
             </div>
           </div>
 
+          <hr className="mb-4"/>
+          <div className="col-md-1 px-1">
+            <button
+              className={`mt-2 center-block btn w-50 ${isFavorite ? (hover ? 'btn-danger' : 'btn-success') : 'btn-outline-dark'}`}
+              onClick={handleFavorite}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+            >
+              <i className={`fas ${isFavorite ? (hover ? 'fa-times' : 'fa-check text-white') : 'fa-heart'}`}></i>
+            </button>
+          </div>
           <div className="row">
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+
               <div className="mb-3">
                 <img src={`https://tmssl.akamaized.net/images/wappen/head/${clubData.clubId}.png`} alt={'club logo'}/>
               </div>
@@ -236,14 +279,21 @@ const PaginaClub = () => {
             </div>
 
             <div className="col-md-3 d-flex flex-column align-items-center parallax parallax-slow">
+              <h2 className="mb-4 d-flex flex-column align-items-center">Ultime Partite</h2>
               {games.length > 0 ? (
-                <ul className="list-unstyled">
+                <div>
                   {games.map((game, index) => (
-                    <li key={index}>{game.date}: {game.opponent} - {game.result}</li>
+                    <div className="mb-5 p-2 border border-light-subtle rounded" key={index}>
+                      <p className="text-center mb-0"><span
+                        className="fw-semibold">{game.home_club_name}</span> {game.home_club_goals}</p>
+                      <p className="text-center mb-0"> - </p>
+                      <p className="text-center mb-0"><span
+                        className="fw-semibold">{game.away_club_name}</span> {game.away_club_goals}</p>
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
-                <p>No games found for this club.</p>
+                <p>Non sono state trovate partite per questo club.</p>
               )}
             </div>
 

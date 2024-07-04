@@ -2,91 +2,224 @@ const queries = require('../queries/games_queries')
 
 
 module.exports.getById = async (req, res) => {
-    await queries.getById(req.params.id)
-        .then((resp) => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+  const {id} = req.params
+  if(!id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
+  try {
+    const mongo_resp = (await queries.getById(id))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 module.exports.getBySeasonAndComp = async (req, res) => {
-    await queries.getByComp(req.params.comp, req.params.season)
-        .then(resp => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+  const {comp, season} = req.params
+  if(!(season && comp)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
+  try {
+    const mongo_resp = (await queries.getByComp(comp, season))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 module.exports.getByCompLast = async (req, res) => {
-    await queries.getByCompLast(req.params.comp)
-      .then(resp => {
-          res.send(resp)
+  const {comp} = req.params
+  if(!comp){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
+  try {
+    const mongo_resp = (await queries.getByCompLast(comp))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
       })
-      .catch((err) => {
-          console.log(err)
-          res.send(err.name)
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
       })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 module.exports.getByClubLast = async (req, res) => {
-    await queries.getByClubLast(req.params.club_id)
-      .then(resp => {
-          res.send(resp)
+  const {club_id} = req.params
+  if(!club_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
+  try {
+    const mongo_resp = (await queries.getByClubLast(club_id))
+
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
       })
-      .catch((err) => {
-          console.log(err)
-          res.send(err.name)
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
       })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }
 
 module.exports.getManagerNameByClubId = async (req, res) => {
-  await queries.getManagerNameByClubId(req.params.club_id)
-    .then(resp => {
-      res.send(resp)
+  const {club_id} = req.params
+  if(!club_id){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
     })
-    .catch((err) => {
-      console.log(err)
-      res.send(err.name)
+  }
+  try {
+    const mongo_resp = (await queries.getManagerNameByClubId(club_id))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
+    }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
     })
+  }
 }
 
 module.exports.getByClub = async (req, res) => {
-    await queries.getByClub(req.params.comp, parseInt(req.params.season), req.params.game_id)
-        .then(resp => {
-            res.send(resp)
-        })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
-}
-
-module.exports.getPosition = async (req, res) => {
-    try {
-        const club_ids = []/*get all the club_id in the database */
-
-        for (i of club_ids)
-            await queries.getPosition(Number(i))
-                .then(resp => {
-                    const competition_name = "test"
-
-                    /*add in each the name of the club and competition_name to the record*/
-                    /*post the result in postgres*/
-
-                    // res.send(resp)
-
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-    }catch (e){
-        console.log(e.name)
-        res.send(e.name)
+  const {comp, season, game_id} = req.params
+  if(!(comp && season && game_id)){
+    res.json({
+      success: false,
+      status: 500,
+      message: "bad request",
+      data: null
+    })
+  }
+  try {
+    const mongo_resp = (await queries.getByClub(comp, parseInt(season), game_id))
+    if (mongo_resp === '') {
+      res.json({
+        success: false,
+        status: 404,
+        message: "No resource found",
+        data: null
+      })
+    } else {
+      res.json({
+        success: true,
+        status: 200,
+        message: "",
+        data: mongo_resp
+      })
     }
+  } catch (e) {
+    res.json({
+      success: false,
+      status: 500,
+      message: "internal server error",
+      data: null
+    })
+  }
 }

@@ -1,6 +1,6 @@
 const games = require('../models/club_games')
 const getByGame = (game) => {
-    return game.find({club_games_id: game}, {}, null)
+    return games.find({club_games_id: game}, {}, null)
 }
 
 const getByClub = (club) => {

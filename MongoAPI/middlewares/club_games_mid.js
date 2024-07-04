@@ -1,34 +1,108 @@
 const queries = require("../queries/club_games_queries");
 
 module.exports.getByGame = async (req, res) => {
-    await queries.getByClub(req.params.game)
-        .then((resp) => {
-            res.send(resp)
+    const {game} = req.params
+    if(!game){
+        res.json({
+            success: false,
+            status: 500,
+            message: "bad request",
+            data: null
         })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
+    }
+    try {
+        const mongo_resp = await queries.getByGame(game)
+        console.log(mongo_resp)
+
+        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+            res.json({
+                success: false,
+                status: 404,
+                message: "No resource found",
+                data: null
+            })
+
+        } else {
+            res.json({
+                success: true,
+                status: 200,
+                message: "",
+                data: mongo_resp
+            })
+        }
+    } catch (e) {
+        res.json({
+            success: false,
+            status: 500,
+            message: "internal server error",
+            data: null
         })
+    }
 }
 
 module.exports.getByClub = async (req, res) => {
-    await queries.getByClub(req.params.club)
-        .then((resp) => {
-            res.send(resp)
+    const {club} = req.params
+    if(!club){
+        res.json({
+            success: false,
+            status: 500,
+            message: "bad request",
+            data: null
         })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
+    }
+    try {
+        const mongo_resp = (await  queries.getByClub(club))
+        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+            res.json({
+                success: false,
+                status: 404,
+                message: "No resource found",
+                data: null
+            })
+        } else {
+            res.json({
+                success: true,
+                status: 200,
+                message: "",
+                data: mongo_resp
+            })
+        }
+    } catch (e) {
+        res.json({
+            success: false,
+            status: 500,
+            message: "internal server error",
+            data: null
         })
+    }
 }
 
 module.exports.getByClubAndHosted = async (req, res) => {
-    await queries.getByClub(req.params.club, req.params.hosted)
-        .then((resp) => {
-            res.send(resp)
+    const {club, hosted} = req.params
+    try {
+        const mongo_resp = (await  queries.getByClub(club,hosted))
+        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+            res.json({
+                success: false,
+                status: 404,
+                message: "No resource found",
+                data: null
+            })
+        } else {
+            res.json({
+                success: true,
+                status: 200,
+                message: "",
+                data: mongo_resp
+            })
+        }
+    } catch (e) {
+        res.json({
+            success: false,
+            status: 500,
+            message: "internal server error",
+            data: null
         })
-        .catch((err) => {
-            console.log(err)
-            res.send(err.name)
-        })
+    }
+
 }

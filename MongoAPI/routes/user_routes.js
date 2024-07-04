@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const mid = require('../middlewares/user_mid');
-const model = require('../models/user')
+
 /**
  * @swagger
  * /user/log/:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Login user (using middleware)
- *     description: This endpoint allows users to login by providing their username and password.
- *                  The functionality is implemented in the middleware layer.
+ *     description: This endpoint allows users to login by providing their username and password. The functionality is implemented in the middleware layer.
  *     requestBody:
  *       required: true
  *       content:
@@ -25,10 +26,22 @@ const model = require('../models/user')
  *     responses:
  *       '200':
  *         description: Login successful. User data returned.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
  *       '401':
  *         description: Unauthorized. Invalid username or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/log/', mid.getUsr);
 
@@ -36,6 +49,8 @@ router.post('/log/', mid.getUsr);
  * @swagger
  * /user/:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Register user
  *     description: This endpoint allows users to register by providing their username and password.
  *     requestBody:
@@ -48,16 +63,26 @@ router.post('/log/', mid.getUsr);
  *               username:
  *                 type: string
  *                 description: The username of the user.
+ *                 example: johndoe
  *               pwd:
  *                 type: string
  *                 description: The password of the user.
+ *                 example: password123
  *     responses:
  *       '200':
  *         description: Registration successful.
- *       '400':  # Assuming a 400 error is returned for bad user data
+ *       '400':
  *         description: Bad request. Username might already exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/', mid.postUsr);
 
@@ -65,6 +90,8 @@ router.post('/', mid.postUsr);
  * @swagger
  * /user/ex/:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Get user by username
  *     description: This endpoint retrieves user data by username.
  *     requestBody:
@@ -80,10 +107,22 @@ router.post('/', mid.postUsr);
  *     responses:
  *       '200':
  *         description: User data retrieved successfully.
- *       '404':  # Assuming a 404 error is returned for not found user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '404':
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/ex/', mid.getUsrByName);
 
@@ -91,138 +130,213 @@ router.post('/ex/', mid.getUsrByName);
  * @swagger
  * /user/fav/player/:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Add favorite player to user
  *     description: This endpoint allows users to add a player to their favorite players list.
- *     parameters:
- *       - in: body
- *         name: user
- *         description: The user to create.
- *         schema:
- *           type: object
- *           required:
- *             - userName
- *           properties:
- *             userName:
- *               type: string
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *               playerId:
+ *                 type: string
+ *                 description: The ID of the player to add.
  *     responses:
  *       '200':
  *         description: Player added to favorites successfully.
- *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
  *         description: Unauthorized. Invalid username or password.
- *       '404':  # Assuming a 404 error is returned for not found user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/fav/player/', mid.addFavoritePlayer);
 
 /**
  * @swagger
- * /user/fav/player/:
+ * /user/fav/team/:
  *   post:
- *     summary: Add favorite player to user
- *     description: This endpoint allows users to add a player to their favorite players list.
- *     parameters:
- *       - in: body
- *         name: user
- *         description: The user to create.
- *         schema:
- *           type: object
- *           required:
- *             - userName
- *           properties:
- *             userName:
- *               type: string
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
+ *     tags:
+ *       - User
+ *     summary: Add favorite team to user
+ *     description: This endpoint allows users to add a team to their favorite teams list.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *               teamId:
+ *                 type: string
+ *                 description: The ID of the team to add.
  *     responses:
  *       '200':
- *         description: Player added to favorites successfully.
- *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Team added to favorites successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
  *         description: Unauthorized. Invalid username or password.
- *       '404':  # Assuming a 404 error is returned for not found user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/fav/team/', mid.addFavoriteTeam);
 
 /**
  * @swagger
- * /user/fav/player/:
+ * /user/fav/formation:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Add favorite formation
- *     description: This endpoint allows users to save the selected formation
- *     parameters:
- *       - in: body
- *         name: user
- *         description: The user to create.
- *         schema:
- *           type: object
- *           required:
- *             - userName
- *           properties:
- *             userName:
- *               type: string
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
+ *     description: This endpoint allows users to save the selected formation.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *               formation:
+ *                 type: object
+ *                 description: The formation object to save.
  *     responses:
  *       '200':
- *         description: Player added to favorites successfully.
- *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Formation added to favorites successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
  *         description: Unauthorized. Invalid username or password.
- *       '404':  # Assuming a 404 error is returned for not found user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
-router.post('/fav/formation', mid.addFormation)
+router.post('/fav/formation', mid.addFormation);
 
 /**
  * @swagger
- * /user/fav/player/:
+ * /user/getfav/formation:
  *   post:
- *     summary: Add favorite formation
- *     description: This endpoint allows users to save the selected formation
- *     parameters:
- *       - in: body
- *         name: user
- *         description: The user to create.
- *         schema:
- *           type: object
- *           required:
- *             - userName
- *           properties:
- *             userName:
- *               type: string
- *             firstName:
- *               type: string
- *             lastName:
- *               type: string
+ *     tags:
+ *       - User
+ *     summary: Get user's favorite formation
+ *     description: This endpoint retrieves a user's saved formation.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
  *     responses:
  *       '200':
- *         description: Player added to favorites successfully.
- *       '401':  # Assuming a 401 error is returned for unauthorized access
+ *         description: Formation retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
  *         description: Unauthorized. Invalid username or password.
- *       '404':  # Assuming a 404 error is returned for not found user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       '500':
  *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
-router.post('/getfav/formation', mid.getFormation)
+router.post('/getfav/formation', mid.getFormation);
 
 /**
  * @swagger
- * /user/getfav/player/:
+ * /user/getfav/player:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Get user's favorite players
  *     description: This endpoint retrieves a user's list of favorite players.
  *     requestBody:
@@ -230,56 +344,193 @@ router.post('/getfav/formation', mid.getFormation)
  *       content:
  *         application/json:
  *           schema:
- *
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *     responses:
+ *       '200':
+ *         description: Favorite players retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
+ *         description: Unauthorized. Invalid username or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
-router.post('/getfav/player', async (req, res) => {
-  try {
-    const resp = await model.findOne(
-      {user_name: req.body.username, pwd: req.body.pwd},
-      {favorite_players: 1}
-    );
-    if (resp) {
-      res.send(resp.favorite_players);
-    } else {
-      res.status(404).send("User not found");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error");
-  }
-});
+router.post('/getfav/player', mid.getFavoritePlayer);
 
 /**
  * @swagger
  * /user/getfav/:
  *   post:
+ *     tags:
+ *       - User
  *     summary: Get user's favorite players, clubs and saved formations
- *     description: This endpoint retrieves an object of user's favorite players, clubs and saved formations.
+ *     description: This endpoint retrieves an object of user's favorite players, clubs, and saved formations.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *     responses:
+ *       '200':
+ *         description: User's favorite data retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
+ *         description: Unauthorized. Invalid username or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
-router.post('/getfav/', async (req, res) => {
-  try {
-    const resp = await model.findOne(
-      {user_name: req.body.username, pwd: req.body.pwd}, {}, null
-    );
-    if (resp) {
-      res.send({
-        "favorite_players": resp.favorite_players,
-        "favorite_teams" : resp.favorite_teams,
-        "formations" : resp.formations
-      });
-    } else {
-      res.status(404).send("User not found");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error");
-  }
-});
+router.post('/getfav/', mid.getAllFav);
 
-module.exports = router
+/**
+ * @swagger
+ * /fav/removePlayer:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Remove favorite player
+ *     description: This endpoint allows users to remove a player from their favorite players list.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *               playerId:
+ *                 type: string
+ *                 description: The ID of the player to remove.
+ *     responses:
+ *       '200':
+ *         description: Player removed from favorites successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
+ *         description: Unauthorized. Invalid username or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.post('/fav/removePlayer', mid.removePlayer);
+
+/**
+ * @swagger
+ * /fav/removeTeam:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Remove favorite team
+ *     description: This endpoint allows users to remove a team from their favorite teams list.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               pwd:
+ *                 type: string
+ *                 description: The password of the user.
+ *               teamId:
+ *                 type: string
+ *                 description: The ID of the team to remove.
+ *     responses:
+ *       '200':
+ *         description: Team removed from favorites successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       '401':
+ *         description: Unauthorized. Invalid username or password.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '404':
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.post('/fav/removeTeam', mid.removeTeam);
+
+module.exports = router;

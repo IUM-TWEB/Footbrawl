@@ -14,7 +14,6 @@ const PaginaUser = () => {
 
   useEffect(() => {
     if (favoritePlayers.length > 0) {
-      // Faccio la fetch dei nomi dei player
       Promise.all(favoritePlayers.map(selectedPlayer =>
         axios.get(`http://localhost:3000/player/${selectedPlayer}`)
           .then(response => response.data)
@@ -52,7 +51,14 @@ const PaginaUser = () => {
 
   return (
     <div className="container-fluid mt-5 px-5 pb-5">
-      <h1>Utente: {username ? username : 'utente'}</h1>
+      <div className="row">
+        <div className="col-sm-10">
+          <h1>Utente: {username ? username : 'utente'}</h1>
+        </div>
+        <div className="col-sm-2 d-flex justify-content-end mt-3">
+          <button onClick={handleLogout} className="btn btn-danger">Logout</button>
+        </div>
+      </div>
       {username && (
         <>
           <FavoriteUserPlayers Players={players}></FavoriteUserPlayers>
@@ -61,11 +67,8 @@ const PaginaUser = () => {
           <FavouriteUserTeam clubs={clubs}></FavouriteUserTeam>
           <hr className="my-custom-hr"/>
 
-          <TeamBuilder  favoritePlayers={players}></TeamBuilder>
+          <TeamBuilder favoritePlayers={players}></TeamBuilder>
 
-          <div className="d-flex justify-content-end w-100 mt-3">
-            <button onClick={handleLogout} className="btn btn-danger">Logout</button>
-          </div>
         </>
       )}
     </div>

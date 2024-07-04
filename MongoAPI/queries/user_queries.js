@@ -37,9 +37,17 @@ const addFavoritePlayer = async (name, pwd, playerId) => {
     return {success: false, message: error.message};
   }
 };
+
+const removeFavoritePlayer = (name, pwd, playerId) => {
+  return model.updateOne(
+    {user_name: name, pwd: pwd},
+    {$pull: {favorite_players: playerId}}
+  );
+};
+
 const getFavoritePlayer = async (username, pwd) => {
   try {
-    return result = await model.findOne({user_name: username, pwd: pwd}, {}, null)
+    return await model.findOne({user_name: username, pwd: pwd}, {}, null)
   } catch (e) {
 
   }
@@ -48,6 +56,13 @@ const addFavoriteTeam = (name, pwd, teamId) => {
   return model.updateOne(
     {user_name: name, pwd: pwd},
     {$push: {favorite_teams: teamId}}
+  );
+};
+
+const removeFavoriteTeam = (name, pwd, teamId) => {
+  return model.updateOne(
+    {user_name: name, pwd: pwd},
+    {$pull: {favorite_teams: teamId}}
   );
 };
 
@@ -81,8 +96,20 @@ const addFormation = async (username, pwd, formation) => {
   }
 }
 
-const getFormation = (username,pwd)=>{
-  return model.findOne({user_name:username, pwd:pwd},{}, null)
+const getFormation = (username, pwd) => {
+  return model.findOne({user_name: username, pwd: pwd}, {}, null)
 }
 
-module.exports = {getUsr, postUsr, getUsrByName, addFavoritePlayer, addFavoriteTeam, getFavoriteTeam ,getFavoritePlayer, addFormation, getFormation};
+module.exports = {
+  getUsr,
+  postUsr,
+  getUsrByName,
+  addFavoritePlayer,
+  addFavoriteTeam,
+  getFavoriteTeam,
+  getFavoritePlayer,
+  addFormation,
+  getFormation,
+  removeFavoriteTeam,
+  removeFavoritePlayer,
+};

@@ -1,7 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
 
 function LeaderBoard(props) {
   const rankings = props.rankings;
+  const navigate = useNavigate();
+
+  const handleRowClick = (club_id) => {
+    navigate(`/club/${club_id}`);
+  };
 
   return (
     <div>
@@ -10,17 +16,15 @@ function LeaderBoard(props) {
         <table className="table">
           <thead className="thead-dark">
           <tr>
-            <th scope="col">#</th>
+            <th scope="col"> </th>
             <th scope="col">Squadra</th>
-            <th scope="col">Posizione</th>
           </tr>
           </thead>
           <tbody>
           {rankings.slice(0, 3).map((ranking) => (
-            <tr key={ranking.ranking_id}>
+            <tr key={ranking.ranking_id} onClick={() => handleRowClick(ranking.club_id)} style={{ cursor: 'pointer' }}>
               <td>{ranking.position}</td>
               <td>{ranking.club_name}</td>
-              <td>{ranking.position}</td>
             </tr>
           ))}
           </tbody>

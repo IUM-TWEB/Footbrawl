@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,9 +13,26 @@ function SearchBar({ setOpacity }) {
   const [showClubsDropdown, setShowClubsDropdown] = useState(true);
   const [showCompetitionsDropdown, setShowCompetitionsDropdown] = useState(true);
   const errorTimeoutRef = useRef(null);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (showContent) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
 
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showContent]);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      handleClickClean();
+    }
+  };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -32,10 +49,9 @@ function SearchBar({ setOpacity }) {
   };
 
   const fetchData = (searchTerm) => {
-
-    if(searchTerm==='')
-      handleClickClean()
-    else
+    if (searchTerm === '') {
+      handleClickClean();
+    } else {
       axios.get(`http://localhost:3000/home/${searchTerm}`)
         .then(response => {
           const [fetchedPlayers, fetchedClubs, fetchedCompetitions] = response.data;
@@ -50,7 +66,7 @@ function SearchBar({ setOpacity }) {
           setShowCompetitionsDropdown(fetchedCompetitions.length >= 1);
         })
         .catch(error => {
-          console.error('Error: ' , error);
+          console.error('Error: ', error);
           setShowError(true);
           setShowContent(false);
           setOpacity(false);
@@ -58,14 +74,15 @@ function SearchBar({ setOpacity }) {
             setShowError(false);
           }, 5000);
         });
+    }
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4" ref={dropdownRef}>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div className="search-bar-container d-flex align-items-center">
-            <form id="searchForm" className="flex-grow-1 d-flex align-items-center" >
+            <form id="searchForm" className="flex-grow-1 d-flex align-items-center">
               <input
                 id="searchInput"
                 type="text"
@@ -79,8 +96,8 @@ function SearchBar({ setOpacity }) {
             </form>
           </div>
 
-            {showContent && (
-              <div className="position-absolute results-div">
+          {showContent && (
+            <div className="position-absolute results-div">
               <div className="row mt-2">
                 {showPlayersDropdown && (
                   <div className="col-md-4">
@@ -116,17 +133,16 @@ function SearchBar({ setOpacity }) {
                   </div>
                 )}
               </div>
-              </div>
-            )}
-            {showError && (
-              <div id="errorMessage" className="alert alert-danger">
-                Mi dispiace, il termine che hai inserito non si trova nel nostro database
-              </div>
-            )}
-          </div>
+            </div>
+          )}
+          {showError && (
+            <div id="errorMessage" className="alert alert-danger">
+              Mi dispiace, il termine che hai inserito non si trova nel nostro database
+            </div>
+          )}
         </div>
       </div>
-
+    </div>
   );
 }
 
