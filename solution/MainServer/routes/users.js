@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /user/log:
+ * /users/log:
  *   post:
  *     summary: Log in a user
  *     description: Logs in a user by sending their credentials to the server.
@@ -55,7 +55,7 @@ router.post('/log', async (req, res) => {
 
 /**
  * @swagger
- * /user/:
+ * /users/:
  *   post:
  *     summary: Create a new user
  *     description: Creates a new user if they do not already exist.
@@ -100,7 +100,7 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /user/favplayer:
+ * /users/favplayer:
  *   post:
  *     summary: Add a favorite player
  *     description: Adds a favorite player for the user.
@@ -141,7 +141,7 @@ router.post('/favplayer', async (req, res) => {
 
 /**
  * @swagger
- * /user/favteam:
+ * /users/favteam:
  *   post:
  *     summary: Add a favorite team
  *     description: Adds a favorite team for the user.
@@ -181,7 +181,7 @@ router.post('/favteam', async (req, res) => {
 
 /**
  * @swagger
- * /user/getfav:
+ * /users/getfav:
  *   post:
  *     summary: Get favorite players and teams
  *     description: Retrieves the favorite players and teams for the user.
@@ -224,7 +224,7 @@ router.post('/getfav', async (req, res) => {
 
 /**
  * @swagger
- * /user/postFormations:
+ * /users/postFormations:
  *   post:
  *     summary: Add a favorite formation
  *     description: Adds a favorite formation for the user.
@@ -268,7 +268,7 @@ router.post('/postFormations', async (req, res) => {
 
 /**
  * @swagger
- * /user/getFormations:
+ * /users/getFormations:
  *   post:
  *     summary: Get favorite formations
  *     description: Retrieves the favorite formations for the user.
@@ -310,7 +310,7 @@ router.post('/getFormations', async (req, res) => {
 
 /**
  * @swagger
- * /removePlayer:
+ * /users/removePlayer:
  *   post:
  *     summary: Remove a player from the user's favorites
  *     description: This endpoint removes a player from the user's favorite players list.
@@ -409,7 +409,7 @@ router.post('/removePlayer', async (req,res)=>{
 
 /**
  * @swagger
- * /removeTeam:
+ * /users/removeTeam:
  *   post:
  *     summary: Remove a Team from the user's favorites
  *     description: This endpoint removes a team from the user's favorite team list.

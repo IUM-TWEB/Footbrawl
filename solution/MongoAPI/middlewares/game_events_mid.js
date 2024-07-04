@@ -1,4 +1,5 @@
 const queries = require('../queries/game_events_queries')
+const {mongo} = require("mongoose");
 
 const getById = async (req, res) => {
   const {id} = req.params
@@ -160,6 +161,7 @@ const getAssistDatesByPlayerId = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getAssistDatesByPlayerIn(player_id))
+    console.log(mongo_resp)
     if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,

@@ -460,12 +460,6 @@ router.post('/getfav/', mid.getAllFav);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UserResponse'
- *       '401':
- *         description: Unauthorized. Invalid username or password.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  *       '404':
  *         description: User not found.
  *         content:

@@ -397,7 +397,6 @@ module.exports.removeTeam = async (req, res) => {
 
   try {
     const mongo_resp = (await queries.removeFavoriteTeam(username, pwd, teamId))
-    console.log("eccoci ",mongo_resp)
     if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
