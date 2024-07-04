@@ -12,7 +12,7 @@ module.exports.getUsr = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getUsr(username, pwd))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if (!mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp.length === 0) {
       res.json({
         success: false,
         status: 404,
@@ -49,7 +49,7 @@ module.exports.getUsrByName = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getUsrByName(username, pwd))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if (!mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -87,7 +87,7 @@ module.exports.postUsr = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.postUsr(username, pwd))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if (!mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -124,7 +124,7 @@ module.exports.addFavoritePlayer = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.addFavoritePlayer(username, pwd, playerId))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -161,7 +161,7 @@ module.exports.getFavoritePlayer = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getFavoritePlayer(username, pwd))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -198,7 +198,7 @@ module.exports.addFavoriteTeam = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.addFavoriteTeam(username, pwd, teamId))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -235,7 +235,7 @@ module.exports.addFormation = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.addFormation(username, pwd, formation))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -272,7 +272,7 @@ module.exports.getFormation = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getFormation(username,pwd))
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -310,7 +310,7 @@ module.exports.getAllFav = async (req, res) => {
   try {
     const mongo_resp = (await queries.getFormation(username,pwd))
 
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -357,7 +357,7 @@ module.exports.removePlayer = async (req, res) => {
   try {
     const mongo_resp = (await queries.removeFavoritePlayer(username,pwd,playerId))
     console.log(mongo_resp)
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,
@@ -398,7 +398,7 @@ module.exports.removeTeam = async (req, res) => {
   try {
     const mongo_resp = (await queries.removeFavoriteTeam(username, pwd, teamId))
     console.log("eccoci ",mongo_resp)
-    if (mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
+    if ( !mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
       res.json({
         success: false,
         status: 404,

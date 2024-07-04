@@ -13,7 +13,7 @@ module.exports.getById = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getById(id))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -50,7 +50,7 @@ module.exports.getBySeasonAndComp = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getByComp(comp, season))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -87,7 +87,7 @@ module.exports.getByCompLast = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getByCompLast(comp))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -125,7 +125,7 @@ module.exports.getByClubLast = async (req, res) => {
   try {
     const mongo_resp = (await queries.getByClubLast(club_id))
 
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -162,7 +162,7 @@ module.exports.getManagerNameByClubId = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getManagerNameByClubId(club_id))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -199,7 +199,7 @@ module.exports.getByClub = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getByClub(comp, parseInt(season), game_id))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,

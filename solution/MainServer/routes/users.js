@@ -43,7 +43,6 @@ router.post('/log', async (req, res) => {
   try {
     console.log(req.body);
     const response = (await axios.post(`http://localhost:3001/user/log/`, req.body)).data;
-    console.log(response.data);
     if (Array.isArray(response.data) && response.data.length)
       res.send("1");
     else
@@ -132,6 +131,7 @@ router.post('/', async (req, res) => {
 router.post('/favplayer', async (req, res) => {
   try {
     const response = (await axios.post("http://localhost:3001/user/fav/player", req.body)).data;
+    console.log(response)
     res.send(response.data);
   } catch (e) {
     console.error(e);
@@ -302,7 +302,7 @@ router.post('/getFormations', async (req, res) => {
       username: req.body.username,
       pwd: req.body.pwd,
     })).data;
-    res.send(resp.data);
+    res.send(resp.data.formations);
   } catch (e) {
     res.sendStatus(500);
   }

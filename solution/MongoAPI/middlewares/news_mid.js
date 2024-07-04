@@ -12,7 +12,7 @@ module.exports.getById = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getById(id))
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,
@@ -41,7 +41,7 @@ module.exports.getAll = async (req, res) => {
   try {
     const mongo_resp = (await queries.getAll())
     console.log(mongo_resp, "mongo resp news")
-    if (mongo_resp === '') {
+    if ( !mongo_resp === '') {
       res.json({
         success: false,
         status: 404,

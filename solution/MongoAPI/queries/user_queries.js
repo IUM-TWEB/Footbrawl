@@ -2,9 +2,7 @@ const model = require('../models/user')
 
 const getUsr = async (name, pwd) => {
   try {
-    const user = await model.find({user_name: name, pwd: pwd}, {}, null);
-    console.log('Query result:', name, pwd); // Log per il debug
-    return user;
+    return user = await model.find({user_name: name, pwd: pwd}, {}, null);
   } catch (error) {
     console.error('Error fetching user:', error);
     throw error;

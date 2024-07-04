@@ -26,9 +26,9 @@ const TeamFormationSelector = ({favoritePlayers}) => {
   useEffect(() => {
     const fetchData = async () => {
       const resp = await getFormations();
-      if (resp && Array.isArray(resp)) {
-        setSavedFormations(resp);
-      }
+      console.log(resp)
+      setSavedFormations(resp);
+      console.log(savedFormations)
     };
     fetchData();
   }, []);
@@ -41,8 +41,21 @@ const TeamFormationSelector = ({favoritePlayers}) => {
   }, [formation, savedFormations]);
 
   useEffect(() => {
-    setPlayerNames(favoritePlayers);
-  }, [favoritePlayers]);
+    const isPlayerInFormation = (player) => {
+      for (const key in selectedFormation) {
+        if (selectedFormation[key].some(p => p.playerId === player.playerId)) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Filtra i giocatori preferiti per escludere quelli già nella formazione
+    const filteredPlayers = favoritePlayers.filter(pl => !isPlayerInFormation(pl));
+
+    // Aggiorna playerNames con i giocatori filtrati
+    setPlayerNames(filteredPlayers);
+  }, [favoritePlayers, selectedFormation]);
 
   const getFormations = async () => {
     const axios_resp = await axios.post('http://localhost:3000/users/getFormations', {

@@ -14,7 +14,7 @@ module.exports.getByGame = async (req, res) => {
         const mongo_resp = await queries.getByGame(game)
         console.log(mongo_resp)
 
-        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+        if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
             res.json({
                 success: false,
                 status: 404,
@@ -52,7 +52,7 @@ module.exports.getByClub = async (req, res) => {
     }
     try {
         const mongo_resp = (await  queries.getByClub(club))
-        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+        if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
             res.json({
                 success: false,
                 status: 404,
@@ -81,7 +81,7 @@ module.exports.getByClubAndHosted = async (req, res) => {
     const {club, hosted} = req.params
     try {
         const mongo_resp = (await  queries.getByClub(club,hosted))
-        if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+        if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
             res.json({
                 success: false,
                 status: 404,

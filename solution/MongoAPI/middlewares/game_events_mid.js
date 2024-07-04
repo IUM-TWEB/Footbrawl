@@ -12,7 +12,7 @@ const getById = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getById(id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -49,7 +49,7 @@ const getByPlayer = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getByPlayer(player_id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -86,7 +86,7 @@ const getByClub = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getByClub(club_id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -123,7 +123,7 @@ const getGoalDatesById = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getGoalDatesByPlayerIn(player_id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -160,7 +160,7 @@ const getAssistDatesByPlayerId = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getAssistDatesByPlayerIn(player_id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
@@ -197,7 +197,7 @@ const getTopScorer = async (req, res) => {
   }
   try {
     const mongo_resp = (await queries.getTopScorer(competition_id))
-    if (mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
+    if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
       res.json({
         success: false,
         status: 404,
