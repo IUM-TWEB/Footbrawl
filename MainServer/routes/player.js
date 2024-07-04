@@ -82,6 +82,44 @@ function extract(raw) {
  *   name: Players
  *   description: Operazioni relative ai giocatori
  */
+
+/**
+ * @swagger
+ * /player/goals_date/{player_id}:
+ *   get:
+ *     summary: Get player's assist counts by year
+ *     description: Returns the count of assists made by a player each year based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.
+ *     tags: [Players]
+ *     parameters:
+ *       - in: path
+ *         name: player_id
+ *         required: true
+ *         description: ID of the player to get assist counts for
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Player's assist counts by year
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dates:
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *                     description: Year of the assist data
+ *                   example: []
+ *                 goal_counts:
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *                     description: Number of assists made in that year
+ *                   example: []
+ *       500:
+ *         description: Error in the request to the Spring Boot server
+ */
 router.get('/goals_date/:player_id', async (req, res) => {
   try {
     const response = (await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`)).data;
@@ -99,10 +137,46 @@ router.get('/goals_date/:player_id', async (req, res) => {
 
 });
 
-
+/**
+ * @swagger
+ * /player/assist_date/{player_id}:
+ *   get:
+ *     summary: Get player's assist counts by year
+ *     description: Returns the count of assists made by a player each year based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.
+ *     tags: [Players]
+ *     parameters:
+ *       - in: path
+ *         name: player_id
+ *         required: true
+ *         description: ID of the player to get assist counts for
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Player's assist counts by year
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dates:
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *                     description: Year of the assist data
+ *                   example: []
+ *                 assist_counts:
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *                     description: Number of assists made in that year
+ *                   example: []
+ *       500:
+ *         description: Error in the request to the Spring Boot server
+ */
 router.get('/assist_date/:player_id', async (req, res) => {
   try {
-    const response = await axios.get(`http://localhost:3001/events/player_assist_date/${req.params.player_id}`);
+    const response = (await axios.get(`http://localhost:3001/events/player_assist_date/${req.params.player_id}`)).data;
     const res_data = extract(response.data);
     res.send(res_data);
 
@@ -113,9 +187,10 @@ router.get('/assist_date/:player_id', async (req, res) => {
 });
 
 
+
 /**
  * @swagger
- * /market_value/{id}:
+ * /player/market_value/{id}:
  *   get:
  *     summary: Get player's market value over time
  *     description: Returns the market value of a player over time based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.
@@ -159,7 +234,7 @@ router.get('/market_value/:id', async (req, res) => {
 
 /**
  * @swagger
- * /player_clubs/{player_id}:
+ * /player/player_clubs/{player_id}:
  *   get:
  *     summary: Get the clubs a player has been associated with
  *     description: Returns a list of clubs that a player has been associated with based on the player's ID. This endpoint makes requests to multiple servers to gather the necessary data.
@@ -218,58 +293,12 @@ router.get('/player_clubs/:player_id', async (req, res) => {
 
 
 
-/**
- * @swagger
- * /assist_date/{player_id}:
- *   get:
- *     summary: Get player's assist counts by year
- *     description: Returns the count of assists made by a player each year based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.
- *     tags: [Players]
- *     parameters:
- *       - in: path
- *         name: player_id
- *         required: true
- *         description: ID of the player to get assist counts for
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Player's assist counts by year
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 dates:
- *                   type: array
- *                   items:
- *                     type: integer
- *                     description: Year of the assist data
- *                   example: []
- *                 goal_counts:
- *                   type: array
- *                   items:
- *                     type: integer
- *                     description: Number of assists made in that year
- *                   example: []
- *       500:
- *         description: Error in the request to the Spring Boot server
- */
 
-router.get('/assist_date/:player_id', async (req, res) => {
-  try {
-    const response = (await axios.get(`http://localhost:3001/events/player_assist_date/${req.params.player_id}`)).data;
-    const res_data = extract(response.data);
-    res.send(res_data);
-  } catch (error) {
-    console.error('Error in the request to the Spring Boot server:', error);
-    res.status(500).send('Error in the request to the Spring Boot server');
-  }
-});
+
 
 /**
  * @swagger
- * /{id}:
+ * /player/{id}:
  *   get:
  *     summary: Get player details by ID
  *     description: Returns the details of a player based on the player's ID. This endpoint makes a request to the Spring Boot server to retrieve the data.

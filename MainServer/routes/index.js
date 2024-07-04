@@ -2,23 +2,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Renders the main page
- *     description: Renders the main page.
- *     responses:
- *       200:
- *         description: Successfully rendered the page
- *         content:
- *           text/html:
- *             schema:
- *               type: string
- */
-router.get('/', function (req, res) {
-  res.render('index');
-});
 
 /**
  * @swagger
