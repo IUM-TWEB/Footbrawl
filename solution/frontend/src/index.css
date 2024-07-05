@@ -271,29 +271,6 @@ hr.solid {
   margin-bottom: auto; /* Assicura che il testo venga spinto verso il basso */
 }
 
-/* Beginning of section for the SingleChat page */
-.bg-custom {
-  background-color: #CAD2C5;
-  /*background-color: #84A98C;*/
-}
-
-.message-item {
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #354F52;
-}
-
-.message-item:last-child {
-  border-bottom: none;
-}
-
-#messages {
-  height: calc(100vh - 230px); /* Imposta l'altezza in modo che non superi un certo limite */
-  overflow-y: auto; /* Abilita lo scorrimento verticale */
-}
-
-/* Ending of section for the SingleChat page */
-
 /*top scorer*/
 
 .top-scorer-list {
@@ -331,32 +308,6 @@ hr.solid {
   list-style: none;
 }
 
-.background-image {
-
-  height: 700px;
-  width: 476px;
-  min-width: 464px;
-  background-image: url("./img/soccer-green-field.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.tb-player {
-  border-radius: 10%; /* Rende i bordi completamente arrotondati */
-  padding: 0; /* Rimuove il padding per evitare distorsioni dell'immagine */
-  overflow: hidden;
-  border: none;
-}
-
-.tb-player img {
-  width: 100%; /* larghezza completa dentro il bottone */
-  height: auto; /* altezza automatica per mantenere le proporzioni */
-  display: block; /* rimuove eventuali spazi extra sotto l'immagine */
-  max-width: 50px; /* Imposta una larghezza massima */
-  max-height: 50px; /* Imposta un'altezza massima */
-}
-
 .image-overlay-container {
   position: relative;
   display: inline-block; /* O 'block' a seconda delle tue necessità */
@@ -375,48 +326,6 @@ hr.solid {
 .image-overlay-selected {
   border: 3px solid #fd9902;
 }
-
-.player-Usr {
-  width: 100%;
-  border: 2px green;
-  background-color: rgba(0, 0, 0, 0); /* Correct transparency syntax */
-  padding: 3px 3px; /* Add padding for better text visibility and click area */
-  border-radius: 5px; /* Optionally round the corners */
-  font-size: 16px; /* Adjust font size as needed */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions on hover */
-}
-
-
-.player-Usr:hover {
-  background-color: rgba(232, 232, 232, 0.3); /* Slight background on hover for feedback */
-  cursor: pointer; /* Indicates the button is clickable */
-}
-
-.player-Usr:active {
-  transform: translateY(2px); /* Simulates the button being pressed down */
-  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5); /* Adjust shadow to look closer to the surface */
-}
-
-/* Effetto parallax per la pagina club */
-
-.parallax {
-  position: relative;
-  will-change: transform;
-}
-
-.parallax-slow {
-  transform: translateZ(0);
-}
-
-.parallax-medium {
-  transform: translateZ(0);
-}
-
-.parallax-fast {
-  transform: translateZ(0);
-}
-
-/* Fine CSS effetto parallax */
 
 .container-fluid {
   display: flex;
@@ -445,66 +354,9 @@ hr.solid {
   margin-bottom: 3rem;
 }
 
-
-/*Bottone info per il componente team builder*/
-
-.bottone-info:hover{
-  background-color: lightgray;
-}
-.bottone-info{
-  background-color: #ffffff;
-}
-
-/*Fine bottone info per il componente team builder*/
-
 /*logo competition*/
 .logo-fixed {
   width: 200px;
   height: 200px;
   object-fit: contain; /* Mantenere le proporzioni originali */
-
 }
-.footer {
-  background-color: chocolate; /* Chocolate color with 50% transparency */
-  width: 100%;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
-@media (max-width: 991.98px) {
-  .footer {
-    height: 300px; /* Altezza di 300px per tablet e smartphone */
-    flex-direction: column;
-    text-align: center;
-    padding: 20px 10px;
-  }
-
-  .footer-button {
-    margin-bottom: 10px;
-  }
-}
-
-.footer-button {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.footer-button:hover {
-  background-color: #f0e68c; /* Cambia il colore di sfondo al passaggio del mouse */
-  transform: scale(1.05); /* Aumenta leggermente le dimensioni del bottone */
-}
-
-.footer-button:active {
-  background-color: #d2b48c; /* Cambia il colore di sfondo quando il bottone è cliccato */
-  transform: scale(1); /* Ripristina le dimensioni originali */
-}
-
-

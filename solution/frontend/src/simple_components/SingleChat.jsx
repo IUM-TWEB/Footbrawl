@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import io from "socket.io-client";
 import {useAuth} from "../context/AuthContext.jsx";
+import '../style/SingleChat.css';
 
 const SingleChat = () => {
   const {id: currentRoom} = useParams();

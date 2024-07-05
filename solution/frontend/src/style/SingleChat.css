@@ -1,0 +1,19 @@
+.bg-custom {
+  background-color: #CAD2C5;
+  /*background-color: #84A98C;*/
+}
+
+.message-item {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #354F52;
+}
+
+.message-item:last-child {
+  border-bottom: none;
+}
+
+#messages {
+  height: calc(100vh - 230px); /* Imposta l'altezza in modo che non superi un certo limite */
+  overflow-y: auto; /* Abilita lo scorrimento verticale */
+}
