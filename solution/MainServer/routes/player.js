@@ -123,7 +123,9 @@ function extract(raw) {
 router.get('/goals_date/:player_id', async (req, res) => {
   try {
     const response = (await axios.get(`http://localhost:3001/events/player_goals_date/${req.params.player_id}`)).data;
-    if (Symbol.iterator in Object(response.data)) {
+    if (!response.success) {
+      res.send(extract([]))
+    } else if (Symbol.iterator in Object(response.data)) {
       const res_data = extract(response.data);
       res.send(res_data);
     } else {
@@ -187,7 +189,6 @@ router.get('/assist_date/:player_id', async (req, res) => {
 });
 
 
-
 /**
  * @swagger
  * /player/market_value/{id}:
@@ -224,13 +225,22 @@ router.get('/assist_date/:player_id', async (req, res) => {
  *         description: Error in the request to the Spring Boot server
  */
 router.get('/market_value/:id', async (req, res) => {
+  const playerId = req.params.id;
+
+  // Verifica che playerId sia una stringa valida
+  if (!playerId || typeof playerId !== 'string' || !playerId.trim()) {
+    return res.status(400).json({error: 'ERR_BAD_REQUEST'});
+  }
+
   try {
-    const response = await axios.get(`http://localhost:8080/playerValuation?id=${req.params.id}`);
+    const response = await axios.get(`http://localhost:8080/playerValuation?id=${playerId}`);
     res.send(extract_values(response.data));
   } catch (err) {
-    res.status(500).send('Error in the request to the Spring Boot server');
+    const statusCode = err.response ? err.response.status : 500;
+    res.status(statusCode).send('Error in the request to the Spring Boot server');
   }
 });
+
 
 /**
  * @swagger
@@ -269,31 +279,31 @@ router.get('/player_clubs/:player_id', async (req, res) => {
     const data = {
       'clubs': []
     };
-    if (Symbol.iterator in Object(response.data)) {
-      for (let i of response.data) {
-        if (!clubs_id.includes(i.club_id)) {
-          try {
-            const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
-            if (club_name) {
-              data.clubs.push(club_name.data.name);
-              clubs_id.push(i.club_id);
+    if (response.success) {
+      if (Symbol.iterator in Object(response.data)) {
+        for (let i of response.data) {
+          if (!clubs_id.includes(i.club_id)) {
+            try {
+              const club_name = await axios.get(`http://localhost:8080/club?id=${i.club_id}`);
+              if (club_name) {
+                data.clubs.push(club_name.data.name);
+                clubs_id.push(i.club_id);
+              }
+            } catch (e) {
+              console.log(`Error fetching club name for club ID ${i.club_id}:`, e);
             }
-          } catch (e) {
-            console.log(`Error fetching club name for club ID ${i.club_id}:`, e);
           }
         }
       }
+      res.send(data);
+    } else {
+      res.status(200).send(data)
     }
-    res.send(data);
   } catch (err) {
     console.log(err);
     res.status(500).send(err.name);
   }
 });
-
-
-
-
 
 
 /**
@@ -374,14 +384,21 @@ router.get('/player_clubs/:player_id', async (req, res) => {
  *         description: Error in the request to the Spring Boot server
  */
 router.get('/:id', async (req, res) => {
-  console.log('Entered with ID =', req.params.id);
+  const playerId = Number(req.params.id);
+  console.log('Entered with ID =', playerId);
+
+  // Verifica che playerId sia un numero valido e maggiore o uguale a 0
+  if (isNaN(playerId) || playerId < 0) {
+    return res.status(400).json({error: 'ERR_BAD_REQUEST'});
+  }
+
   try {
-    const response = await axios.get(`http://localhost:8080/player?id=${req.params.id}`);
+    const response = await axios.get(`http://localhost:8080/player?id=${playerId}`);
     res.send(response.data);
   } catch (err) {
     console.log(err);
-    res.status(500).send('The main server is not responding');
+    const statusCode = err.response ? err.response.status : 500;
+    res.status(statusCode).send('The main server is not responding');
   }
 });
-
 module.exports = router;

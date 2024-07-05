@@ -342,8 +342,12 @@ router.get('/news/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const response = await axios.get(`http://localhost:3001/news/${id}`);
-    const newsData = response.data;
-    res.send(newsData);
+    if(response) {
+      const newsData = response.data;
+      res.send(newsData);
+    }else{
+      res.status(response.status).send(response.data)
+    }
   } catch (error) {
     console.error('Error in the request to the MongoDB server:', error);
     res.status(500).send('Error in the request to the MongoDB server');
@@ -393,7 +397,11 @@ router.get('/manager_name/:club_id', async (req, res) => {
 
   try {
     const response = await axios.get(url);
+    if(response.success)
     res.json(response.data);
+    else{
+      res.status(response.status).send(response.data)
+    }
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
     res.status(500).json({ error: 'An error occurred while fetching the data.' });

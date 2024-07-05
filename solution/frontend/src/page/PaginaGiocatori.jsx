@@ -7,7 +7,6 @@ import axios from "axios";
 import {useAuth} from '../context/AuthContext';
 
 
-
 import {// Import chart.js components
   CategoryScale,
   Chart as ChartJS,
@@ -66,9 +65,11 @@ function show_graph(data, type) {
   if (data) {
     return <Line options={options} data={data}/>;
   } else {
-    return <p className="h3 mt-5 text-center d-flex justify-content-center">Non ci sono abbastanza dati sui {type} del giocatore</p>;
+    return <p className="h3 mt-5 text-center d-flex justify-content-center">Non ci sono abbastanza dati sui {type} del
+      giocatore</p>;
   }
 }
+
 // Mostriamo i dati relativi al giocatore
 function show_info(player, player_id) {
   if (player) {
@@ -103,25 +104,20 @@ export default function PaginaGiocatori() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Recuperiamo tutti i dati
-        const [playerClubs, playerData, goalsChartData, marketValueChartData] = await Promise.all([
-          axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
-          axios.get(`http://localhost:3000/player/${playerId}`),
-          getChartData(playerId, 'goals_date', 'goals'),
-          getChartData(playerId, 'market_value', 'market value')
-        ]);
+      // Recuperiamo tutti i dati
+      const [playerClubs, playerData, goalsChartData, marketValueChartData] = await Promise.all([
+        axios.get(`http://localhost:3000/player/player_clubs/${playerId}`),
+        axios.get(`http://localhost:3000/player/${playerId}`),
+        getChartData(playerId, 'goals_date', 'goals'),
+        getChartData(playerId, 'market_value', 'market value')
+      ]);
 
-        setPlayerClubs(playerClubs.data.clubs)
-        setPlayer(playerData.data);
-        setChartGoalData(goalsChartData);
-        setChartMarket(marketValueChartData);
-        setLoading(false); // Terminiamo l'animazione di loading
+      setPlayerClubs(playerClubs.data.clubs)
+      setPlayer(playerData.data);
+      setChartGoalData(goalsChartData);
+      setChartMarket(marketValueChartData);
+      setLoading(false); // Terminiamo l'animazione di loading
 
-      } catch (error) {
-        console.error('Error fetching chart data:', error);
-        setLoading(false); // Terminiamo l'animazione di loading
-      }
     };
 
     // Controlliamo se il parametro playerId è disponibile

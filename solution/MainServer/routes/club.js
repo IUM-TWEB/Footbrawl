@@ -87,12 +87,22 @@ const axios = require('axios');
  *         description: Main server is not responding
  */
 router.get('/:id', async (req, res) => {
-  try {
-    const response = (await axios.get(`http://localhost:8080/club?id=${req.params.id}`)).data;
-    res.send(response);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send('Main server is not responding');
+  const clubId = Number(req.params.id);
+
+  if (isNaN(clubId) || clubId < 0) { // il club id è un numero >= 0
+    res.status(400).send("ERR_BAD_REQUEST");
+  } else {
+    console.log("ciao2");
+    try {
+      const response = (await axios.get(`http://localhost:8080/club?id=${clubId}`)).data;
+      res.send(response);
+    } catch (err) {
+      console.log("ciao3");
+      const statusCode = err.response ? err.response.status : 500; // Ottieni il codice di stato dalla risposta, o imposta 500 se non disponibile
+      const message = err.message; // Puoi anche ottenere il messaggio di errore se necessario
+      console.log(message); // Logga il messaggio di errore per debugging
+      res.status(statusCode).send(JSON.stringify({ message, details: err.response ? err.response.data : err }));
+    }
   }
 });
 
@@ -181,14 +191,28 @@ router.get('/:id', async (req, res) => {
 
 router.get('/clubByName/:club_name', async (req, res) => {
   const name = req.params.club_name;
-  const url = `http://localhost:8080/clubByName?name=${name}`;
+
+  // Verifica che il parametro name non sia vuoto o contenga solo spazi
+  if (!name || typeof name !== 'string' || !name.trim()) {
+    return res.status(400).json({ error: 'ERR_BAD_REQUEST' });
+  }
+
+  const url = `http://localhost:8080/clubByName?name=${encodeURIComponent(name)}`;
 
   try {
     const response = await axios.get(url);
     res.json(response.data);
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({error: 'An error occurred while fetching the data.'});
+
+    const statusCode = error.response ? error.response.status : 500;
+    const message = error.message;
+    console.log(message);
+
+    res.status(statusCode).json({
+      message,
+      details: error.response ? error.response.data : error,
+    });
   }
 });
 
@@ -272,12 +296,21 @@ router.get('/clubByName/:club_name', async (req, res) => {
  *         description: Error in the request to the Spring Boot server
  */
 router.get('/playersOfClubLastSeason/:current_club_id', async (req, res) => {
-  const id = req.params.current_club_id;
+  const id = Number(req.params.current_club_id);
+
+  // Verifica che il parametro id sia un numero valido e maggiore o uguale a 0
+  if (isNaN(id) || id < 0) {
+    return res.status(400).json({ error: 'ERR_BAD_REQUEST' });
+  }
+
   try {
     const response = await axios.get(`http://localhost:8080/playersOfClubLastSeason?id=${id}`);
     res.send(response.data);
   } catch (err) {
-    res.status(500).send('Error in the request to the Spring Boot server');
+    const statusCode = err.response ? err.response.status : 500; // Ottieni il codice di stato dalla risposta, o imposta 500 se non disponibile
+    const message = err.message; // Puoi anche ottenere il messaggio di errore se necessario
+    console.log(message); // Logga il messaggio di errore per debugging
+    res.status(statusCode).send(JSON.stringify({ message, details: err.response ? err.response.data : err }));
   }
 });
 

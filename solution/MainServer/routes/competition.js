@@ -58,12 +58,20 @@ const axios = require('axios');
  *         description: Error in the request to the Postgres server
  */
 router.get('/ranking/:competition_name', async (req, res) => {
-  /*controllare se questa route viene usata o meno*/
+  const competitionName = req.params.competition_name;
+
+  // Verifica che competitionName sia una stringa valida
+  if (!competitionName || typeof competitionName !== 'string' || !competitionName.trim()) {
+    return res.status(400).json({error: 'ERR_BAD_REQUEST'});
+  }
+
   try {
-    const response = (await axios.get(`http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${req.params.competition_name}`)).data;
-    res.send(response);
+    const response = await axios.get(`http://localhost:8080/lastCompetitionRankingByCompetitionName?name=${encodeURIComponent(competitionName)}`);
+    res.send(response.data);
   } catch (error) {
-    res.status(500).send('Error in the request to the Postgres server');
+    console.error('Error fetching data from Postgres server:', error);
+    const statusCode = error.response ? error.response.status : 500;
+    res.status(statusCode).json({error: 'Error in the request to the Postgres server'});
   }
 });
 
@@ -117,14 +125,21 @@ router.get('/ranking/:competition_name', async (req, res) => {
  */
 router.get('/rankingId/:id_campionato', async (req, res) => {
   const idCampionato = req.params.id_campionato;
+
+  // Verifica che idCampionato sia una stringa valida
+  if (!idCampionato || typeof idCampionato !== 'string' || !idCampionato.trim()) {
+    return res.status(400).json({error: 'ERR_BAD_REQUEST'});
+  }
+
   const url = `http://localhost:8080/lastCompetitionRankingByCompetitionId?id=${idCampionato}`;
+
   try {
     const response = await axios.get(url);
-    const rankingData = response.data;
-    res.send(rankingData);
+    res.send(response.data);
   } catch (error) {
-    console.error('Error in the request to the Postgres server:', error);
-    res.status(500).send('Error in the request to the Postgres server');
+    console.error('Error fetching data from Postgres server:', error);
+    const statusCode = error.response ? error.response.status : 500;
+    res.status(statusCode).json({error: 'Error in the request to the Postgres server'});
   }
 });
 
@@ -175,14 +190,20 @@ router.get('/rankingId/:id_campionato', async (req, res) => {
  *         description: Error in the request to the Postgres server
  */
 router.get('/details/:id_competition', async (req, res) => {
+  const idCompetition = req.params.id_competition;
+
+  // Verifica che idCompetition sia una stringa valida
+  if (!idCompetition || typeof idCompetition !== 'string' || !idCompetition.trim()) {
+    return res.status(400).json({error: 'ERR_BAD_REQUEST'});
+  }
+
   try {
-    const id = req.params.id_competition;
-    const response = await axios.get(`http://localhost:8080/competition?id=${id}`);
-    const dati = response.data;
-    res.send(dati);
+    const response = await axios.get(`http://localhost:8080/competition?id=${idCompetition}`);
+    res.send(response.data);
   } catch (error) {
-    console.error('Errore nella richiesta al server Spring Boot:', error);
-    res.status(500).send('Errore nella richiesta al server Spring Boot');
+    console.error('Error in the request to the Postgres server:', error);
+    const statusCode = error.response ? error.response.status : 500;
+    res.status(statusCode).json({error: 'Errore nella richiesta al server Spring Boot'});
   }
 });
 
@@ -272,45 +293,49 @@ router.get('/top_scorer/:competition_id', async (req, res) => {
   try {
     const competitionId = req.params.competition_id;
     const response = (await axios.get(`http://localhost:3001/events/top_scorer/${competitionId}`)).data;
-    const topScorerData = response.data;
+    if (!response.success) {
+      res.status(response.status).send(response.data)
+    } else {
+      const topScorerData = response.data;
 
-    const playerDetailsPromises = topScorerData.map(async (player) => {
-      try {
-        const playerResponse = await axios.get(`http://localhost:8080/player?id=${player.player_id}`);
-        const playerDetails = playerResponse.data;
-        const {
-          playerId,
-          ...otherDetails
-        } = playerDetails;
-        return {
-          ...player,
-          ...otherDetails
-        };
-      } catch (error) {
-        console.error(`Errore nel recupero dei dettagli per il giocatore con ID ${player.player_id}:`, error);
-        return {
-          ...player,
-          name: 'Nome non disponibile',
-          age: null,
-          marketValue: null,
-          highestMarketValue: null,
-          lastSeason: null,
-          currentClubId: null,
-          countryOfBirth: null,
-          dateOfBirth: null,
-          position: null,
-          foot: null,
-          heightInCm: null,
-          imageUrl: null,
-          currentClubDomesticCompetitionId: null,
-          currentClubName: 'Nome del club non disponibile'
-        };
-      }
-    });
+      const playerDetailsPromises = topScorerData.map(async (player) => {
+        try {
+          const playerResponse = await axios.get(`http://localhost:8080/player?id=${player.player_id}`);
+          const playerDetails = playerResponse.data;
+          const {
+            playerId,
+            ...otherDetails
+          } = playerDetails;
+          return {
+            ...player,
+            ...otherDetails
+          };
+        } catch (error) {
+          console.error(`Errore nel recupero dei dettagli per il giocatore con ID ${player.player_id}:`, error);
+          return {
+            ...player,
+            name: 'Nome non disponibile',
+            age: null,
+            marketValue: null,
+            highestMarketValue: null,
+            lastSeason: null,
+            currentClubId: null,
+            countryOfBirth: null,
+            dateOfBirth: null,
+            position: null,
+            foot: null,
+            heightInCm: null,
+            imageUrl: null,
+            currentClubDomesticCompetitionId: null,
+            currentClubName: 'Nome del club non disponibile'
+          };
+        }
+      });
 
-    const detailedTopScorers = await Promise.all(playerDetailsPromises);
+      const detailedTopScorers = await Promise.all(playerDetailsPromises);
 
-    res.send(detailedTopScorers);
+      res.send(detailedTopScorers);
+    }
   } catch (error) {
     console.error('ERRORE nella richiesta al server MongoDB:', error);
     res.status(500).send('Errore nella richiesta al server MongoDB');
@@ -406,11 +431,13 @@ router.get('/top_scorer/:competition_id', async (req, res) => {
 router.get('/last_game/:competition_id', async (req, res) => {
   try {
     const response = (await axios.get(`http://localhost:3001/games/last_game/${req.params.competition_id}`)).data;
-    console.log(response);
-    res.json(response.data);
+    if (response.success)
+      res.json(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (error) {
-    console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+    res.status(500).json({error: 'An error occurred while fetching the data.'});
   }
 });
 
@@ -503,13 +530,16 @@ router.get('/last_game/:competition_id', async (req, res) => {
 router.get('/last_game_by_club/:club_id', async (req, res) => {
   const clubId = req.params.club_id;
   const url = `http://localhost:3001/games/last_game_club/${clubId}`;
-
   try {
     const response = await axios.get(url);
+    if(response.success)
     res.json(response.data);
+    else{
+      res.status(response.status).send(response.data)
+    }
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+    res.status(500).json({error: 'An error occurred while fetching the data.'});
   }
 });
 
@@ -594,6 +624,12 @@ router.get('/last_game_by_club/:club_id', async (req, res) => {
  */
 router.get('/top_market_value/:competition_id', async (req, res) => {
   const competitionId = req.params.competition_id;
+
+  // Verifica che competitionId sia una stringa valida
+  if (!competitionId || typeof competitionId !== 'string' || !competitionId.trim()) {
+    return res.status(400).json({ error: 'ERR_BAD_REQUEST' });
+  }
+
   const url = `http://localhost:8080/topMarketPlayerCompetition?competitionId=${competitionId}`;
 
   try {
@@ -601,8 +637,10 @@ router.get('/top_market_value/:competition_id', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error(`Error fetching data from ${url}:`, error);
-    res.status(500).json({ error: 'An error occurred while fetching the data.' });
+    const statusCode = error.response ? error.response.status : 500;
+    res.status(statusCode).json({ error: 'An error occurred while fetching the data.' });
   }
 });
+
 
 module.exports = router;

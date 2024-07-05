@@ -131,8 +131,11 @@ router.post('/', async (req, res) => {
 router.post('/favplayer', async (req, res) => {
   try {
     const response = (await axios.post("http://localhost:3001/user/fav/player", req.body)).data;
-    console.log(response)
-    res.send(response.data);
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send({error: 'Server error'});
@@ -172,7 +175,11 @@ router.post('/favplayer', async (req, res) => {
 router.post('/favteam', async (req, res) => {
   try {
     const response = (await axios.post("http://localhost:3001/user/fav/team", req.body)).data;
-    res.send(response.data);
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send({error: 'Server error'});
@@ -216,7 +223,11 @@ router.post('/getfav', async (req, res) => {
       username: req.body.username,
       pwd: req.body.pwd
     })).data;
-    res.send(response.data);
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     res.sendStatus(500);
   }
@@ -260,7 +271,11 @@ router.post('/postFormations', async (req, res) => {
       formation: req.body.formation,
     })).data;
 
-    res.send(response.data);
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     res.sendStatus(500);
   }
@@ -298,11 +313,15 @@ router.post('/postFormations', async (req, res) => {
  */
 router.post('/getFormations', async (req, res) => {
   try {
-    const resp = (await axios.post('http://localhost:3001/user/getfav/formation', {
+    const response = (await axios.post('http://localhost:3001/user/getfav/formation', {
       username: req.body.username,
       pwd: req.body.pwd,
     })).data;
-    res.send(resp.data.formations);
+    if (response.success)
+      res.send(response.data.formations);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     res.sendStatus(500);
   }
@@ -397,10 +416,14 @@ router.post('/getFormations', async (req, res) => {
  *                   nullable: true
  *                   example: null
  */
-router.post('/removePlayer', async (req,res)=>{
+router.post('/removePlayer', async (req, res) => {
   try {
     const response = await axios.post("http://localhost:3001/user/fav/removePlayer", req.body);
-    res.send(response.data);
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send({error: 'Errore nel server'});
@@ -496,11 +519,14 @@ router.post('/removePlayer', async (req,res)=>{
  *                   nullable: true
  *                   example: null
  */
-router.post('/removeTeam', async (req,res)=>{
+router.post('/removeTeam', async (req, res) => {
   try {
     const response = await axios.post("http://localhost:3001/user/fav/removeTeam", req.body);
-    res.send(response.data);
-  } catch (e) {
+    if (response.success)
+      res.send(response.data);
+    else {
+      res.status(response.status).send(response.data)
+    }  } catch (e) {
     console.error(e);
     res.status(500).send({error: 'Errore nel server'});
   }

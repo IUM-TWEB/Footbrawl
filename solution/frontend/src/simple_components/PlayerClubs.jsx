@@ -11,7 +11,7 @@ function PlayerPres({playerClubs: playerClubs}) {
   // forziamo il ricaricare la pagina se playerInfo cambia
   }, [playerClubs]);
 
-  if (playerClubs)
+  if (Array.isArray(playerClubs) && playerClubs.length > 0)
     return (
       <div className="card player-card">
         <div className="card-body">
