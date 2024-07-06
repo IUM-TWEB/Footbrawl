@@ -149,8 +149,8 @@ const Home = () => {
                 stopOnHover={false}
               >
                 {newsList.map((item) => (
-                  <div key={item.id} onClick={() => handleClickNews(item)} style={{ cursor: 'pointer' }}>
-                    <News singleNews={item} />
+                  <div key={item.id} onClick={() => handleClickNews(item)} style={{cursor: 'pointer'}}>
+                    <News singleNews={item}/>
                   </div>
                 ))}
               </Carousel>
@@ -180,38 +180,48 @@ const Home = () => {
                     </h5>
                     {lastGames[league] ? (
                       lastGames[league].map(game => (
-                        <p key={game._id} className="card-text">
-                          {game.home_club_name} {game.home_club_goals} - {game.away_club_goals} {game.away_club_name}
-                        </p>
+                        <div key={game._id} className="row card-text">
+                          <div className="col-5 club-name">
+                            {game.home_club_name}
+                          </div>
+                          <div className="col-2 text-center">
+                            {game.home_club_goals} - {game.away_club_goals}
+                          </div>
+                          <div className="col-5 text-end club-name">
+                            {game.away_club_name}
+                          </div>
+                        </div>
                       ))
                     ) : (
-                      <p className="card-text">Caricamento...</p>
+                      <p className="card-text-last-match">Caricamento...</p>
                     )}
                   </div>
                 </div>
               ))}
             </div>
+
+
           </div>
           <div className="col-md-12 col-lg-3 order-2 order-lg-1">
             <h1>Classifiche</h1>
             <div className="card">
               <div className="card-body pb-5">
-                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub} />
+                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub} />
+                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub} />
+                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub} />
+                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
               </div>
             </div>
           </div>

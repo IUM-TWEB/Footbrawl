@@ -37,6 +37,9 @@
   text-decoration: underline;
   color: chocolate;
 }
+.menu-item.active {
+  color: chocolate;
+}
 .div-menu-scritte{
   padding-left: 200px;
 }
@@ -270,6 +273,28 @@ hr.solid {
   text-overflow: ellipsis;
   margin-bottom: auto; /* Assicura che il testo venga spinto verso il basso */
 }
+.club-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-title {
+  margin-bottom: 16px;
+}
+
+.card-text-last-match {
+  margin-top: 16px;
+}
+
+
 
 /*top scorer*/
 
