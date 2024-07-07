@@ -9,10 +9,17 @@ function LeaderBoard(props) {
     navigate(`/club/${club_id}`);
   };
 
+  const transformCompetitionName = (name) => {
+    return name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   return (
     <div>
       <div className="container">
-        <h2 className="mt-4 mb-3">{rankings.length > 0 ? rankings[0].competition_name : 'Competition'}</h2>
+        <h2 className="mt-4 mb-3">{rankings.length > 0 ? transformCompetitionName(rankings[0].competition_name) : 'Competition'}</h2>
         <table className="table">
           <thead className="thead-dark">
           <tr>

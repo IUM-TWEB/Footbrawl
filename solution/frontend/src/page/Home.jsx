@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../simple_components/SearchBar.jsx";
 import LeaderBoard from "../simple_components/LeaderBoard.jsx";
-import Footer from "../simple_components/Footer.jsx";
 import News from "../simple_components/News.jsx";
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -25,9 +24,20 @@ const Home = () => {
     CL: { loading: true, data: null },
     EL: { loading: true, data: null }
   });
+  const [newsLoaded, setNewsLoaded] = useState(false); // New state to check if news are loaded
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/news');
+        setNewsList(response.data);
+        setNewsLoaded(true); // Set newsLoaded to true after news are fetched
+      } catch (error) {
+        console.error('Errore durante il recupero delle notizie:', error);
+      }
+    };
+
     const fetchLastGame = async (competitionId) => {
       try {
         const response = await axios.get(`http://localhost:3000/competition/last_game/${competitionId}`);
@@ -50,10 +60,9 @@ const Home = () => {
       }
     };
 
-    const fetchData = async () => {
+    const fetchOtherData = async () => {
       try {
-        const [newsResponse, serieAResponse, premierLeagueResponse, laLigaResponse, ligue1Response, lastGameIT1, lastGameGB1, lastGameES1, lastGameCL, lastGameEL] = await Promise.all([
-          axios.get('http://localhost:3000/news'),
+        const [serieAResponse, premierLeagueResponse, laLigaResponse, ligue1Response, lastGameIT1, lastGameGB1, lastGameES1, lastGameCL, lastGameEL] = await Promise.all([
           axios.get('http://localhost:3000/competition/ranking/serie-a'),
           axios.get('http://localhost:3000/competition/ranking/premier-league'),
           axios.get('http://localhost:3000/competition/ranking/laLiga'),
@@ -65,14 +74,12 @@ const Home = () => {
           fetchLastGame('EL')
         ]);
 
-        setNewsList(newsResponse.data);
         setSerieA(serieAResponse.data.slice(0, 3));
         setPremierLeague(premierLeagueResponse.data.slice(0, 3));
         setLaLiga(laLigaResponse.data.slice(0, 3));
         setLigue1(ligue1Response.data.slice(0, 3));
         setLastGames({ IT1: lastGameIT1, GB1: lastGameGB1, ES1: lastGameES1, CL: lastGameCL, EL: lastGameEL });
 
-        // Fetch top scorers asynchronously
         const topScorerPromises = [
           fetchTopScorer('IT1'),
           fetchTopScorer('GB1'),
@@ -81,7 +88,6 @@ const Home = () => {
           fetchTopScorer('EL')
         ];
 
-        // Use Promise.allSettled to avoid blocking other requests
         const topScorerResults = await Promise.allSettled(topScorerPromises);
         const topScorersData = {
           IT1: { loading: false, data: topScorerResults[0].status === 'fulfilled' ? topScorerResults[0].value : null },
@@ -97,7 +103,8 @@ const Home = () => {
       }
     };
 
-    fetchData();
+    fetchNews();
+    fetchOtherData();
   }, []);
 
   const toggleOpacity = (opacity) => {
@@ -131,21 +138,25 @@ const Home = () => {
       <div className="container-fluid padding" style={{ opacity: isOpaque ? 0.2 : 1 }}>
         <div className="row justify-content-md-center">
           <div className="col-md-12 col-lg-6 order-1 order-lg-2">
-            <Carousel
-              showThumbs={false}
-              showArrows={true}
-              autoPlay={!isPaused}
-              interval={5000}
-              infiniteLoop={true}
-              showStatus={false}
-              stopOnHover={false}
-            >
-              {newsList.map((item) => (
-                <div key={item.id} onClick={() => handleClickNews(item)} style={{ cursor: 'pointer' }}>
-                  <News singleNews={item} />
-                </div>
-              ))}
-            </Carousel>
+            {newsLoaded ? (
+              <Carousel
+                showThumbs={false}
+                showArrows={true}
+                autoPlay={!isPaused}
+                interval={5000}
+                infiniteLoop={true}
+                showStatus={false}
+                stopOnHover={false}
+              >
+                {newsList.map((item) => (
+                  <div key={item.id} onClick={() => handleClickNews(item)} style={{cursor: 'pointer'}}>
+                    <News singleNews={item}/>
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              <div>Loading...</div>
+            )}
             <div className="controls center mt-3">
               <button className="btn btn-primary mr-2 m-2" onClick={handlePause} disabled={isPaused}>
                 Pausa
@@ -169,38 +180,48 @@ const Home = () => {
                     </h5>
                     {lastGames[league] ? (
                       lastGames[league].map(game => (
-                        <p key={game._id} className="card-text">
-                          {game.home_club_name} {game.home_club_goals} - {game.away_club_goals} {game.away_club_name}
-                        </p>
+                        <div key={game._id} className="row card-text">
+                          <div className="col-5 club-name">
+                            {game.home_club_name}
+                          </div>
+                          <div className="col-2 text-center">
+                            {game.home_club_goals} - {game.away_club_goals}
+                          </div>
+                          <div className="col-5 text-end club-name">
+                            {game.away_club_name}
+                          </div>
+                        </div>
                       ))
                     ) : (
-                      <p className="card-text">Caricamento...</p>
+                      <p className="card-text-last-match">Caricamento...</p>
                     )}
                   </div>
                 </div>
               ))}
             </div>
+
+
           </div>
           <div className="col-md-12 col-lg-3 order-2 order-lg-1">
             <h1>Classifiche</h1>
             <div className="card">
               <div className="card-body pb-5">
-                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub} />
+                <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub} />
+                <LeaderBoard title="Premier League" rankings={premierLeague} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub} />
+                <LeaderBoard title="La Liga" rankings={laLiga} onClickClub={handleClickClub}/>
               </div>
             </div>
             <div className="card mt-4">
               <div className="card-body pb-5">
-                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub} />
+                <LeaderBoard title="Ligue 1" rankings={ligue1} onClickClub={handleClickClub}/>
               </div>
             </div>
           </div>
@@ -215,12 +236,11 @@ const Home = () => {
                         league === 'ES1' ? 'La Liga' :
                           league === 'GB1' ? 'Premier League' :
                             league === 'CL' ? 'Champions League' :
-                                'Errore'}
+                              'Errore'}
                     </h5>
                     {topScorers[league].loading ? (
                       <div className="text-center">
                         <div className="loader"/>
-
                       </div>
                     ) : (
                       topScorers[league].data.slice(0, 3).map((scorer) => (

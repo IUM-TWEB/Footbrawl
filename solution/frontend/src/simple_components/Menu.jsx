@@ -1,16 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import biancoSVG from '../img/bianco.svg';
 import { useNavigate } from 'react-router-dom';
-import '../index.css'
+import '../index.css';
 
 const Menu = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClickLogo = () => {
     navigate('/');
+  };
+
+  const getLinkClass = (path) => {
+    return location.pathname === path ? 'menu-item active' : 'menu-item';
   };
 
   return (
@@ -23,13 +28,13 @@ const Menu = () => {
 
         {/* Seconda colonna: Link */}
         <div className="col-8 col-md-9 text-center div-menu-scritte">
-          <Link to="/" className="menu-item ">Home</Link>
-          <Link to="/news" className="menu-item">News</Link>
-          <Link to="/campionati" className="menu-item">Campionati</Link>
+          <Link to="/" className={getLinkClass('/')}>Home</Link>
+          <Link to="/news" className={getLinkClass('/news')}>News</Link>
+          <Link to="/campionati" className={getLinkClass('/campionati')}>Campionati</Link>
           {isAuthenticated ? (
-            <Link to="/paginauser" className="menu-item">User</Link>
+            <Link to="/paginauser" className={getLinkClass('/paginauser')}>User</Link>
           ) : (
-            <Link to="/login" className="menu-item">Login</Link>
+            <Link to="/login" className={getLinkClass('/login')}>Login</Link>
           )}
           {/*<Link to="/chat" className="menu-item">Chat</Link>*/}
         </div>
@@ -39,6 +44,6 @@ const Menu = () => {
       </div>
     </nav>
   );
-}
+};
 
 export default Menu;
