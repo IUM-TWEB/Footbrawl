@@ -141,8 +141,6 @@ const swaggerOptions = {
             data: {
               type: 'object',
               properties: {
-                ciao: { type: 'string' },
-                ciao2: { type: 'integer' },
                 game_id: { type: 'integer' },
                 club_id: { type: 'integer' },
                 own_goals: { type: 'integer' },

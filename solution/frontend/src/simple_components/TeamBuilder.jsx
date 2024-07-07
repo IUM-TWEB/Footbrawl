@@ -39,7 +39,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         const resp = await getFormations();
         if (resp && Array.isArray(resp)) {
           setSavedFormations(resp);
-          //console.log("saved:", savedFormations)
         }
       };
 
@@ -48,11 +47,11 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
 
     useEffect(() => {
-      // Cerchiamo la formazione salvata che corrisponde tra le salvate in base al tipo
+      // Cerchiamo la formazione che corrisponde tra le salvate in base al tipo
       const filtered_formation = savedFormations.find(i => i.type === formation)
-      if (filtered_formation)
+      if (filtered_formation) {
         setSelectedFormation(filtered_formation.formation)
-
+      }
     }, [formation, savedFormations]);
 
     // Quando alert viene modificato reimpostiamo a false lo stato per richiudere
@@ -65,7 +64,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         return () => clearTimeout(timeout);
       }
     }, [alert]);
-
 
     useEffect(() => {
       setSavedPlayersValues(favoritePlayers);
@@ -89,6 +87,14 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         .catch(e => {
           console.log(e)
         })
+    }
+
+    // Controlliamo se un certo giocatore è presente nella formazione
+    const isPlayerInFormation = (formation, player) => {
+      return (formation.forwards.some(p => p.id === player.id) ||
+        formation.midfielders.some(p => p.id === player.id) ||
+        formation.defenders.some(p => p.id === player.id) ||
+        formation.goalkeeper.some(p => p.id === player.id))
     }
 
     // Otteniamo le formazioni salvate
@@ -139,10 +145,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
     const handlePlayerSelection = (player) => {
       // Controlliamo se il giocatore è già stato inserito nella formazione
-      if (selectedFormation.forwards.includes(player) ||
-        selectedFormation.midfielders.includes(player) ||
-        selectedFormation.defenders.includes(player) ||
-        selectedFormation.goalkeeper.includes(player)) {
+      if (!isPlayerInFormation(selectedFormation, player)) {
         setAlert({isOpen: true, color: "danger", message: "Non è possibile aggiungere due volte lo stesso giocatore"});
         return
       }
@@ -167,6 +170,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     };
 
     const addPlayer = (newPlayer) => {
+      // Aggiungiamo il giocatore solamente se non è già presente
       if (!savedPlayersValues.some(player => player.playerId === newPlayer.playerId)) {
         setSavedPlayersValues([...savedPlayersValues, newPlayer]);
       } else {
@@ -201,14 +205,14 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     }
 
     // Aggiungiamo alla lista dei giocatori selezionabili
-  const addToList = (player) => {
-    if (!savedPlayersValues.some(savedPlayer => savedPlayer.playerId === player.playerId)) {
-      setSavedPlayersValues([...savedPlayersValues, player]);
-    } else {
-      //console.error("Tentativo di aggiungere un giocatore già esistente");
-      setAlert({isOpen: true, color: "warning", message: "Giocatore già presente in lista"});
-    }
-  };
+    const addToList = (player) => {
+      if (!savedPlayersValues.some(savedPlayer => savedPlayer.playerId === player.playerId)) {
+        setSavedPlayersValues([...savedPlayersValues, player]);
+      } else {
+        //console.error("Tentativo di aggiungere un giocatore già esistente");
+        setAlert({isOpen: true, color: "warning", message: "Giocatore già presente in lista"});
+      }
+    };
 
     const selectPlayerPosition = (index, array) => {
       if (selectedPlayerIndex.index === index && selectedPlayerIndex.array === array) {

@@ -235,6 +235,7 @@ module.exports.addFormation = async (req, res) => {
   } else
     try {
       const mongo_resp = (await queries.addFormation(username, pwd, formation))
+      console.log(mongo_resp)
       if (!mongo_resp || mongo_resp === '' || Array.isArray(mongo_resp) && mongo_resp === []) {
         res.json({
           success: false,

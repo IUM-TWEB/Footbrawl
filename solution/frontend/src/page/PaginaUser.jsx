@@ -53,7 +53,7 @@ const PaginaUser = () => {
     <div className="container-fluid mt-5 px-5 pb-5">
       <div className="row">
         <div className="col-sm-10">
-          <h1>Utente: {username ? username : 'utente'}</h1>
+          <h1>Ciao, {username ? username : 'utente'} !</h1>
         </div>
         <div className="col-sm-2 d-flex justify-content-end mt-3">
           <button onClick={handleLogout} className="btn btn-danger">Logout</button>
