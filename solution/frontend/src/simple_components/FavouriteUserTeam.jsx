@@ -17,6 +17,13 @@ const FavouriteUserTeam = ({clubs}) => {
     return value === -1 ? 'non disponibile' : value + ' euro';
   };
 
+  const transformCompetitionName = (name) => {
+    return name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   return (
     <div className="my-5">
       <h2>Club Preferiti:</h2>
@@ -61,7 +68,7 @@ const FavouriteUserTeam = ({clubs}) => {
                     </div>
                   </div>
                   <div className="col-md-8 border-2 border-end">
-                    <p>Campionato in cui gioca: {selectedClub.domesticCompetitionName}</p>
+                    <p>Campionato in cui gioca: {transformCompetitionName(selectedClub.domesticCompetitionName)}</p>
                     <p>Allenatore: {selectedClub.coachName}</p>
                     <p>Stadio: {selectedClub.stadiumName}</p>
                     <p>Posti a sedere dello stadio: {selectedClub.stadiumSeats}</p>

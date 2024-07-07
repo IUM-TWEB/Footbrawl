@@ -23,13 +23,23 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       defenders: ['0', '0', '0', '0'],
       goalkeeper: ['0']
     });
+    const [selectedPlayerIndex, setSelectedPlayerIndex] = useState({index: null, array: null});
+
+    const handlePlayerClick = (index, array) => {
+      if (selectedPlayerIndex.index === index && selectedPlayerIndex.array === array) {
+        setSelectedPlayerIndex({index: null, array: null}); // Deseleziona se è già selezionato
+      } else {
+        setSelectedPlayerIndex({index, array}); // Seleziona il nuovo
+      }
+      selectPlayerPosition(index, array);
+    };
 
     useEffect(() => {
       const fetchData = async () => {
         const resp = await getFormations();
         if (resp && Array.isArray(resp)) {
           setSavedFormations(resp);
-          console.log("saved:", savedFormations)
+          //console.log("saved:", savedFormations)
         }
       };
 
@@ -40,7 +50,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     useEffect(() => {
       // Cerchiamo la formazione salvata che corrisponde tra le salvate in base al tipo
       const filtered_formation = savedFormations.find(i => i.type === formation)
-      console.log("trovata: ", filtered_formation)
       if (filtered_formation)
         setSelectedFormation(filtered_formation.formation)
 
@@ -157,26 +166,25 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       });
     };
 
-    let addPlayer = (newPlayer) => {
-      // Aggiungiamo il nuovo giocatore alla lista selezionabile se non già presente
+    const addPlayer = (newPlayer) => {
       if (!savedPlayersValues.some(player => player.playerId === newPlayer.playerId)) {
         setSavedPlayersValues([...savedPlayersValues, newPlayer]);
       } else {
-        setAlert({isOpen: true, color: "danger", message: "Giocatore già aggiunto ai selezionati"})
+        setAlert({isOpen: true, color: "danger", message: "Giocatore già aggiunto ai tuoi giocatori"});
       }
-    }
+    };
 
     // Rimuoviamo un giocatore dalla formazione
     const removePlayer = (pos, index) => {
       if (pos[index] !== '0') {
-        const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos) // Otteniamo quale chiave dell'oggetto
+        const pos_key = Object.keys(selectedFormation).find(key => selectedFormation[key] === pos); // Otteniamo quale chiave dell'oggetto
         setSelectedFormation(prevState => {
-          const tmp = {...prevState}
-          addToList(pos[index])
-          pos[index] = '0' // Eliminiamo il giocatore
-          tmp[pos_key] = pos // Assegniamo l'array senza il giocatore
-          return tmp
-        })
+          const tmp = {...prevState};
+          addToList(pos[index]); // Aggiungi alla lista se non già presente
+          pos[index] = '0'; // Eliminiamo il giocatore
+          tmp[pos_key] = pos; // Assegniamo l'array senza il giocatore
+          return tmp;
+        });
       }
     };
 
@@ -193,68 +201,49 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     }
 
     // Aggiungiamo alla lista dei giocatori selezionabili
-    const addToList = (player) => {
-      if (!savedPlayersValues.includes(player)) {
-        setSavedPlayersValues([...savedPlayersValues, player]);
+  const addToList = (player) => {
+    if (!savedPlayersValues.some(savedPlayer => savedPlayer.playerId === player.playerId)) {
+      setSavedPlayersValues([...savedPlayersValues, player]);
+    } else {
+      //console.error("Tentativo di aggiungere un giocatore già esistente");
+      setAlert({isOpen: true, color: "warning", message: "Giocatore già presente in lista"});
+    }
+  };
+
+    const selectPlayerPosition = (index, array) => {
+      if (selectedPlayerIndex.index === index && selectedPlayerIndex.array === array) {
+        setSelectedPosition({index: null, array: null}); // Deseleziona
       } else {
-        console.error("Tentativo di aggiungere un giocatore già esistente")
-        setAlert({isOpen: true, color: "danger", message: "Errore"})
+        setSelectedPosition({index, array}); // Seleziona
       }
     }
 
-    // Cambiamo lo stile della posizione selezionata
-    const buttonSelector = (index, pos) => {
-      if (index !== selectedPosition.index || pos !== selectedPosition.array) {
-        return 'image-overlay'
-      } else
-        return 'image-overlay-selected'
-    }
-
-    const selectPlayerPosition = (index, array) => {
-      setSelectedPosition({index, array})
-    }
-
-    const lineFormation = (elements, h) => {
+    const lineFormation = (elements, flexClass) => {
       const numElements = elements.length;
-      const colSize = Math.min(1, 12 / Math.max(1, numElements));
 
       return (
-        <div className={`row flex-grow-1 d-flex justify-content-center align-items-center w-100 mx-0 ${h} `}>
-          {
-            elements.map((element, index) => (
-              <div key={index}
-                   style={{maxWidth: "80px"}}
-                   className={`col-md-${colSize + 1} d-flex justify-content-center align-items-center m-3 position-relative`}>
+        <div className={`row ${flexClass} d-flex justify-content-center align-items-center w-100 ps-4`}>
+          {elements.map((element, index) => (
+            <div key={index}
+                 className={`col-${Math.floor(12 / numElements)} pt-5 d-flex justify-content-center align-items-center`}>
+              <div className="position-relative">
                 {elements[index] !== '0' && (
-                  <div className="btn btn-sm btn-danger ml-2" onClick={() => removePlayer(elements, index)}
-                       style={{
-                         position: 'absolute',
-                         width: "10px",
-                         height: "10px",
-                         borderRadius: "55px",
-                         zIndex: 100,
-                         backgroundColor: "rgb(0,0,0,0)",
-                         border: "10px",
-                         borderColor: "black",
-                         bottom: "110%",
-                         left: "80%"
-                       }}
-                  >
+                  <div className="remove-button" onClick={() => removePlayer(elements, index)}>
                     x
                   </div>
                 )}
-                <button className={`tb-player ${buttonSelector(index, elements)}`}
-                        onClick={() => selectPlayerPosition(index, elements)}>
-                  <img className={`tb-img`} src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
-
+                <button
+                  className={`tb-player ${selectedPlayerIndex.index === index && selectedPlayerIndex.array === elements ? 'image-overlay-selected' : 'image-overlay'}`}
+                  onClick={() => handlePlayerClick(index, elements)}>
+                  <img src={elements[index].imageUrl || altImg} alt={elements[index].name}/>
                 </button>
-
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       );
     };
+
 
     const listItemStyle = {
       position: 'relative',  // This makes it a reference for absolute positioning
@@ -379,7 +368,7 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         <div className="row">
           <div className="col-md-4 min-width-tb">
             <div className={"text-center"}>
-              <h3>Seleziona i giocatori:</h3>
+              <h3>I tuoi giocatori:</h3>
 
               {listPlayers('Attack', filterPlayersByPosition('Attack'), 'left')}
 
@@ -393,20 +382,16 @@ const TeamFormationSelector = ({favoritePlayers}) => {
 
           <div className=" col-md-4 d-flex align-items-stretch justify-content-center min-width-tb">
             {showError()}
-
-            <div
-              className=" background-image">
-              <div className="container-fluid d-flex flex-column justify-content-between h-100 px-0">
-                {lineFormation(selectedFormation.forwards, 'h-100')}
-                {lineFormation(selectedFormation.midfielders, 'h-75')}
-                {lineFormation(selectedFormation.defenders, 'h-50')}
-                {lineFormation(selectedFormation.goalkeeper, 'h-75')}
-              </div>
+            <div className="background-image field-background d-flex flex-column justify-content-between">
+              {lineFormation(selectedFormation.forwards, 'flex-grow-1')}
+              {lineFormation(selectedFormation.midfielders, 'flex-grow-1')}
+              {lineFormation(selectedFormation.defenders, 'flex-grow-1')}
+              {lineFormation(selectedFormation.goalkeeper, 'flex-grow-1')}
             </div>
           </div>
 
           <div className="col-md-4 min-width-tb">
-            <h3 className="text-center">Giocatori selezionati:</h3>
+            <h3 className="text-center">Giocatori in campo:</h3>
             <div className="text-center">
               <ul className="list-unstyled">
                 {listPlayers('Attack', selectedFormation.forwards, 'right')}
