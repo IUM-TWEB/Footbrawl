@@ -91,11 +91,8 @@ const getTopScorer = async (competition) => {
     }
   ];
 
-  console.log("Pipeline di aggregazione:", JSON.stringify(pipeline, null, 2));
-
   try {
     const result = await queries.aggregate(pipeline).exec();
-    console.log("Risultato aggregazione:", result);
     return result;
   } catch (error) {
     console.error("Errore durante l'aggregazione:", error);

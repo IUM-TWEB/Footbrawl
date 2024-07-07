@@ -25,7 +25,6 @@ function Login() {
 
   const handleError = async (res) => {
     if (res === 0) {
-      console.log("handle ", res);
       setLoginValid(false);
       toast.error('Username or password is incorrect', {
         position: "top-center",
@@ -54,7 +53,6 @@ function Login() {
       setError('');
       axios.post(`http://localhost:3000/users/log`, {username: username, pwd: password})
         .then(res => {
-          console.log(res.data);
           handleError(res.data);
         })
         .catch(err => {

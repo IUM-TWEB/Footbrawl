@@ -41,7 +41,6 @@ const router = express.Router();
  */
 router.post('/log', async (req, res) => {
   try {
-    console.log(req.body);
     const response = (await axios.post(`http://localhost:3001/user/log/`, req.body)).data;
     if (Array.isArray(response.data) && response.data.length)
       res.send("1");
@@ -86,7 +85,6 @@ router.post('/', async (req, res) => {
   try {
     const exist = (await axios.post(`http://localhost:3001/user/ex`, req.body)).data;
 
-    console.log(exist.data);
     if (Array.isArray(exist.data) && !exist.data.length) {
       const newUser = (await axios.post(`http://localhost:3001/user`, req.body)).data;
       res.send("1");
@@ -217,7 +215,6 @@ router.post('/favteam', async (req, res) => {
  *         description: Error occurred while retrieving favorites
  */
 router.post('/getfav', async (req, res) => {
-  console.log(req.body);
   try {
     const response = (await axios.post(`http://localhost:3001/user/getfav/`, {
       username: req.body.username,

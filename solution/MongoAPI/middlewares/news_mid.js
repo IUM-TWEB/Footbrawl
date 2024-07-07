@@ -9,7 +9,7 @@ module.exports.getById = async (req, res) => {
       message: "bad request",
       data: null
     })
-  }
+  }else
   try {
     const mongo_resp = (await queries.getById(id))
     if ( !mongo_resp === '') {
@@ -40,7 +40,6 @@ module.exports.getById = async (req, res) => {
 module.exports.getAll = async (req, res) => {
   try {
     const mongo_resp = (await queries.getAll())
-    console.log(mongo_resp, "mongo resp news")
     if ( !mongo_resp === '') {
       res.json({
         success: false,

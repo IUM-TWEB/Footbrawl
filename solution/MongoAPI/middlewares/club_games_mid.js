@@ -9,10 +9,9 @@ module.exports.getByGame = async (req, res) => {
             message: "bad request",
             data: null
         })
-    }
+    }else
     try {
         const mongo_resp = await queries.getByGame(game)
-        console.log(mongo_resp)
 
         if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
             res.json({
@@ -49,7 +48,7 @@ module.exports.getByClub = async (req, res) => {
             message: "bad request",
             data: null
         })
-    }
+    }else
     try {
         const mongo_resp = (await  queries.getByClub(club))
         if ( !mongo_resp === '' || Array.isArray(mongo_resp)  && mongo_resp.length===0 || !mongo_resp) {
