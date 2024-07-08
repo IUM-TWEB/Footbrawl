@@ -5,27 +5,8 @@
     color: #4b3621; /* Chocolate color */
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: chocolate; /* Light chocolate color */
-}
-.badge-custom {
-    background-color: transparent !important;
-    color: black !important;
-    border: 1px solid black;
-}
-
 .ranking-item:hover {
     background-color: #f0f0f0;
-}
-
-.top-scorer-item:hover .badge-custom {
-    background-color: black !important;
-    color: white !important;
-}
-
-.top-market-value-item:hover .badge-custom {
-    background-color: black !important;
-    color: white !important;
 }
 
 .top-scorer-item,
@@ -53,4 +34,8 @@
 
 .team-name:hover {
     text-decoration: underline; /* Underline team name on hover */
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: lightgray;
 }

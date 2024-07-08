@@ -114,7 +114,6 @@ function Login() {
       <div className="m-5 d-flex"></div>
       <div className="m-5 d-flex"></div>
       <div className="m-5 d-flex"></div>
-      <div className="m-5 d-flex"></div>
     </>
   );
 }

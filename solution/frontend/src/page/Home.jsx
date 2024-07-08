@@ -166,7 +166,7 @@ const Home = () => {
               </button>
             </div>
             <div className="mt-4">
-              <h1>Ultime Partite</h1>
+              <h1 className="text-center">Ultime Partite</h1>
               {['IT1', 'GB1', 'ES1', 'CL', 'EL'].map(league => (
                 <div key={league} className="card mt-4">
                   <div className="card-body">
@@ -203,7 +203,7 @@ const Home = () => {
 
           </div>
           <div className="col-md-12 col-lg-3 order-2 order-lg-1">
-            <h1>Classifiche</h1>
+            <h1 className="text-center">Classifiche</h1>
             <div className="card">
               <div className="card-body pb-5">
                 <LeaderBoard title="Serie A" rankings={serieA} onClickClub={handleClickClub}/>
@@ -227,7 +227,7 @@ const Home = () => {
           </div>
           <div className="col-md-12 col-lg-3 order-3">
             <div>
-              <h1>Top Scorers</h1>
+              <h1 className="text-center">Top Scorers</h1>
               {['IT1', 'GB1', 'ES1', 'CL'].map(league => (
                 <div key={league} className="card mb-custom">
                   <div className="card-body card-top-scorer">

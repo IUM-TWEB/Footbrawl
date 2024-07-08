@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../style/pagina-campionato.css"
 
 const PaginaCampionato = () => {
-  const { id_campionato } = useParams();
+  const {id_campionato} = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [topScorerData, setTopScorerData] = useState([]);
@@ -30,7 +30,6 @@ const PaginaCampionato = () => {
         timeout: 10000 // Aumenta il timeout a 10 secondi
       });
       const topScorerData = response.data;
-      console.log('Top Scorer Data:', topScorerData);
       setTopScorerData(topScorerData);
     } catch (error) {
       console.error('Errore nella richiesta al server:', error);
@@ -46,7 +45,6 @@ const PaginaCampionato = () => {
         timeout: 10000
       });
       const topMarketValueData = response.data.slice(0, 15);
-      console.log('Top Market Value Data:', topMarketValueData);
       setTopMarketValueData(topMarketValueData);
     } catch (error) {
       console.log("competizione Europea, Top Market Value non disponibili");
@@ -61,7 +59,6 @@ const PaginaCampionato = () => {
         timeout: 10000
       });
       const ranking = response.data.slice(0, 15);
-      console.log('ranking:', ranking);
       setRankingData(ranking);
     } catch (error) {
       console.log("competizione Europea, classifica non disponibile")
@@ -76,7 +73,6 @@ const PaginaCampionato = () => {
         timeout: 10000
       });
       const lastGameData = response.data;
-      console.log('Last Game Data:', lastGameData);
       setLastGameData(lastGameData);
     } catch (error) {
       console.error('Errore nella richiesta al server:', error);
@@ -102,10 +98,20 @@ const PaginaCampionato = () => {
 
     fetchData();
     fetchTopScorer(id_campionato);
-    fetchTopMarketValue(id_campionato);
-    fetchRanking(id_campionato);
     fetchLastGame(id_campionato);
   }, [id_campionato, lower_id_campionato]);
+
+  useEffect(() => {
+    if (data && data.type !== "international_cup") {
+      setLoadingTopMarketValue(true);
+      setLoadingRanking(true);
+      fetchTopMarketValue(id_campionato);
+      fetchRanking(id_campionato);
+    } else {
+      setLoadingTopMarketValue(false);
+      setLoadingRanking(false);
+    }
+  }, [data, id_campionato]);
 
   if (loading) {
     return <div className="loader"/>;
@@ -126,7 +132,7 @@ const PaginaCampionato = () => {
                   src={`https://tmssl.akamaized.net/images/logo/header/${lower_id_campionato}.png`}
                   alt="Competition Logo"
                   className="img-fluid mb-3"
-                  style={{ maxHeight: '150px' }}
+                  style={{maxHeight: '150px'}}
                 />
                 <div className="mb-3">
                   <p className="card-text">
@@ -162,7 +168,7 @@ const PaginaCampionato = () => {
                     <thead className="thead-dark">
                     <tr>
                       <th scope="col">Nome Giocatore</th>
-                      <th scope="col">Goals</th>
+                      <th scope="col" className="text-center">Goals</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -170,10 +176,10 @@ const PaginaCampionato = () => {
                       <tr
                         key={index}
                         onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
-                        style={{ cursor: 'pointer' }}
+                        style={{cursor: 'pointer'}}
                       >
                         <td>{scorer.name}</td>
-                        <td><span className="badge badge-pill badge-custom">{scorer.totalGoals}</span></td>
+                        <td className="text-center fw-semibold"><span>{scorer.totalGoals}</span></td>
                       </tr>
                     ))}
                     </tbody>
@@ -198,9 +204,8 @@ const PaginaCampionato = () => {
                 <table className="table table-striped table-hover">
                   <thead className="thead-dark">
                   <tr>
-                    <th >Posizione</th>
+                    <th>Posizione</th>
                     <th>Squadra</th>
-                    <th>Punti</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -209,7 +214,7 @@ const PaginaCampionato = () => {
                       key={index}
                       className="ranking-item"
                       onClick={() => navigate(`/club/${team.club_id}`)}
-                      style={{ cursor: 'pointer' }}
+                      style={{cursor: 'pointer'}}
                     >
                       <td>{team.position}</td>
                       <td>{team.club_name}</td>
@@ -234,7 +239,7 @@ const PaginaCampionato = () => {
                   <thead className="thead-dark">
                   <tr>
                     <th scope="col">Nome Giocatore</th>
-                    <th scope="col">Valore di Mercato</th>
+                    <th scope="col" className="text-center">Valore di Mercato</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -242,11 +247,11 @@ const PaginaCampionato = () => {
                     <tr
                       key={index}
                       onClick={() => navigate(`/giocatori/${player.playerId}`)}
-                      style={{ cursor: 'pointer' }}
+                      style={{cursor: 'pointer'}}
                     >
                       <td>{player.firstName} {player.lastName}</td>
-                      <td>
-                      <span className="badge badge-pill badge-custom">
+                      <td className="text-center">
+                      <span className="fw-semibold">
                         {player.highestMarketValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} euro
                       </span>
                       </td>
@@ -286,17 +291,17 @@ const PaginaCampionato = () => {
                       <td
                         className="team-name"
                         onClick={() => navigate(`/club/${game.home_club_id}`)}
-                        style={{ cursor: 'pointer'}}
+                        style={{cursor: 'pointer'}}
                       >
                         {game.home_club_name}
                       </td>
-                      <td  className="team-name"
-                        onClick={() => navigate(`/club/${game.away_club_id}`)}
-                        style={{ cursor: 'pointer'}}
+                      <td className="team-name"
+                          onClick={() => navigate(`/club/${game.away_club_id}`)}
+                          style={{cursor: 'pointer'}}
                       >
                         {game.away_club_name}
                       </td>
-                      <td>{game.home_club_goals} - {game.away_club_goals}</td>
+                      <td className="text-center">{game.home_club_goals} - {game.away_club_goals}</td>
                       <td>{game.stadium}</td>
                       <td>{game.referee}</td>
                     </tr>

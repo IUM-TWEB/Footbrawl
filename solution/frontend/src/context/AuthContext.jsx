@@ -58,15 +58,25 @@ export const AuthProvider = ({children}) => {
   }, [isAuthenticated, username, password, favoritePlayers, favoriteClubs]);
 
   const login = async (userInfo) => {
-    const saved_data = (await axios.post('http://localhost:3000/users/getfav', {
-      username: userInfo.username,
-      pwd: userInfo.password
-    })).data;
-    setIsAuthenticated(true);
-    setUsername(userInfo.username);
-    setPassword(userInfo.password);
-    setFavoritePlayers(saved_data.favorite_players || []);
-    setFavoriteClubs(saved_data.favorite_teams || []);
+    try {
+      const response = await axios.post('http://localhost:3000/users/getfav', {
+        username: userInfo.username,
+        pwd: userInfo.password
+      });
+
+      const saved_data = response.data;
+
+      setIsAuthenticated(true);
+      setUsername(userInfo.username);
+      setPassword(userInfo.password);
+
+      const favoritePlayersAsStrings = (saved_data.favorite_players || []).map(player => player.toString());
+
+      setFavoritePlayers(favoritePlayersAsStrings);
+      setFavoriteClubs(saved_data.favorite_teams || []);
+    } catch (error) {
+      console.error('Errore durante il login:', error);
+    }
   };
 
   const setNewPlayer = (player_id) => {

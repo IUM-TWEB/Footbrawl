@@ -74,7 +74,7 @@ const Register = () => {
                     />
                   </div>
                   <div className="text-end">
-                    <button type="submit" className="btn btn-primary">Register</button>
+                    <button type="submit" className="btn btn-primary">Registrati</button>
                   </div>
                 </form>
               </div>

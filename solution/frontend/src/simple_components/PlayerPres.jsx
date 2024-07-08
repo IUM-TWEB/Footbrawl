@@ -32,22 +32,14 @@ function PlayerPres({
 
   const handleFavorite = () => {
     if (!favoritePlayers.includes(playerId)) {
-      console.log("non contenuto")
       setNewPlayer(playerId)
       axios.post("http://localhost:3000/users/favplayer", {username: username, pwd: password, playerId: playerId})
-        .then(res => {
-          console.log(res)
-        })
         .catch(e => {
           console.log(e)
         })
     } else {
-      console.log(" contenuto")
       removePlayer(playerId)
       axios.post("http://localhost:3000/users/removePlayer", {username: username, pwd: password, playerId: playerId})
-        .then(res => {
-          console.log(res)
-        })
         .catch(e => {
           console.log(e)
         })

@@ -37,7 +37,15 @@ function PlayerPres({playerClubs: playerClubs}) {
         </div>
       </div>
     );
-  else return (<></>)
+  else return (
+    <div className="card player-card">
+      <div className="card-body">
+        <h1 className={"center-text"}>Clubs in cui ha giocato</h1>
+        <hr></hr>
+        <h6 className="text-center">Non sono presenti dati sufficienti sui club in cui ha giocato</h6>
+      </div>
+    </div>
+  )
 
 }
 

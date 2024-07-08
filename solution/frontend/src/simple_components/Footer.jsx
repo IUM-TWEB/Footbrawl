@@ -4,7 +4,7 @@ import '../style/Footer.css';
 
 const Footer = () => {
   return (
-    <footer className="mt-3 footer d-flex flex-column flex-md-row align-items-center justify-content-between">
+    <footer className="mt-5 footer d-flex flex-column flex-md-row align-items-center justify-content-between">
       <div className="mb-3 mb-md-0">
         <h4 style={{color: 'white', textAlign: "center"}}>Documentazione swagger</h4>
         <a href="http://localhost:3000/api-ui/" className="btn btn-outline-light footer-button" target="_blank"
@@ -21,7 +21,7 @@ const Footer = () => {
         </a>
       </div>
       <div className="text-center mb-3 mb-md-0">
-        <h2 style={{color: 'white'}}>Footbrawl</h2>
+        <h2 style={{color: 'white'}}>FootBrawl</h2>
       </div>
       <div className="d-flex justify-content-end">
         <div className="row">

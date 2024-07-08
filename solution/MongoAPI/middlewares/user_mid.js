@@ -187,7 +187,7 @@ module.exports.getFavoritePlayer = async (req, res) => {
 }
 
 module.exports.addFavoriteTeam = async (req, res) => {
-  const {username, pwd, teamId} = req.params
+  const {username, pwd, teamId} = req.body
   if (!(username && pwd && teamId)) {
     res.json({
       success: false,
