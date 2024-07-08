@@ -86,11 +86,14 @@ const addFormation = async (username, pwd, formation) => {
         {$push: {formations: formation}}
       );
       console.log("Formation added successfully!", pushResult);
+      return pushResult
     } else {
       console.log("Formation updated successfully!", updateResult);
+      return updateResult
     }
   } catch (error) {
     console.error("Error updating or adding formation:", error);
+    return updateResult;
   }
 }
 

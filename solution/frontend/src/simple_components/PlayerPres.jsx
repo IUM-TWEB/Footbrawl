@@ -57,8 +57,8 @@ function PlayerPres({
 
   return (
     <div className="card player-card">
-      <div className="card-body">
-        <div className="col-md-1 px-3 w-50">
+      <div className="card-body text-center">
+        <div className="col-md-1 px-3 w-50 d-flex">
           <button
             className={`mt-2 center-block btn w-50 ${isFavorite ? (hover ? 'btn-danger' : 'btn-success') : 'btn-outline-dark'}`}
             onClick={handleFavorite}
@@ -69,15 +69,15 @@ function PlayerPres({
           </button>
         </div>
         <img src={img} className="center-img" alt="Player"/>
-        <h2 className="center-text card-title">{name}</h2>
+        <h2 className="justify-content-center card-title">{name}</h2>
 
-        <p className="center-text card-text card-subtitle">Data di nascita:</p>
-        <p className="center-text card-text">{data}</p>
+        <p className="justify-content-center card-text card-subtitle">Data di nascita:</p>
+        <p className="justify-content-center card-text">{data}</p>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Età:</p>
-        <p className="center-text card-text">{età}</p>
+        <p className="justify-content-center card-text card-subtitle">Età:</p>
+        <p className="justify-content-center card-text">{età}</p>
 
         <hr className="solid"></hr>
 
@@ -85,35 +85,35 @@ function PlayerPres({
           navigate(`/club/${teamId}`)
         }}>
           <div className="row">
-            <p className="center-text card-text card-subtitle">Squadra:</p>
-            <p className="center-text card-text">{team}</p>
+            <p className="justify-content-center card-text card-subtitle">Squadra:</p>
+            <p className="justify-content-center card-text">{team}</p>
           </div>
         </div>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Nazionalità:</p>
-        <p className="center-text card-text">{nazionalità}</p>
+        <p className="justify-content-center card-text card-subtitle">Nazionalità:</p>
+        <p className="justify-content-center card-text">{nazionalità}</p>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Posizione:</p>
-        <p className="center-text card-text">{position}</p>
+        <p className="justify-content-center card-text card-subtitle">Posizione:</p>
+        <p className="justify-content-center card-text">{position}</p>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Ultima Stagione:</p>
-        <p className="center-text card-text">{lastSeason}</p>
+        <p className="justify-content-center card-text card-subtitle">Ultima Stagione:</p>
+        <p className="justify-content-center card-text">{lastSeason}</p>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Altezza:</p>
-        <p className="center-text card-text">{hight}</p>
+        <p className="justify-content-center card-text card-subtitle">Altezza:</p>
+        <p className="justify-content-center card-text">{hight}</p>
 
         <hr className="solid"></hr>
 
-        <p className="center-text card-text card-subtitle">Piede preferito:</p>
-        <p className="center-text card-text">{foot}</p>
+        <p className="justify-content-center card-text card-subtitle">Piede preferito:</p>
+        <p className="justify-content-center card-text">{foot}</p>
 
       </div>
     </div>

@@ -1,11 +1,15 @@
 .background-image {
   height: 700px;
-  width: 476px;
+  width: 100%;
+  max-width: 476px;
   min-width: 464px;
   background-image: url("../img/soccer-green-field.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .tb-player {
@@ -13,17 +17,17 @@
   padding: 0;
   overflow: hidden;
   border: none;
+  background: none; /* Rimuove lo sfondo del bottone */
+  position: relative; /* Aggiungi posizione relativa per posizionare la x rispetto al bottone */
 }
 
 .tb-player img {
   width: 100%;
   height: auto;
-  display: block; /* rimuove eventuali spazi extra sotto l'immagine */
+  display: block; /* Rimuove eventuali spazi extra sotto l'immagine */
   max-width: 50px;
   max-height: 50px;
 }
-
-/*Bottone info*/
 
 .bottone-info:hover {
   background-color: lightgray;
@@ -32,8 +36,6 @@
 .bottone-info {
   background-color: #ffffff;
 }
-
-/*Fine bottone info*/
 
 .image-overlay-container {
   position: relative;
@@ -52,4 +54,20 @@
 
 .image-overlay-selected {
   border: 3px solid #fd9902;
+}
+
+.remove-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
 }

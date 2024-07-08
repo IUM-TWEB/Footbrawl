@@ -1,6 +1,5 @@
 const lineup = require('../models/game_lineups')
 const getById = (id) => {
-    console.log(id)
     return lineup.find({_id: id}, {}, null)
 }
 

@@ -9,7 +9,7 @@ const getById = async (req, res) => {
       message: "bad request",
       data: null
     })
-  }
+  }else
   try {
     const mongo_resp = (await queries.getById(id))
     if ( !mongo_resp === '') {
@@ -47,7 +47,7 @@ const getByPlayer = async (req,res)=>{
       message: "bad request",
       data: null
     })
-  }
+  }else
   try {
     const mongo_resp = (await queries.getByPlayer(player))
     if ( !mongo_resp === '') {
@@ -84,7 +84,7 @@ const getByClub = async (req,res) => {
       message: "bad request",
       data: null
     })
-  }
+  }else
   try {
     const mongo_resp = (await  queries.getByClub(club))
     if ( !mongo_resp === '') {
@@ -122,7 +122,7 @@ const getByPlayerAndPosition = async (req,res) => {
       message: "bad request",
       data: null
     })
-  }
+  }else
   try {
     const mongo_resp = (await  queries.getByPlayerAndPosition(player, pos))
     if ( !mongo_resp === '') {

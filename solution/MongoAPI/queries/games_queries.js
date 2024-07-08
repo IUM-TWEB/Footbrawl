@@ -37,7 +37,6 @@ async function getManagerNameByClubId(clubId) {
 }
 
 const getByClubLast = (club, season) => {
-    console.log('club',club)
     return games.find({
         $or: [
             { away_club_id: club },
@@ -52,7 +51,6 @@ const getByClub = (comp, season, club_id) => {
 }
 
 const getPosition = (teamId) => {
-    console.log(typeof teamId)
     // teamId = 2700
     return games.aggregate([
         {

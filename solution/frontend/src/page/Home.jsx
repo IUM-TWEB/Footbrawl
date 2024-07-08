@@ -158,7 +158,7 @@ const Home = () => {
               <div>Loading...</div>
             )}
             <div className="controls center mt-3">
-              <button className="btn btn-primary mr-2" onClick={handlePause} disabled={isPaused}>
+              <button className="btn btn-primary mr-2 m-2" onClick={handlePause} disabled={isPaused}>
                 Pausa
               </button>
               <button className="btn btn-primary" onClick={handleResume} disabled={!isPaused}>

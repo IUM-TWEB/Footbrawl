@@ -92,14 +92,12 @@ router.get('/:id', async (req, res) => {
   if (isNaN(clubId) || clubId < 0) { // il club id è un numero >= 0
     res.status(400).send("ERR_BAD_REQUEST");
   } else {
-    console.log("ciao2");
     try {
       const response = (await axios.get(`http://localhost:8080/club?id=${clubId}`)).data;
       res.send(response);
     } catch (err) {
-      console.log("ciao3");
       const statusCode = err.response ? err.response.status : 500; // Ottieni il codice di stato dalla risposta, o imposta 500 se non disponibile
-      const message = err.message; // Puoi anche ottenere il messaggio di errore se necessario
+      const message = err.message;
       console.log(message); // Logga il messaggio di errore per debugging
       res.status(statusCode).send(JSON.stringify({ message, details: err.response ? err.response.data : err }));
     }
