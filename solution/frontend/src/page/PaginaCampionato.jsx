@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../index.css';
+import "../style/pagina-campionato.css"
 
 const PaginaCampionato = () => {
   const { id_campionato } = useParams();
@@ -127,32 +127,35 @@ const PaginaCampionato = () => {
     <div className="container mt-5">
       {data ? (
         <div className="row">
-          <div className="col-md-6 d-flex justify-content-center">
-            <div className="card mb-3" style={{ maxWidth: "540px", border: "none", boxShadow: "none" }}>
-              <div className="row no-gutters">
+          <div className="col-md-6 mb-5 pt-5">
+            <div className="card">
+              <div className="card-body text-center pt-4">
                 <img
                   src={`https://tmssl.akamaized.net/images/logo/header/${lower_id_campionato}.png`}
                   alt="Competition Logo"
-                  className="logo-fixed"
+                  className="img-fluid mb-3"
+                  style={{ maxHeight: '150px' }}
                 />
-                <div className="col-md-4 d-flex align-items-center justify-content-center p-3">
+                <div className="mb-3">
+                  <p className="card-text">
+                    <strong>Tipo competizione: </strong>
+                    <span className="ml-2">{data.type || "Not available"}</span>
+                  </p>
                 </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h2 className="card-title" style={{fontSize: '2.5rem'}}>{formatCompetitionName(data.name) || "Not available"}</h2>
+                <div className="mb-3">
+                  <p className="card-text">
+                    <strong>Continente: </strong>
+                    <span className="ml-2">{data.confederation || "Not available"}</span>
+                  </p>
+                </div>
+                {data.countryName && (
+                  <div className="mb-3">
                     <p className="card-text">
-                      <strong>tipo competizione: </strong> {data.type || "Not available"}
+                      <strong>Paese: </strong>
+                      <span className="ml-2">{data.countryName}</span>
                     </p>
-                    <p className="card-text">
-                      <strong>Continente: </strong> {data.confederation || "Not available"}
-                    </p>
-                    {data.countryName && (
-                      <p className="card-text">
-                        <strong>Paese: </strong> {data.countryName}
-                      </p>
-                    )}
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -162,21 +165,21 @@ const PaginaCampionato = () => {
             ) : (
               topScorerData.length > 0 && (
                 <>
-                  <h3 className="text-center">Top Scorers</h3>
+                  <h3 className="text-center classifiche-title">Top Scorers</h3>
                   <ul className="list-group top-scorer-list">
                     <li className="list-group-item d-flex justify-content-between align-items-center">
                       <strong>Nome Giocatore</strong>
                       <strong>Goals</strong>
                     </li>
-                    {topScorerData.map((scorer, index) => (
+                    {topScorerData.slice(0, 7).map((scorer, index) => (
                       <li
                         key={index}
-                        className="list-group-item d-flex justify-content-between align-items-center top-scorer-item"
+                        className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
                         onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
                         style={{ cursor: 'pointer' }}
                       >
                         <span>{scorer.name}</span>
-                        <span className="badge badge-primary badge-pill">{scorer.totalGoals}</span>
+                        <span className="badge badge-primary badge-pill badge-custom">{scorer.totalGoals}</span>
                       </li>
                     ))}
                   </ul>
@@ -196,7 +199,7 @@ const PaginaCampionato = () => {
           ) : (
             rankingData.length > 0 && (
               <>
-                <h3 className="text-center">Classifica</h3>
+                <h3 className="text-center classifiche-title">Classifica</h3>
                 <table className="table table-striped">
                   <thead>
                   <tr>
@@ -207,7 +210,7 @@ const PaginaCampionato = () => {
                   </thead>
                   <tbody>
                   {rankingData.map((team, index) => (
-                    <tr key={index} onClick={() => navigate(`/club/${team.club_id}`)} style={{ cursor: 'pointer' }}>
+                    <tr key={index} className="ranking-item" onClick={() => navigate(`/club/${team.club_id}`)} style={{ cursor: 'pointer' }}>
                       <td>{team.position}</td>
                       <td>{team.club_name}</td>
                       <td>{team.points}</td>
@@ -226,7 +229,7 @@ const PaginaCampionato = () => {
           ) : (
             topMarketValueData.length > 0 && (
               <>
-                <h3 className="text-center">Top Market Value Players</h3>
+                <h3 className="text-center classifiche-title">Top Market Value Players</h3>
                 <ul className="list-group top-market-value-list">
                   <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Nome Giocatore</strong>
@@ -237,10 +240,12 @@ const PaginaCampionato = () => {
                       key={index}
                       className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
                       onClick={() => navigate(`/giocatori/${player.playerId}`)}
-                      style={{ cursor: 'pointer' }}
+                      style={{cursor: 'pointer'}}
                     >
                       <span>{player.firstName} {player.lastName}</span>
-                      <span className="badge badge-primary badge-pill">{player.highestMarketValue} euro</span>
+                      <span className="badge badge-primary badge-pill badge-custom">
+                        {player.highestMarketValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} euro
+                      </span>
                     </li>
                   ))}
                 </ul>

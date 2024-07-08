@@ -295,27 +295,6 @@ hr.solid {
 }
 
 
-
-/*top scorer*/
-
-.top-scorer-list {
-  max-width: 540px;
-  margin: 0 auto;
-  padding: 0;
-}
-
-.top-scorer-item,
-.top-market-value-item {
-  cursor: pointer; /* Aggiungi il puntatore per indicare che è cliccabile */
-}
-
-.top-scorer-item:hover,
-.top-market-value-item:hover {
-  background-color: chocolate;
-}
-
-/*end top scorer*/
-
 .nav-item .nav-link.active {
   color: blue;
   font-weight: bold;

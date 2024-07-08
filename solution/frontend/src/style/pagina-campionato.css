@@ -1,0 +1,49 @@
+.ranking-item:hover {
+    background-color: #f0f0f0;
+}
+.badge-custom {
+    background-color: transparent !important;
+    color: black !important;
+    border: 1px solid black;
+}
+
+.top-scorer-item:hover .badge-custom {
+    background-color: black !important;
+    color: white !important;
+}
+
+.top-market-value-item:hover .badge-custom {
+    background-color: black !important;
+    color: white !important;
+}
+
+.classifiche-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.top-scorer-item,
+.top-market-value-item {
+    cursor: pointer;
+}
+top-scorer-item:hover,
+.top-market-value-item:hover {
+    background-color: chocolate;
+}
+.top-scorer-list {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0;
+}
+.loader {
+    border: 3px solid rgba(120, 113, 113, 0.1);
+    border-left-color: #000000;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+
+
