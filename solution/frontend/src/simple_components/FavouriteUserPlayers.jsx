@@ -15,7 +15,7 @@ const FavouriteUserPlayers = ({Players}) => {
 
 
   const formatValue = (value) => {
-    return value === -1 ? 'non disponibile' : value + ' euro';
+    return value === -1 ? 'non disponibile' : value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' euro';
   };
 
   return (

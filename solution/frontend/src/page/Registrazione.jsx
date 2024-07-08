@@ -47,7 +47,7 @@ const Register = () => {
         <div className="row justify-content-center">
           <div className="col-md-6">
             <div className="card">
-              <h5 className="card-header">Register</h5>
+              <h5 className="card-header">Registrati</h5>
               <div className="card-body">
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form onSubmit={handleSubmit}>

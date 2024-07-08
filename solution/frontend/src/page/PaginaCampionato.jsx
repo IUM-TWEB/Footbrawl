@@ -24,14 +24,6 @@ const PaginaCampionato = () => {
   const convertToLowerCase = (str) => str.toLowerCase();
   const lower_id_campionato = convertToLowerCase(id_campionato);
 
-  const formatCompetitionName = (name) => {
-    if (!name) return "";
-    return name
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-
   const fetchTopScorer = async (id_campionato) => {
     try {
       const response = await axios.get(`http://localhost:3000/competition/top_scorer/${id_campionato}`, {
@@ -166,23 +158,26 @@ const PaginaCampionato = () => {
               topScorerData.length > 0 && (
                 <>
                   <h3 className="text-center classifiche-title">Top Scorers</h3>
-                  <ul className="list-group top-scorer-list">
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                      <strong>Nome Giocatore</strong>
-                      <strong>Goals</strong>
-                    </li>
+                  <table className="table table-striped table-hover">
+                    <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">Nome Giocatore</th>
+                      <th scope="col">Goals</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {topScorerData.slice(0, 7).map((scorer, index) => (
-                      <li
+                      <tr
                         key={index}
-                        className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
                         onClick={() => navigate(`/giocatori/${scorer.player_id}`)}
                         style={{ cursor: 'pointer' }}
                       >
-                        <span>{scorer.name}</span>
-                        <span className="badge badge-primary badge-pill badge-custom">{scorer.totalGoals}</span>
-                      </li>
+                        <td>{scorer.name}</td>
+                        <td><span className="badge badge-pill badge-custom">{scorer.totalGoals}</span></td>
+                      </tr>
                     ))}
-                  </ul>
+                    </tbody>
+                  </table>
                 </>
               )
             )}
@@ -200,17 +195,22 @@ const PaginaCampionato = () => {
             rankingData.length > 0 && (
               <>
                 <h3 className="text-center classifiche-title">Classifica</h3>
-                <table className="table table-striped">
-                  <thead>
+                <table className="table table-striped table-hover">
+                  <thead className="thead-dark">
                   <tr>
-                    <th>Posizione</th>
+                    <th >Posizione</th>
                     <th>Squadra</th>
                     <th>Punti</th>
                   </tr>
                   </thead>
                   <tbody>
                   {rankingData.map((team, index) => (
-                    <tr key={index} className="ranking-item" onClick={() => navigate(`/club/${team.club_id}`)} style={{ cursor: 'pointer' }}>
+                    <tr
+                      key={index}
+                      className="ranking-item"
+                      onClick={() => navigate(`/club/${team.club_id}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <td>{team.position}</td>
                       <td>{team.club_name}</td>
                       <td>{team.points}</td>
@@ -230,25 +230,30 @@ const PaginaCampionato = () => {
             topMarketValueData.length > 0 && (
               <>
                 <h3 className="text-center classifiche-title">Top Market Value Players</h3>
-                <ul className="list-group top-market-value-list">
-                  <li className="list-group-item d-flex justify-content-between align-items-center">
-                    <strong>Nome Giocatore</strong>
-                    <strong>Valore di Mercato</strong>
-                  </li>
+                <table className="table table-striped table-hover">
+                  <thead className="thead-dark">
+                  <tr>
+                    <th scope="col">Nome Giocatore</th>
+                    <th scope="col">Valore di Mercato</th>
+                  </tr>
+                  </thead>
+                  <tbody>
                   {topMarketValueData.map((player, index) => (
-                    <li
+                    <tr
                       key={index}
-                      className="list-group-item d-flex justify-content-between align-items-center top-market-value-item"
                       onClick={() => navigate(`/giocatori/${player.playerId}`)}
-                      style={{cursor: 'pointer'}}
+                      style={{ cursor: 'pointer' }}
                     >
-                      <span>{player.firstName} {player.lastName}</span>
-                      <span className="badge badge-primary badge-pill badge-custom">
+                      <td>{player.firstName} {player.lastName}</td>
+                      <td>
+                      <span className="badge badge-pill badge-custom">
                         {player.highestMarketValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} euro
                       </span>
-                    </li>
+                      </td>
+                    </tr>
                   ))}
-                </ul>
+                  </tbody>
+                </table>
               </>
             )
           )}
@@ -258,33 +263,45 @@ const PaginaCampionato = () => {
       <div className="row mt-5">
         <div className="col-lg-12 mb-5">
           {loadingLastGame ? (
-            <div className="text-center">Loading Last Games...</div>
+            <div className="text-center"> caricando le ultime partite...</div>
           ) : (
             lastGameData.length > 0 && (
               <>
-                <h3 className="text-center">Last Games</h3>
-                <table className="table table-striped">
-                  <thead>
+                <h3 className="text-center">Ultime Partite</h3>
+                <table className="table table-striped table-hover">
+                  <thead className="thead-dark">
                   <tr>
                     <th>Data</th>
-                    <th>Home Club</th>
-                    <th>Away Club</th>
-                    <th>Score</th>
-                    <th>Stadium</th>
-                    <th>Referee</th>
+                    <th>Squadra di casa</th>
+                    <th>Squadra ospite</th>
+                    <th>Risultato</th>
+                    <th>Stadio</th>
+                    <th>Arbitro</th>
                   </tr>
                   </thead>
                   <tbody>
                   {lastGameData.map((game) => (
                     <tr key={game._id}>
                       <td>{new Date(game.date).toLocaleDateString()}</td>
-                      <td>{game.home_club_name}</td>
-                      <td>{game.away_club_name}</td>
+                      <td
+                        className="team-name"
+                        onClick={() => navigate(`/club/${game.home_club_id}`)}
+                        style={{ cursor: 'pointer'}}
+                      >
+                        {game.home_club_name}
+                      </td>
+                      <td  className="team-name"
+                        onClick={() => navigate(`/club/${game.away_club_id}`)}
+                        style={{ cursor: 'pointer'}}
+                      >
+                        {game.away_club_name}
+                      </td>
                       <td>{game.home_club_goals} - {game.away_club_goals}</td>
                       <td>{game.stadium}</td>
                       <td>{game.referee}</td>
                     </tr>
                   ))}
+
                   </tbody>
                 </table>
               </>

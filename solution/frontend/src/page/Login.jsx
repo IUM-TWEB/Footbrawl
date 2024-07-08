@@ -95,7 +95,7 @@ function Login() {
                     />
                   </div>
                   <div className="text-end">
-                    <button type="submit" className="btn btn-chocolate">Invia</button>
+                    <button type="submit" className="btn btn-primary rounded">Invia</button>
                   </div>
                 </form>
               </div>

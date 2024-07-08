@@ -24,7 +24,7 @@ function LeaderBoard(props) {
           <thead className="thead-dark">
           <tr>
             <th scope="col"> </th>
-            <th scope="col">Squadra</th>
+            <th  scope="col">Squadra</th>
           </tr>
           </thead>
           <tbody>

@@ -111,7 +111,7 @@ const SingleChat = () => {
             aria-label="send message"
             id="messageButton"
             className="btn btn-primary w-100"
-            onClick={sendMessage}>Send
+            onClick={sendMessage}>Invia
           </button>
         </div>
       </div>
