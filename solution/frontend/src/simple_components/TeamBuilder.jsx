@@ -45,7 +45,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       fetchData();
     }, []);
 
-
     useEffect(() => {
       // Cerchiamo la formazione che corrisponde tra le salvate in base al tipo
       const filtered_formation = savedFormations.find(i => i.type === formation)
@@ -69,6 +68,30 @@ const TeamFormationSelector = ({favoritePlayers}) => {
       setSavedPlayersValues(favoritePlayers);
     }, [favoritePlayers]);
 
+    useEffect(() => {
+      const newSavedPlayersValues = favoritePlayers.filter(player => !isPlayerInFormation(selectedFormation, player));
+      setSavedPlayersValues(newSavedPlayersValues);
+    }, [selectedFormation, favoritePlayers, savedFormations]);
+
+    useEffect(() => {
+      // Questo useEffect viene eseguito solo al caricamento iniziale della pagina
+      const newSavedPlayersValues = favoritePlayers.filter(player => !isPlayerInFormation(selectedFormation, player));
+      setSavedPlayersValues(newSavedPlayersValues);
+    }, [])
+
+    // Controlliamo se un certo giocatore è presente nella formazione
+    const isPlayerInFormation = (formation, player) => {
+      if (!player || !formation) return false
+      const inForwards = formation.forwards.some(p => (p !== "0" && p.playerId === player.playerId));
+      const inMidfielders = formation.midfielders.some(p => p !== "0" && p.playerId === player.playerId);
+      const inDefenders = formation.defenders.some(p => p !== "0" && p.playerId === player.playerId);
+      const inGoalkeeper = formation.goalkeeper[0] !== "0" && formation.goalkeeper[0].playerId === player.playerId;
+
+      const result = inForwards || inMidfielders || inDefenders || inGoalkeeper;
+
+      return result;
+    };
+
     // Salviamo la formazione
     const sendFormation = async () => {
       axios.post('http://localhost:3000/users/postFormations', {
@@ -87,14 +110,6 @@ const TeamFormationSelector = ({favoritePlayers}) => {
         .catch(e => {
           console.log(e)
         })
-    }
-
-    // Controlliamo se un certo giocatore è presente nella formazione
-    const isPlayerInFormation = (formation, player) => {
-      return (formation.forwards.some(p => p.id === player.id) ||
-        formation.midfielders.some(p => p.id === player.id) ||
-        formation.defenders.some(p => p.id === player.id) ||
-        formation.goalkeeper.some(p => p.id === player.id))
     }
 
     // Otteniamo le formazioni salvate
@@ -170,11 +185,18 @@ const TeamFormationSelector = ({favoritePlayers}) => {
     };
 
     const addPlayer = (newPlayer) => {
-      // Aggiungiamo il giocatore solamente se non è già presente
-      if (!savedPlayersValues.some(player => player.playerId === newPlayer.playerId)) {
+      // Controlliamo se il giocatore è già presente nei giocatori salvati o nella formazione
+      const isInSavedPlayers = savedPlayersValues.some(player => player.playerId === newPlayer.playerId);
+      const isInFormation = isPlayerInFormation(selectedFormation, newPlayer);
+
+      if (!isInSavedPlayers && !isInFormation) {
         setSavedPlayersValues([...savedPlayersValues, newPlayer]);
       } else {
-        setAlert({isOpen: true, color: "danger", message: "Giocatore già aggiunto ai tuoi giocatori"});
+        setAlert({
+          isOpen: true,
+          color: "danger",
+          message: "Giocatore già aggiunto ai tuoi giocatori o già presente nella formazione"
+        });
       }
     };
 

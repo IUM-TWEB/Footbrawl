@@ -23,7 +23,7 @@ const TopCampionati = ({ onSelectCampionato }) => {
       <div className="quadrati-container">
         {topCampionati.map((campionato, index) => (
           <div key={index} className="quadrato-padding" onClick={() => handleClick(campionato.id)}>
-            <div className="square">{campionato.nomeCompleto}</div>
+            <div className="square" style={{cursor: 'pointer'}}>{campionato.nomeCompleto}</div>
           </div>
         ))}
       </div>
